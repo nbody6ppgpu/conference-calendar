@@ -1,16 +1,7 @@
 # Conference Calendar 2025
 
 ​
-
-## January 2025
-
-1. Gas Accretion in Planet formation. MPIA, Heidelberg on 10–12 March 2025. [Link](https://sites.google.com/view/gapconference1/home?authuser=0 "https://sites.google.com/view/gapconference1/home?authuser=0")&#x20;
-
-​
-
-## Feb 2025
-
-
-## June 2025
-
-1. IAU Symposium/Modest 2025: "IAU Symposium 398: Compact Objects and Binaries in Dense Stellar Systems". Seoul National University, Seoul, Korea on 16-20 June 2025. [Link](https://gravity.snu.ac.kr/iaus398/)
+| Date        | Location                         | Meeting title and link                                                                                                   | Registration Deadline         | Abstract Deadline | Comments |
+|-------------|----------------------------------|--------------------------------------------------------------------------------------------------------------------------|-------------------------------|-------------------|----------|
+| March 10–12 | MPIA, Heidelberg                 | [Gas Accretion in Planet formation](https://sites.google.com/view/gapconference1)                                        | 5 Jan                         | 5 Jan             |          |
+| June 16-20 | Seoul National University, Seoul | [IAU Symposium 398/Modest-25: Compact Objects and Binaries in Dense Stellar Systems](https://gravity.snu.ac.kr/iaus398/) | Early: April 30; Late: May 31 | 15 April    |          |

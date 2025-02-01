@@ -13,6 +13,8 @@
 | June 30 - July 4 | Heidelberg, Germany | [Quo Vadis Galaxy Evolution?](https://sites.google.com/view/quovadisgalaxyevolution/home) | April 15 | ~~January 24~~ | |
 | Sept 1-5 | Matera, Italy | [Bridging scales: star clusters and their host galaxies from the Local to the high-z Universe](https://sites.google.com/inaf.it/bridging-scales-in-matera-2025/home) | N/A | March 14 | emailed by Prof. Michela Mapelli |
 | September 1-3 |	University of Southampton, UK |	[YAGN25 : Young Astronomers on Galactic Nuclei](https://www.astro.soton.ac.uk/yagn2025/index.html) | April 30 | N/A |	Talks will be selected in May 2025 |
+| Sept. 8-12 | Byurakan, Armenia | [4th Regional Astronomical Summer School Astronomy and Data Science (4RASS)](https://www.bao.am/meetings/meetings/4RASS/index.html)| June 15 | ? |for students in astronomy |
+| Sept. 15-19 | Byurakan, Armenia | [International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)](https://www.bao.am/meetings/meetings/ASBD3/index.php)|June 15 | June 15| | 
 | Sept. 15-19 | Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | ? | ? | Call for Splinter Meetings Deadline Feb. 28 |
 
 *Note: after edit please click* `Preview` *on the top left to see whether the table shows properly.*

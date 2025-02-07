@@ -5,7 +5,7 @@
 |-|-|-|-|-|-|
 | March 6-7 | Forschungszentrum Jülich, Germany | [NIC Symposium 2025](https://www.john-von-neumann-institut.de/en/news/nic-symposium/nic-symposium-2025)   | Feb 10 | Feb 10 ||
 | March 10–12 | MPIA, Heidelberg| [Gas Accretion in Planet formation](https://sites.google.com/view/gapconference1) | ~~5 Jan~~ | ~~5 Jan~~ | |
-| March 24-28 | Tashkent, Uzbekistan | [ICTPA 2024 Conference](https://conference.ifar.uz/ictpa2025/)                                            | Open; DDL not mentioned | Open; DDL not mentioned | |
+| March 24-28 | Tashkent, Uzbekistan | [ICTPA 2025 Conference](https://conference.ifar.uz/ictpa2025/)                                            | Open; DDL not mentioned | Open; DDL not mentioned | |
 | March 30 - April 6   | La Thuile, Italy | [59th Rencontres de Moriond 2025](https://moriond.in2p3.fr/2025/Gravitation/) | February 16 | Jan 31 | |
 | June 16-20 | Seoul National University, Seoul | [IAU Symposium 398/Modest-25: Compact Objects and Binaries in Dense Stellar Systems](https://gravity.snu.ac.kr/iaus398/) | Early: April 30; Late: May 31 | April 15 | |
 | June 23-27 | Dali, China | [13th Silk Road Conference: Exploring the Frontiers of Dynamical Astronomy with High-Performance Computing, Artificial Intelligence, and Leading-Edge Observational Techniques](https://www.astro-silkroad.eu/conferences/silkroad13) | Not yet Announced | N/A | |

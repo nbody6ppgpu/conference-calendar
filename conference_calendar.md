@@ -10,7 +10,7 @@
 | September 1-3 2025|	University of Southampton, UK |	[YAGN25 : Young Astronomers on Galactic Nuclei](https://www.astro.soton.ac.uk/yagn2025/index.html) | April 30 | N/A |	Talks will be selected in May 2025 |
 | Sept. 8-12 2025| Byurakan, Armenia | [4th Regional Astronomical Summer School Astronomy and Data Science (4RASS)](https://www.bao.am/meetings/meetings/4RASS/index.html)| June 15 | ? |for students in astronomy |
 | Sept. 15-19 2025| Byurakan, Armenia | [International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)](https://www.bao.am/meetings/meetings/ASBD3/index.php)|June 15 | June 15| | 
-| Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | ? | ? | Call for Splinter Meetings Deadline Feb. 28 |
+| Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = July 15;  Call for Splinter Meetings Deadline Feb. 28 |
 |**>2026<**||||||
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong          | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Open: October 1 2025; deadline TBA | Opens October 1 2025; deadline TBA |  |
 

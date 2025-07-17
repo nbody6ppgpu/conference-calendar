@@ -1,12 +1,17 @@
 # Conference Calendar
+
+| Possible Travel Money | Time | Restriction | Note |
+|-|-|-|-|
+| [German Astro. Society](https://www.astronomische-gesellschaft.de/de/aktivitaeten/foerderung) | Always open | Affiliated to a German inst.; apply 6+ weeks before meeting | amount given is usually not big (< 1000 eur) |
 ​
+
 | Date | Location | Meeting title and link | Registration Deadline | Abstract Deadline | Comments |
 |-|-|-|-|-|-|
 | Sept. 1-5 2025| Matera, Italy | [Bridging scales: star clusters and their host galaxies from the Local to the high-z Universe](https://sites.google.com/inaf.it/bridging-scales-in-matera-2025/home) | N/A | ~~March 14~~ | emailed by Prof. Michela Mapelli |
 | Sept. 1-3 2025|	University of Southampton, UK |	[YAGN25 : Young Astronomers on Galactic Nuclei](https://www.astro.soton.ac.uk/yagn2025/index.html) | ~~April 30~~ | N/A |	Talks will be selected in May 2025 |
 | Sept. 8-12 2025| Byurakan, Armenia | [4th Regional Astronomical Summer School Astronomy and Data Science (4RASS)](https://www.bao.am/meetings/meetings/4RASS/index.html)| ~~June 15~~ | ? |for students in astronomy |
 | Sept. 15-19 2025| Byurakan, Armenia | [International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)](https://www.bao.am/meetings/meetings/ASBD3/index.php)|Sept 12 | ~~June 15~~| | 
-| Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~; [Possible sponsor of AG](https://www.astronomische-gesellschaft.de/de/aktivitaeten/foerderung)  |
+| Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~  |
 | Sept. 15-19 2025| Jeju Island, South Korea | [EANAM 10: 10th East Asia Numerical Astrophysics Meeting](https://coma.kasi.re.kr/eanam10/) | July 31 | July 31  |  |
 | Oct 31 - Nov 4| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](http://astronomy.pmo.cas.cn/xsjl/gnxsjl/202504/t20250416_831825.html) | ? | ? |  |
 |**>2026<**|||||**>2026<**|

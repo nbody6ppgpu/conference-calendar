@@ -14,7 +14,8 @@
 | Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~  |
 | Sept. 15-19 2025| Jeju Island, South Korea | [EANAM 10: 10th East Asia Numerical Astrophysics Meeting](https://coma.kasi.re.kr/eanam10/) | July 31 | July 31  |  |
 | Oct 31 - Nov 4| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](http://astronomy.pmo.cas.cn/xsjl/gnxsjl/202504/t20250416_831825.html) | ? | ? |  |
-|**>2026<**|||||**>2026<**|
+| Dec 8 - Dec 12 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
+|**2026**|||||**2026**|
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong          | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Open: October 1 2025; deadline TBA | Opens October 1 2025; deadline TBA |  |
 
 

@@ -18,6 +18,7 @@
 | Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](http://astronomy.pmo.cas.cn/xsjl/gnxsjl/202504/t20250416_831825.html) | ? | ? |  |
 | Dec 8 - Dec 12 2025 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
 |**2026**|||||**2026**|
+| Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong          | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Open: October 1 2025; deadline TBA | Opens October 1 2025; deadline TBA |  |
 |May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |

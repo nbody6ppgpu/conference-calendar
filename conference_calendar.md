@@ -15,7 +15,7 @@
 | Sept. 15-19 2025| Byurakan, Armenia | [International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)](https://www.bao.am/meetings/meetings/ASBD3/index.php)|Sept 12 | ~~June 15~~| | 
 | Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~  |
 | Sept. 15-19 2025| Jeju Island, South Korea | [EANAM 10: 10th East Asia Numerical Astrophysics Meeting](https://coma.kasi.re.kr/eanam10/) | July 31 | July 31  |  |
-| Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](http://astronomy.pmo.cas.cn/xsjl/gnxsjl/202504/t20250416_831825.html) | ? | ? |  |
+| Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](https://2025casmeeting.casconf.cn/) | Sept 15 | Sept 15 |  |
 | Dec 8 - Dec 12 2025 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
 |**2026**|||||**2026**|
 | Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |

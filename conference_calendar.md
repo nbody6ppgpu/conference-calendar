@@ -15,10 +15,12 @@
 | Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~  |
 | Sept. 15-19 2025| Jeju Island, South Korea | [EANAM 10: 10th East Asia Numerical Astrophysics Meeting](https://coma.kasi.re.kr/eanam10/) | July 31 | July 31  |  |
 | Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](https://2025casmeeting.casconf.cn/) | Sept 15 | Sept 15 |  |
+| Nov. 11 - 14 2025| Univ. Rijeka/Zagreb, Opatija, Croatia | [The 4th Einstein Telescope Annual Meeting](https://indico.ego-gw.it/event/916/) | Oct. 19 | Sept 22 |  |
 | Dec 8 - 12 2025 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
 | Dec 8 - 12 2025 | Shanghai, China | [The International Conference “Exoplanets and Planet Formation” (EPF 2025)](https://indico-tdli.sjtu.edu.cn/event/4089/) | Early: Sept. 20 2025; Regular: Nov. 1 2025 | Oct. 10 2025 | Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU) |
 |**2026**|||||**2026**|
 | Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
+| Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong          | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Open: October 1 2025; deadline TBA | Opens October 1 2025; deadline TBA |  |
 |May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |

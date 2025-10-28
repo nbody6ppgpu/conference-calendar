@@ -15,7 +15,7 @@
 | Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
 | Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong          | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Open: October 1 2025; deadline TBA | Opens October 1 2025; deadline TBA |  |
-| Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2026 | one session called "Galaxies, Clusters and Compact Objects"
+| Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2025 | one session called "Galaxies, Clusters and Compact Objects"
 |May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |
 |Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | ? | ? | |

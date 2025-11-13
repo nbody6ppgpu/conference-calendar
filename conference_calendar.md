@@ -15,7 +15,6 @@
 | Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
 | Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
 | Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescop science workshop for early carrer researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |
-
 | Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2025 | one session called "Galaxies, Clusters and Compact Objects"
 | Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  5 Dec 2025 | 30 Jan 2026 | includes all fields of astronomy
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China  | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Feb. 5 2026 | Dec. 5 2025 | IAU travel grant application deadline Dec. 5 2025 |

@@ -17,7 +17,7 @@
 | Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescop science workshop for early carrer researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong          | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Feb. 5 2026 | Dec. 5 2025 | IAU travel grant application deadline Dec. 5 2025 |
 | Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2025 | one session called "Galaxies, Clusters and Compact Objects"
-| Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  1 Dec 2025 | 30 Jan 2026 |
+| Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  1 Dec 2025 | 30 Jan 2026 | includes all fields of astronomy
 |May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |
 |Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | ? | ? | |

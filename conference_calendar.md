@@ -20,6 +20,10 @@
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China  | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Feb. 5 2026 | Dec. 5 2025 | IAU travel grant application deadline Dec. 5 2025 |
 |May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |
+|June 15-19 2026| RWTH Aachen University, Germany | [XVI ET Symposium 2026](https://indico.ego-gw.it/event/960/overview) | Early bird = 01.05.2026 |  | |
+|29 June – 3 July 2026| SwissTech Convention Centre, Lausanne, Switzerland| [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp)| grant app / abstract = 3 March 2026 | | |
+|16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)|? | | |
+| 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | |
 |Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | ? | ? | |
 |Nov. 22-27 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | ? | ? | |
 

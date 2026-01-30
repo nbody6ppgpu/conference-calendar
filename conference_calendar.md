@@ -23,7 +23,7 @@
 |June 15-19 2026| RWTH Aachen University, Germany | [XVI ET Symposium 2026](https://indico.ego-gw.it/event/960/overview) | Early bird = 01.05.2026 |  | |
 |29 June – 3 July 2026| SwissTech Convention Centre, Lausanne, Switzerland| [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp)| grant app / abstract = 3 March 2026 | | |
 |16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)|? | | |
-| 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | |
+| 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | Rainer will apply for a star cluster splinter meeting |
 |Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | ? | ? | |
 |Nov. 22-27 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | ? | ? | |
 

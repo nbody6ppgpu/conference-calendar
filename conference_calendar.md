@@ -14,15 +14,15 @@
 |**2026**|||||**2026**|
 | Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  5 Dec 2025 | 30 Jan 2026 | includes all fields of astronomy |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China  | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Feb. 5 2026 | Dec. 5 2025 | IAU travel grant application deadline Dec. 5 2025 |
-|May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
+|May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | 18 Mar 2026 | 18 Mar 2026 | abstract submitted with registration |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |
 |June 15-19 2026| RWTH Aachen University, Germany | [XVI ET Symposium 2026](https://indico.ego-gw.it/event/960/overview) | Early bird = 01.05.2026 |  | |
 |29 June – 3 July 2026| SwissTech Convention Centre, Lausanne, Switzerland| [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp)| grant app / abstract = 3 March 2026 | | |
-|16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)|? | | |
-|TBA 2026| University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | ? | ? | |
+|16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)| open | 31 Mar 2026 | |
+|Oct. 26-28 2026| University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | 31 May 2026 | 31 May 2026 | talk submission; speakers selected in June 2026 |
 | 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | Rainer will apply for a star cluster splinter meeting |
-|Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | ? | ? | |
-|Nov. 22-27 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | ? | ? | |
+|Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | 17 Jul 2026 | 31 May 2026 | travel support deadline: 24 Apr 2026 |
+|Nov. 22-26 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | ? | ? | |
 
 
 *Note: after edit please click* `Preview` *on the top left to see whether the table shows properly.*

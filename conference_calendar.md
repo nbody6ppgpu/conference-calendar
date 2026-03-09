@@ -12,17 +12,14 @@
 | Dec 8 - 12 2025 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
 | Dec 8 - 12 2025 | Shanghai, China | [The International Conference “Exoplanets and Planet Formation” (EPF 2025)](https://indico-tdli.sjtu.edu.cn/event/4089/) | Early: Sept. 20 2025; Regular: Nov. 1 2025 | Oct. 10 2025 | Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU) |
 |**2026**|||||**2026**|
-| Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
-| Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
-| Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescop science workshop for early carrer researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |
-| Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2025 | one session called "Galaxies, Clusters and Compact Objects"
-| Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  5 Dec 2025 | 30 Jan 2026 | includes all fields of astronomy
+| Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  5 Dec 2025 | 30 Jan 2026 | includes all fields of astronomy |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China  | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Feb. 5 2026 | Dec. 5 2025 | IAU travel grant application deadline Dec. 5 2025 |
 |May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | ? | ? | |
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |
 |June 15-19 2026| RWTH Aachen University, Germany | [XVI ET Symposium 2026](https://indico.ego-gw.it/event/960/overview) | Early bird = 01.05.2026 |  | |
 |29 June – 3 July 2026| SwissTech Convention Centre, Lausanne, Switzerland| [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp)| grant app / abstract = 3 March 2026 | | |
 |16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)|? | | |
+|TBA 2026| University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | ? | ? | |
 | 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | Rainer will apply for a star cluster splinter meeting |
 |Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | ? | ? | |
 |Nov. 22-27 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | ? | ? | |
@@ -49,3 +46,7 @@
 | Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~  |
 | Sept. 15-19 2025| Jeju Island, South Korea | [EANAM 10: 10th East Asia Numerical Astrophysics Meeting](https://coma.kasi.re.kr/eanam10/) | July 31 | July 31  |  |
 | Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](https://2025casmeeting.casconf.cn/) | Sept 15 | Sept 15 |  |
+| Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
+| Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
+| Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescop science workshop for early carrer researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |
+| Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2025 | one session called "Galaxies, Clusters and Compact Objects" |

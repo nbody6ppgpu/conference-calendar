@@ -48,5 +48,5 @@
 | Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](https://2025casmeeting.casconf.cn/) | Sept 15 | Sept 15 |  |
 | Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
 | Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
-| Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescop science workshop for early carrer researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |
+| Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescope science workshop for early career researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |
 | Mar. 4-6 2026 | Online | [The 3rd International Online Conference on Universe](https://sciforum.net/event/IOCU2026) | 1 Mar 2026 | 2 Dec. 2025 | one session called "Galaxies, Clusters and Compact Objects" |

@@ -18,6 +18,7 @@
 |May 18-22 2026| Masaryk Univ. Brno, Czech Rep.| [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/)| Mar. 31 | Dec. 15, 2025 | |
 |June 15-19 2026| RWTH Aachen University, Germany | [XVI ET Symposium 2026](https://indico.ego-gw.it/event/960/overview) | Early bird = 01.05.2026 |  | |
 |29 June – 3 July 2026| SwissTech Convention Centre, Lausanne, Switzerland| [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp)| grant app / abstract = 3 March 2026 | | |
+|27-31 July 2026| DotCampus, Rome, Italy | [AstroStat School 7th Edition](https://astrostat-academy.github.io/website-school-7/) | To be announced | To be announced | detailed programme to be published closer to the school date |
 |16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)| open | 31 Mar 2026 | |
 |Oct. 26-28 2026| University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | 31 May 2026 | 31 May 2026 | talk submission; speakers selected in June 2026 |
 | 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | Rainer will apply for a star cluster splinter meeting |

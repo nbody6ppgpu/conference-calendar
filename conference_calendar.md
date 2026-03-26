@@ -7,10 +7,6 @@
 
 | Date | Location | Meeting title and link | Registration Deadline | Abstract Deadline | Comments |
 |-|-|-|-|-|-|
-|**2025**|||||**2025**|
-| Nov. 11 - 14 2025| Univ. Rijeka/Zagreb, Opatija, Croatia | [The 4th Einstein Telescope Annual Meeting](https://indico.ego-gw.it/event/916/) | Oct. 19 | Sept 22 |  |
-| Dec 8 - 12 2025 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
-| Dec 8 - 12 2025 | Shanghai, China | [The International Conference “Exoplanets and Planet Formation” (EPF 2025)](https://indico-tdli.sjtu.edu.cn/event/4089/) | Early: Sept. 20 2025; Regular: Nov. 1 2025 | Oct. 10 2025 | Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU) |
 |**2026**|||||**2026**|
 | Mar. 24-26 2026 | Geraldton, West Australia | [ACAMAR 11 - Australia-Chinese Astronomy Collaboration](https://acamar.org.au/event/acamar-11/) |  5 Dec 2025 | 30 Jan 2026 | includes all fields of astronomy |
 | May 4–8 2026     | Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China  | [2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)](https://aprim2026.org/)           | Feb. 5 2026 | Dec. 5 2025 | IAU travel grant application deadline Dec. 5 2025 |
@@ -47,6 +43,9 @@
 | Sept. 15-19 2025| Goerlitz, Germany | [Annual Meeting of German Astronomical Society](https://ag2025.astronomische-gesellschaft.de/) | Aug 15 | July 31 | Early bird (-50€) = ~~July 15~~  |
 | Sept. 15-19 2025| Jeju Island, South Korea | [EANAM 10: 10th East Asia Numerical Astrophysics Meeting](https://coma.kasi.re.kr/eanam10/) | July 31 | July 31  |  |
 | Oct 31 - Nov 4 2025| Xiamen Univ., Xiamen, China | [Chinese Astro. Society Annual Meeting 2025](https://2025casmeeting.casconf.cn/) | Sept 15 | Sept 15 |  |
+| Nov. 11 - 14 2025| Univ. Rijeka/Zagreb, Opatija, Croatia | [The 4th Einstein Telescope Annual Meeting](https://indico.ego-gw.it/event/916/) | Oct. 19 | Sept 22 |  |
+| Dec 8 - 12 2025 | TOKI MESSE, Niigata, Japan | [EAMA 11: 11th East Asian Meeting on Astronomy]( https://naoj-global.mtk.nao.ac.jp/eama11/ ) | Aug. 31;Oct. 31;Dec. 5 | ~~June 12~~ | |
+| Dec 8 - 12 2025 | Shanghai, China | [The International Conference “Exoplanets and Planet Formation” (EPF 2025)](https://indico-tdli.sjtu.edu.cn/event/4089/) | Early: Sept. 20 2025; Regular: Nov. 1 2025 | Oct. 10 2025 | Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU) |
 | Jan 12–16 2026     | New York University Abu Dhabi Conference Center, Abu Dhabi          | [Cosmic Collisions Conference](https://www.nyuadcc26.com/)           | Open: July 1 2025; deadline TBA | Opens July 1 2025; deadline TBA |  |
 | Jan 27–29 2026     | EPhysLab Ourense Spain          | [8th DualSPHysics](https://dual.sphysics.org/8thworkshop/)           | Nov. 14 | Oct. 24 |  |
 | Feb 18-20 2026     | La Sapienza University, Rome, Italy          | [Einstein telescope science workshop for early career researchers](https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0)           | Open until filled spots | Open until filled spots |  |

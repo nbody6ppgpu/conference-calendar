@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conference Calendar</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: #fffaf2;
+      --ink: #1c1b18;
+      --accent: #9f3a22;
+      --line: #d6c7b3;
+      --muted: #675f54;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(159, 58, 34, 0.14), transparent 32%),
+        linear-gradient(180deg, #f9f4ea 0%, var(--bg) 100%);
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 20px 72px;
+    }
+    h1, h2 {
+      font-family: "Avenir Next Condensed", "Gill Sans", sans-serif;
+      letter-spacing: 0.03em;
+      margin: 0 0 12px;
+    }
+    p, li {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 18px 40px rgba(28, 27, 24, 0.08);
+      margin-bottom: 28px;
+    }
+    .links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .links a {
+      text-decoration: none;
+      color: white;
+      background: var(--accent);
+      border-radius: 999px;
+      padding: 10px 16px;
+    }
+    .panel {
+      background: rgba(255, 250, 242, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-family: "Avenir Next Condensed", "Gill Sans", sans-serif;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+    a { color: var(--accent); }
+    footer { margin-top: 24px; }
+    @media (max-width: 720px) {
+      main { padding: 28px 14px 48px; }
+      .hero, .panel { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <p>Generated from structured YAML and rebuilt automatically.</p>
+      <h1>Conference Calendar</h1>
+      <p>Subscribe to the ICS feed in your calendar app, or browse the latest upcoming and past events below. Reminder issues are computed from concrete deadline dates only.</p>
+      <div class="links">
+        <a href="./conference_calendar.ics">Subscribe to ICS</a>
+        <a href="https://github.com/nbody6ppgpu/conference-calendar">Repository</a>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Upcoming events</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Meeting title and link</th>
+            <th>Registration Deadline</th>
+            <th>Abstract Deadline</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>May 4-8 2026</td><td>Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China</td><td><a href="https://aprim2026.org/">2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)</a></td><td>Feb. 5 2026</td><td>Dec. 5 2025</td><td>IAU travel grant application deadline 2025-12-05</td></tr>
+          <tr><td>May 18-22 2026</td><td>New Uzbekistan Univ., Tashkent, Uzbekistan</td><td><a href="https://astro-silkroad.eu/conferences/silkroad14">14th Silk Road / 2nd Silk Road AREA conference</a></td><td>Mar. 18 2026</td><td>Mar. 18 2026</td><td>abstract submitted with registration</td></tr>
+          <tr><td>May 18-22 2026</td><td>Masaryk Univ. Brno, Czech Rep.</td><td><a href="https://gc2026.muni.cz/">IAUS405: Traversing the Galactic Center in Space and Time</a></td><td>Mar. 31 2026</td><td>Dec. 15 2025</td><td></td></tr>
+          <tr><td>June 15-19 2026</td><td>RWTH Aachen University, Germany</td><td><a href="https://indico.ego-gw.it/event/960/overview">XVI ET Symposium 2026</a></td><td>Early bird: May 1 2026</td><td></td><td></td></tr>
+          <tr><td>June 29 - July 3 2026</td><td>SwissTech Convention Centre, Lausanne, Switzerland</td><td><a href="https://eas.unige.ch/EAS2026/grants.jsp">EAS2026</a></td><td>Grant application / abstract: Mar. 3 2026</td><td></td><td></td></tr>
+          <tr><td>July 27-31 2026</td><td>DotCampus, Rome, Italy</td><td><a href="https://astrostat-academy.github.io/website-school-7/">AstroStat School 7th Edition</a></td><td>To be announced</td><td>To be announced</td><td>detailed programme to be published closer to the school date</td></tr>
+          <tr><td>Aug. 16-22 2026</td><td>Quy Nhon, ICISE, Vietnam</td><td><a href="https://astro-silkroad.eu/conferences/modest26">MODEST26</a></td><td>open</td><td>Mar. 31 2026</td><td></td></tr>
+          <tr><td>Aug. 17-21 2026</td><td>University of Cologne, Cologne, Germany</td><td><a href="https://sfb1601.astro.uni-koeln.de/symposium2026/">Cologne-Bonn Symposium on the habitats of massive stars across cosmic time</a></td><td>Early bird: Apr. 1 2026; Regular: June 30 2026</td><td>Apr. 15 2026</td><td>hybrid participation available</td></tr>
+          <tr><td>Aug. 17-21 2026</td><td>Liege, Belgium</td><td><a href="https://pandore.astro.uliege.be/IAUS408/">IAUS 408: Unraveling the joint lives of Stars and Exoplanets</a></td><td>July 17 2026</td><td>May 31 2026</td><td>travel support deadline: 2026-04-24</td></tr>
+          <tr><td>Sept. 7-11 2026</td><td>Garching, Germany</td><td>AG meeting 2026</td><td></td><td></td><td>Rainer will apply for a star cluster splinter meeting</td></tr>
+          <tr><td>Oct. 26-28 2026</td><td>University of Seville, Seville, Spain</td><td><a href="https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html">Young Astronomers on Active Galactic Nuclei (YAGN)</a></td><td>May 31 2026</td><td>May 31 2026</td><td>talk submission; speakers selected in June 2026</td></tr>
+          <tr><td>Nov. 22-26 2026</td><td>Bariloche, Argentina</td><td><a href="https://iaus411.fcaglp.unlp.edu.ar/">IAUS 411: Star Clusters as Guides to Galaxies</a></td><td>?</td><td>?</td><td></td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="panel">
+      <h2>Past events</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Meeting title and link</th>
+            <th>Registration Deadline</th>
+            <th>Abstract Deadline</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Mar. 6-7 2025</td><td>Forschungszentrum Jülich, Germany</td><td><a href="https://www.john-von-neumann-institut.de/en/news/nic-symposium/nic-symposium-2025">NIC Symposium 2025</a></td><td>Feb. 10 2025</td><td>Feb. 10 2025</td><td></td></tr>
+          <tr><td>Mar. 10-12 2025</td><td>MPIA, Heidelberg</td><td><a href="https://sites.google.com/view/gapconference1">Gas Accretion in Planet formation</a></td><td>Jan. 5 2025</td><td>Jan. 5 2025</td><td></td></tr>
+          <tr><td>Mar. 24-28 2025</td><td>Tashkent, Uzbekistan</td><td><a href="https://conference.ifar.uz/ictpa2025/">ICTPA 2025 Conference</a></td><td>Open; DDL not mentioned</td><td>Open; DDL not mentioned</td><td></td></tr>
+          <tr><td>Mar. 30 - Apr. 6 2025</td><td>La Thuile, Italy</td><td><a href="https://moriond.in2p3.fr/2025/Gravitation/">59th Rencontres de Moriond 2025</a></td><td>Feb. 16 2025</td><td>Jan. 31 2025</td><td></td></tr>
+          <tr><td>June 16-20 2025</td><td>Seoul National University, Seoul</td><td><a href="https://gravity.snu.ac.kr/iaus398/">IAUS 398/Modest-25: Compact Objects and Binaries in Dense Stellar Systems</a></td><td>Early: Apr. 30 2025; Late: May 31 2025</td><td>Apr. 15 2025</td><td></td></tr>
+          <tr><td>June 23-27 2025</td><td>Dali, China</td><td><a href="https://www.astro-silkroad.eu/conferences/silkroad13">13th Silk Road Conference: Exploring the Frontiers of Dynamical Astronomy with High-Performance Computing, Artificial Intelligence, and Leading-Edge Observational Techniques</a></td><td>Not yet announced</td><td>N/A</td><td></td></tr>
+          <tr><td>June 23-27 2025</td><td>University College Cork, Cork, Ireland</td><td><a href="https://eas.unige.ch/EAS_meeting/">EAS 2025: European Astronomical Society Annual Meeting</a></td><td>?</td><td>?</td><td>Selection of Symposia and Sessions: end-Jan 2025</td></tr>
+          <tr><td>June 30 - July 4 2025</td><td>Heidelberg, Germany</td><td><a href="https://sites.google.com/view/quovadisgalaxyevolution/home">Quo Vadis Galaxy Evolution?</a></td><td>Apr. 15 2025</td><td>Jan. 24 2025</td><td></td></tr>
+          <tr><td>Aug. 25-29 2025</td><td>SRIRAS Inst., Moscow, Russia</td><td><a href="https://meeting.hea.cosmos.ru/">Russian-Chinese Meeting on High Energy Astrophysics</a></td><td>?</td><td>?</td><td></td></tr>
+          <tr><td>Sept. 1-3 2025</td><td>University of Southampton, UK</td><td><a href="https://www.astro.soton.ac.uk/yagn2025/index.html">YAGN25 : Young Astronomers on Galactic Nuclei</a></td><td>Apr. 30 2025</td><td>N/A</td><td>Talks will be selected in May 2025</td></tr>
+          <tr><td>Sept. 1-5 2025</td><td>Matera, Italy</td><td><a href="https://sites.google.com/inaf.it/bridging-scales-in-matera-2025/home">Bridging scales: star clusters and their host galaxies from the Local to the high-z Universe</a></td><td>N/A</td><td>Mar. 14 2025</td><td>emailed by Prof. Michela Mapelli</td></tr>
+          <tr><td>Sept. 8-12 2025</td><td>Byurakan, Armenia</td><td><a href="https://www.bao.am/meetings/meetings/4RASS/index.html">4th Regional Astronomical Summer School Astronomy and Data Science (4RASS)</a></td><td>June 15 2025</td><td>?</td><td>for students in astronomy</td></tr>
+          <tr><td>Sept. 15-19 2025</td><td>Goerlitz, Germany</td><td><a href="https://ag2025.astronomische-gesellschaft.de/">Annual Meeting of German Astronomical Society</a></td><td>Aug. 15 2025</td><td>July 31 2025</td><td>Early bird (-50EUR) = 2025-07-15</td></tr>
+          <tr><td>Sept. 15-19 2025</td><td>Jeju Island, South Korea</td><td><a href="https://coma.kasi.re.kr/eanam10/">EANAM 10: 10th East Asia Numerical Astrophysics Meeting</a></td><td>July 31 2025</td><td>July 31 2025</td><td></td></tr>
+          <tr><td>Sept. 15-19 2025</td><td>Byurakan, Armenia</td><td><a href="https://www.bao.am/meetings/meetings/ASBD3/index.php">International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)</a></td><td>Sept. 12 2025</td><td>June 15 2025</td><td></td></tr>
+          <tr><td>Oct. 31 - Nov. 4 2025</td><td>Xiamen Univ., Xiamen, China</td><td><a href="https://2025casmeeting.casconf.cn/">Chinese Astro. Society Annual Meeting 2025</a></td><td>Sept. 15 2025</td><td>Sept. 15 2025</td><td></td></tr>
+          <tr><td>Nov. 11-14 2025</td><td>Univ. Rijeka/Zagreb, Opatija, Croatia</td><td><a href="https://indico.ego-gw.it/event/916/">The 4th Einstein Telescope Annual Meeting</a></td><td>Oct. 19 2025</td><td>Sept. 22 2025</td><td></td></tr>
+          <tr><td>Dec. 8-12 2025</td><td>TOKI MESSE, Niigata, Japan</td><td><a href="https://naoj-global.mtk.nao.ac.jp/eama11/">EAMA 11: 11th East Asian Meeting on Astronomy</a></td><td>Round 1: Aug. 31 2025; Round 2: Oct. 31 2025; Final: Dec. 5 2025</td><td>June 12 2025</td><td></td></tr>
+          <tr><td>Dec. 8-12 2025</td><td>Shanghai, China</td><td><a href="https://indico-tdli.sjtu.edu.cn/event/4089/">The International Conference &quot;Exoplanets and Planet Formation&quot; (EPF 2025)</a></td><td>Early: Sept. 20 2025; Regular: Nov. 1 2025</td><td>Oct. 10 2025</td><td>Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU)</td></tr>
+          <tr><td>Jan. 12-16 2026</td><td>New York University Abu Dhabi Conference Center, Abu Dhabi</td><td><a href="https://www.nyuadcc26.com/">Cosmic Collisions Conference</a></td><td>Open: July 1 2025; deadline TBA</td><td>Opens July 1 2025; deadline TBA</td><td></td></tr>
+          <tr><td>Jan. 27-29 2026</td><td>EPhysLab Ourense Spain</td><td><a href="https://dual.sphysics.org/8thworkshop/">8th DualSPHysics</a></td><td>Nov. 14 2025</td><td>Oct. 24 2025</td><td></td></tr>
+          <tr><td>Feb. 18-20 2026</td><td>La Sapienza University, Rome, Italy</td><td><a href="https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0">Einstein telescope science workshop for early career researchers</a></td><td>Open until filled spots</td><td>Open until filled spots</td><td></td></tr>
+          <tr><td>Mar. 4-6 2026</td><td>Online</td><td><a href="https://sciforum.net/event/IOCU2026">The 3rd International Online Conference on Universe</a></td><td>Mar. 1 2026</td><td>Dec. 2 2025</td><td>one session called &quot;Galaxies, Clusters and Compact Objects&quot;</td></tr>
+          <tr><td>Mar. 24-26 2026</td><td>Geraldton, West Australia</td><td><a href="https://acamar.org.au/event/acamar-11/">ACAMAR 11 - Australia-Chinese Astronomy Collaboration</a></td><td>Dec. 5 2025</td><td>Jan. 30 2026</td><td>includes all fields of astronomy</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <footer>
+      <p>Generated for 2026-03-30 using Europe/Berlin date logic.</p>
+    </footer>
+  </main>
+</body>
+</html>

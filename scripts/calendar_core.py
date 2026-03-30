@@ -7,6 +7,7 @@ from datetime import UTC, date, datetime, timedelta
 from html import escape
 from pathlib import Path
 from typing import Iterable
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
 import yaml
@@ -238,6 +239,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
     upcoming, past = split_conferences(conferences, today)
     upcoming_rows = _html_rows(upcoming)
     past_rows = _html_rows(past)
+    webcal_url = _build_webcal_url(repo_url)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -335,8 +337,9 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <p>Generated from structured YAML and rebuilt automatically.</p>
       <h1>Conference Calendar</h1>
       <p>Subscribe to the ICS feed for deadline reminders only, or browse the latest upcoming and past events below. Reminder issues are computed from concrete deadline dates only.</p>
+      <p>Subscribe this calendar (with auto update) using: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
       <div class="links">
-        <a href="./conference_calendar.ics">Subscribe to ICS</a>
+        <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
         <a href="{escape(repo_url)}">Repository</a>
       </div>
     </section>
@@ -383,6 +386,21 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
 </body>
 </html>
 """
+
+
+def _build_webcal_url(repo_url: str) -> str:
+    normalized = repo_url.rstrip("/")
+    if normalized.startswith("https://github.com/"):
+        path = normalized.removeprefix("https://github.com/")
+        parts = [part for part in path.split("/") if part]
+        if len(parts) >= 2:
+            owner, repo = parts[0], parts[1]
+            return f"webcal://{owner}.github.io/{repo}/conference_calendar.ics"
+    parsed = urlparse(normalized)
+    path = parsed.path.rstrip("/")
+    if parsed.scheme in {"http", "https"} and parsed.netloc:
+        return f"webcal://{parsed.netloc}{path}/conference_calendar.ics"
+    return "webcal://conference_calendar.ics"
 
 
 def build_reminder_payload(conferences: Iterable[Conference], today: date, timezone_name: str) -> dict[str, object]:

@@ -192,43 +192,34 @@ def build_ics(conferences: Iterable[Conference]) -> str:
     events: list[str] = []
     dtstamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     for conference in conferences:
-        events.append(
-            "\n".join(
-                [
-                    "BEGIN:VEVENT",
-                    f"UID:{stable_uid(conference.id, 'conference', conference.start_date.isoformat())}",
-                    f"DTSTAMP:{dtstamp}",
-                    f"DTSTART;VALUE=DATE:{conference.start_date.strftime('%Y%m%d')}",
-                    f"DTEND;VALUE=DATE:{(conference.end_date + timedelta(days=1)).strftime('%Y%m%d')}",
-                    f"SUMMARY:{_ics_escape(conference.title)}",
-                    f"LOCATION:{_ics_escape(conference.location)}",
-                    f"DESCRIPTION:{_ics_escape(conference.comments or 'Conference event')}",
-                    f"URL:{_ics_escape(conference.url)}",
-                    "END:VEVENT",
-                ]
-            )
-        )
-        for kind, deadlines in (("registration", conference.registration_deadlines), ("abstract", conference.abstract_deadlines)):
-            for deadline in deadlines:
-                label = deadline.label if deadline.label else kind.title()
-                summary = f"{conference.title} - {kind.title()} deadline"
-                if label.lower() not in {"registration", "abstract"}:
-                    summary += f" ({label})"
-                events.append(
-                    "\n".join(
-                        [
-                            "BEGIN:VEVENT",
-                            f"UID:{stable_uid(conference.id, kind, label, deadline.date.isoformat())}",
-                            f"DTSTAMP:{dtstamp}",
-                            f"DTSTART;VALUE=DATE:{deadline.date.strftime('%Y%m%d')}",
-                            f"DTEND;VALUE=DATE:{(deadline.date + timedelta(days=1)).strftime('%Y%m%d')}",
-                            f"SUMMARY:{_ics_escape(summary)}",
-                            f"DESCRIPTION:{_ics_escape(conference.url or conference.comments or conference.title)}",
-                            f"URL:{_ics_escape(conference.url)}",
-                            "END:VEVENT",
-                        ]
-                    )
+        for deadline_date, items in _group_deadlines_for_ics(conference).items():
+            summary = f"{conference.title} - " + " / ".join(item["summary_part"] for item in items)
+            description_parts = [f"{item['description_part']}: {deadline_date.isoformat()}" for item in items]
+            if conference.comments:
+                description_parts.append(f"Notes: {conference.comments}")
+            if conference.url:
+                description_parts.append(f"Link: {conference.url}")
+            uid_parts = [conference.id, deadline_date.isoformat(), *[str(item["uid_part"]) for item in items]]
+            events.append(
+                "\n".join(
+                    [
+                        "BEGIN:VEVENT",
+                        f"UID:{stable_uid(*uid_parts)}",
+                        f"DTSTAMP:{dtstamp}",
+                        f"DTSTART;VALUE=DATE:{deadline_date.strftime('%Y%m%d')}",
+                        f"DTEND;VALUE=DATE:{(deadline_date + timedelta(days=1)).strftime('%Y%m%d')}",
+                        f"SUMMARY:{_ics_escape(summary)}",
+                        f"DESCRIPTION:{_ics_escape('; '.join(description_parts))}",
+                        f"URL:{_ics_escape(conference.url)}",
+                        "BEGIN:VALARM",
+                        "ACTION:DISPLAY",
+                        f"DESCRIPTION:{_ics_escape(summary)}",
+                        "TRIGGER:-P2D",
+                        "END:VALARM",
+                        "END:VEVENT",
+                    ]
                 )
+            )
     return "\n".join(
         [
             "BEGIN:VCALENDAR",
@@ -343,7 +334,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
     <section class="hero">
       <p>Generated from structured YAML and rebuilt automatically.</p>
       <h1>Conference Calendar</h1>
-      <p>Subscribe to the ICS feed in your calendar app, or browse the latest upcoming and past events below. Reminder issues are computed from concrete deadline dates only.</p>
+      <p>Subscribe to the ICS feed for deadline reminders only, or browse the latest upcoming and past events below. Reminder issues are computed from concrete deadline dates only.</p>
       <div class="links">
         <a href="./conference_calendar.ics">Subscribe to ICS</a>
         <a href="{escape(repo_url)}">Repository</a>
@@ -477,6 +468,25 @@ def render_reminder_issue(reminders: list[dict[str, object]], today: date, timez
 def stable_uid(*parts: str) -> str:
     digest = hashlib.sha1("::".join(parts).encode("utf-8")).hexdigest()
     return f"{digest}@conference-calendar"
+
+
+def _group_deadlines_for_ics(conference: Conference) -> dict[date, list[dict[str, str]]]:
+    grouped: dict[date, list[dict[str, str]]] = {}
+    for kind, deadlines in (("registration", conference.registration_deadlines), ("abstract", conference.abstract_deadlines)):
+        kind_title = kind.title()
+        for deadline in deadlines:
+            label = deadline.label if deadline.label else kind_title
+            label_suffix = f" ({label})" if label.lower() not in {"registration", "abstract"} else ""
+            grouped.setdefault(deadline.date, []).append(
+                {
+                    "uid_part": f"{kind}:{label}",
+                    "summary_part": f"{kind_title} deadline{label_suffix}",
+                    "description_part": f"{kind_title} deadline{label_suffix}",
+                }
+            )
+    for items in grouped.values():
+        items.sort(key=lambda item: str(item["uid_part"]).lower())
+    return dict(sorted(grouped.items(), key=lambda item: item[0]))
 
 
 def _conference_rows(conferences: Iterable[Conference]) -> list[str]:

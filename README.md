@@ -11,7 +11,7 @@
 这个仓库目前有两种提醒方式：
 
 1. `ICS 日历提醒`
-   你把 `site/conference_calendar.ics` 订阅到自己的日历应用后，可以用 Google Calendar、Apple Calendar、Outlook 等客户端自己设置弹窗、邮件或系统提醒。
+   你把 `site/conference_calendar.ics` 订阅到自己的日历应用后，会收到 concrete deadline 事件；每个事件默认内置一个 `2 天前` 的提醒。
 
 2. `GitHub Issue 提醒`
    仓库每天会自动维护一个 issue，标题格式固定为 `Deadline reminders for YYYY-MM-DD`，内容是当天命中的会议 deadline。
@@ -27,7 +27,9 @@
 
 说明：
 
-- ICS 文件里既包含会议本身，也包含每一个具体的 registration / abstract deadline。
+- ICS 文件只包含具体的 `registration deadline` / `abstract deadline`，不包含会议开始-结束日期。
+- 每个 ICS 事件默认带一个 `deadline 前 2 天` 的提醒。
+- 如果同一个会议的 registration deadline 和 abstract deadline 正好是同一天，ICS 里只创建一个事件，并把两类 deadline 合并显示。
 - 对 `TBA`、`open`、`?` 这类没有具体日期的 deadline，不会生成 ICS 事件，也不会自动提醒。
 
 ### 方式 2：接收 GitHub Issue 通知

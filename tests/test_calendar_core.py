@@ -183,7 +183,7 @@ class CalendarCoreTests(unittest.TestCase):
         )
         self.assertEqual(deadline_display(conference.abstract_deadlines, conference.abstract_display), "open")
 
-    def test_ics_includes_conference_and_deadline_events_with_stable_uids(self) -> None:
+    def test_ics_merges_same_day_deadlines_and_adds_two_day_alarm(self) -> None:
         path = write_yaml(
             {
                 "conferences": [
@@ -195,7 +195,10 @@ class CalendarCoreTests(unittest.TestCase):
                         "start_date": "2026-04-10",
                         "end_date": "2026-04-12",
                         "registration_deadlines": [{"label": "Registration", "date": "2026-04-01"}],
-                        "abstract_deadlines": [{"label": "Poster", "date": "2026-03-28"}],
+                        "abstract_deadlines": [
+                            {"label": "Poster", "date": "2026-04-01"},
+                            {"label": "Abstract", "date": "2026-03-28"},
+                        ],
                         "registration_display": "",
                         "abstract_display": "",
                         "comments": "",
@@ -206,10 +209,14 @@ class CalendarCoreTests(unittest.TestCase):
         conferences = load_conferences(path)
         ics_one = build_ics(conferences)
         ics_two = build_ics(conferences)
-        self.assertEqual(ics_one.count("BEGIN:VEVENT"), 3)
-        self.assertIn(f"UID:{stable_uid('ics-test', 'conference', '2026-04-10')}", ics_one)
-        self.assertIn(f"UID:{stable_uid('ics-test', 'registration', 'Registration', '2026-04-01')}", ics_one)
-        self.assertIn(f"UID:{stable_uid('ics-test', 'abstract', 'Poster', '2026-03-28')}", ics_one)
+        self.assertEqual(ics_one.count("BEGIN:VEVENT"), 2)
+        self.assertIn(
+            f"UID:{stable_uid('ics-test', '2026-04-01', 'abstract:Poster', 'registration:Registration')}",
+            ics_one,
+        )
+        self.assertIn(f"UID:{stable_uid('ics-test', '2026-03-28', 'abstract:Abstract')}", ics_one)
+        self.assertIn("SUMMARY:ICS Test - Abstract deadline (Poster) / Registration deadline", ics_one)
+        self.assertIn("TRIGGER:-P2D", ics_one)
         self.assertEqual(
             [line for line in ics_one.splitlines() if line.startswith("UID:")],
             [line for line in ics_two.splitlines() if line.startswith("UID:")],

@@ -1,0 +1,735 @@
+{
+  "generated_on": "2026-03-30",
+  "upcoming": [
+    {
+      "id": "aprim-2026",
+      "title": "2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)",
+      "url": "https://aprim2026.org/",
+      "location": "Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China",
+      "start_date": "2026-05-04",
+      "end_date": "2026-05-08",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-02-05"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-12-05"
+        }
+      ],
+      "registration_display": "Feb. 5 2026",
+      "abstract_display": "Dec. 5 2025",
+      "comments": "IAU travel grant application deadline 2025-12-05"
+    },
+    {
+      "id": "silk-road-14",
+      "title": "14th Silk Road / 2nd Silk Road AREA conference",
+      "url": "https://astro-silkroad.eu/conferences/silkroad14",
+      "location": "New Uzbekistan Univ., Tashkent, Uzbekistan",
+      "start_date": "2026-05-18",
+      "end_date": "2026-05-22",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-03-18"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-03-18"
+        }
+      ],
+      "registration_display": "Mar. 18 2026",
+      "abstract_display": "Mar. 18 2026",
+      "comments": "abstract submitted with registration"
+    },
+    {
+      "id": "iaus-405",
+      "title": "IAUS405: Traversing the Galactic Center in Space and Time",
+      "url": "https://gc2026.muni.cz/",
+      "location": "Masaryk Univ. Brno, Czech Rep.",
+      "start_date": "2026-05-18",
+      "end_date": "2026-05-22",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-03-31"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-12-15"
+        }
+      ],
+      "registration_display": "Mar. 31 2026",
+      "abstract_display": "Dec. 15 2025",
+      "comments": ""
+    },
+    {
+      "id": "et-symposium-2026",
+      "title": "XVI ET Symposium 2026",
+      "url": "https://indico.ego-gw.it/event/960/overview",
+      "location": "RWTH Aachen University, Germany",
+      "start_date": "2026-06-15",
+      "end_date": "2026-06-19",
+      "registration_deadlines": [
+        {
+          "label": "Early bird",
+          "date": "2026-05-01"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "Early bird: May 1 2026",
+      "abstract_display": "",
+      "comments": ""
+    },
+    {
+      "id": "eas-2026",
+      "title": "EAS2026",
+      "url": "https://eas.unige.ch/EAS2026/grants.jsp",
+      "location": "SwissTech Convention Centre, Lausanne, Switzerland",
+      "start_date": "2026-06-29",
+      "end_date": "2026-07-03",
+      "registration_deadlines": [
+        {
+          "label": "Grant application / abstract",
+          "date": "2026-03-03"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "Grant application / abstract: Mar. 3 2026",
+      "abstract_display": "",
+      "comments": ""
+    },
+    {
+      "id": "astrostat-school-7",
+      "title": "AstroStat School 7th Edition",
+      "url": "https://astrostat-academy.github.io/website-school-7/",
+      "location": "DotCampus, Rome, Italy",
+      "start_date": "2026-07-27",
+      "end_date": "2026-07-31",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "To be announced",
+      "abstract_display": "To be announced",
+      "comments": "detailed programme to be published closer to the school date"
+    },
+    {
+      "id": "modest26",
+      "title": "MODEST26",
+      "url": "https://astro-silkroad.eu/conferences/modest26",
+      "location": "Quy Nhon, ICISE, Vietnam",
+      "start_date": "2026-08-16",
+      "end_date": "2026-08-22",
+      "registration_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-03-31"
+        }
+      ],
+      "registration_display": "open",
+      "abstract_display": "Mar. 31 2026",
+      "comments": ""
+    },
+    {
+      "id": "cologne-bonn-symposium-2026",
+      "title": "Cologne-Bonn Symposium on the habitats of massive stars across cosmic time",
+      "url": "https://sfb1601.astro.uni-koeln.de/symposium2026/",
+      "location": "University of Cologne, Cologne, Germany",
+      "start_date": "2026-08-17",
+      "end_date": "2026-08-21",
+      "registration_deadlines": [
+        {
+          "label": "Early bird",
+          "date": "2026-04-01"
+        },
+        {
+          "label": "Regular",
+          "date": "2026-06-30"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-04-15"
+        }
+      ],
+      "registration_display": "Early bird: Apr. 1 2026; Regular: June 30 2026",
+      "abstract_display": "Apr. 15 2026",
+      "comments": "hybrid participation available"
+    },
+    {
+      "id": "iaus-408",
+      "title": "IAUS 408: Unraveling the joint lives of Stars and Exoplanets",
+      "url": "https://pandore.astro.uliege.be/IAUS408/",
+      "location": "Liege, Belgium",
+      "start_date": "2026-08-17",
+      "end_date": "2026-08-21",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-07-17"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-05-31"
+        }
+      ],
+      "registration_display": "July 17 2026",
+      "abstract_display": "May 31 2026",
+      "comments": "travel support deadline: 2026-04-24"
+    },
+    {
+      "id": "ag-meeting-2026",
+      "title": "AG meeting 2026",
+      "url": "",
+      "location": "Garching, Germany",
+      "start_date": "2026-09-07",
+      "end_date": "2026-09-11",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "",
+      "abstract_display": "",
+      "comments": "Rainer will apply for a star cluster splinter meeting"
+    },
+    {
+      "id": "yagn-2026",
+      "title": "Young Astronomers on Active Galactic Nuclei (YAGN)",
+      "url": "https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html",
+      "location": "University of Seville, Seville, Spain",
+      "start_date": "2026-10-26",
+      "end_date": "2026-10-28",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-05-31"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-05-31"
+        }
+      ],
+      "registration_display": "May 31 2026",
+      "abstract_display": "May 31 2026",
+      "comments": "talk submission; speakers selected in June 2026"
+    },
+    {
+      "id": "iaus-411",
+      "title": "IAUS 411: Star Clusters as Guides to Galaxies",
+      "url": "https://iaus411.fcaglp.unlp.edu.ar/",
+      "location": "Bariloche, Argentina",
+      "start_date": "2026-11-22",
+      "end_date": "2026-11-26",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "?",
+      "abstract_display": "?",
+      "comments": ""
+    }
+  ],
+  "past": [
+    {
+      "id": "nic-symposium-2025",
+      "title": "NIC Symposium 2025",
+      "url": "https://www.john-von-neumann-institut.de/en/news/nic-symposium/nic-symposium-2025",
+      "location": "Forschungszentrum Jülich, Germany",
+      "start_date": "2025-03-06",
+      "end_date": "2025-03-07",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-02-10"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-02-10"
+        }
+      ],
+      "registration_display": "Feb. 10 2025",
+      "abstract_display": "Feb. 10 2025",
+      "comments": ""
+    },
+    {
+      "id": "gas-accretion-in-planet-formation-2025",
+      "title": "Gas Accretion in Planet formation",
+      "url": "https://sites.google.com/view/gapconference1",
+      "location": "MPIA, Heidelberg",
+      "start_date": "2025-03-10",
+      "end_date": "2025-03-12",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-01-05"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-01-05"
+        }
+      ],
+      "registration_display": "Jan. 5 2025",
+      "abstract_display": "Jan. 5 2025",
+      "comments": ""
+    },
+    {
+      "id": "ictpa-2025",
+      "title": "ICTPA 2025 Conference",
+      "url": "https://conference.ifar.uz/ictpa2025/",
+      "location": "Tashkent, Uzbekistan",
+      "start_date": "2025-03-24",
+      "end_date": "2025-03-28",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "Open; DDL not mentioned",
+      "abstract_display": "Open; DDL not mentioned",
+      "comments": ""
+    },
+    {
+      "id": "moriond-2025-gravitation",
+      "title": "59th Rencontres de Moriond 2025",
+      "url": "https://moriond.in2p3.fr/2025/Gravitation/",
+      "location": "La Thuile, Italy",
+      "start_date": "2025-03-30",
+      "end_date": "2025-04-06",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-02-16"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-01-31"
+        }
+      ],
+      "registration_display": "Feb. 16 2025",
+      "abstract_display": "Jan. 31 2025",
+      "comments": ""
+    },
+    {
+      "id": "iaus-398-modest-25",
+      "title": "IAUS 398/Modest-25: Compact Objects and Binaries in Dense Stellar Systems",
+      "url": "https://gravity.snu.ac.kr/iaus398/",
+      "location": "Seoul National University, Seoul",
+      "start_date": "2025-06-16",
+      "end_date": "2025-06-20",
+      "registration_deadlines": [
+        {
+          "label": "Early",
+          "date": "2025-04-30"
+        },
+        {
+          "label": "Late",
+          "date": "2025-05-31"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-04-15"
+        }
+      ],
+      "registration_display": "Early: Apr. 30 2025; Late: May 31 2025",
+      "abstract_display": "Apr. 15 2025",
+      "comments": ""
+    },
+    {
+      "id": "silk-road-13",
+      "title": "13th Silk Road Conference: Exploring the Frontiers of Dynamical Astronomy with High-Performance Computing, Artificial Intelligence, and Leading-Edge Observational Techniques",
+      "url": "https://www.astro-silkroad.eu/conferences/silkroad13",
+      "location": "Dali, China",
+      "start_date": "2025-06-23",
+      "end_date": "2025-06-27",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "Not yet announced",
+      "abstract_display": "N/A",
+      "comments": ""
+    },
+    {
+      "id": "eas-2025",
+      "title": "EAS 2025: European Astronomical Society Annual Meeting",
+      "url": "https://eas.unige.ch/EAS_meeting/",
+      "location": "University College Cork, Cork, Ireland",
+      "start_date": "2025-06-23",
+      "end_date": "2025-06-27",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "?",
+      "abstract_display": "?",
+      "comments": "Selection of Symposia and Sessions: end-Jan 2025"
+    },
+    {
+      "id": "quo-vadis-galaxy-evolution-2025",
+      "title": "Quo Vadis Galaxy Evolution?",
+      "url": "https://sites.google.com/view/quovadisgalaxyevolution/home",
+      "location": "Heidelberg, Germany",
+      "start_date": "2025-06-30",
+      "end_date": "2025-07-04",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-04-15"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-01-24"
+        }
+      ],
+      "registration_display": "Apr. 15 2025",
+      "abstract_display": "Jan. 24 2025",
+      "comments": ""
+    },
+    {
+      "id": "russian-chinese-high-energy-2025",
+      "title": "Russian-Chinese Meeting on High Energy Astrophysics",
+      "url": "https://meeting.hea.cosmos.ru/",
+      "location": "SRIRAS Inst., Moscow, Russia",
+      "start_date": "2025-08-25",
+      "end_date": "2025-08-29",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "?",
+      "abstract_display": "?",
+      "comments": ""
+    },
+    {
+      "id": "yagn25",
+      "title": "YAGN25 : Young Astronomers on Galactic Nuclei",
+      "url": "https://www.astro.soton.ac.uk/yagn2025/index.html",
+      "location": "University of Southampton, UK",
+      "start_date": "2025-09-01",
+      "end_date": "2025-09-03",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-04-30"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "Apr. 30 2025",
+      "abstract_display": "N/A",
+      "comments": "Talks will be selected in May 2025"
+    },
+    {
+      "id": "bridging-scales-2025",
+      "title": "Bridging scales: star clusters and their host galaxies from the Local to the high-z Universe",
+      "url": "https://sites.google.com/inaf.it/bridging-scales-in-matera-2025/home",
+      "location": "Matera, Italy",
+      "start_date": "2025-09-01",
+      "end_date": "2025-09-05",
+      "registration_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-03-14"
+        }
+      ],
+      "registration_display": "N/A",
+      "abstract_display": "Mar. 14 2025",
+      "comments": "emailed by Prof. Michela Mapelli"
+    },
+    {
+      "id": "rass-4",
+      "title": "4th Regional Astronomical Summer School Astronomy and Data Science (4RASS)",
+      "url": "https://www.bao.am/meetings/meetings/4RASS/index.html",
+      "location": "Byurakan, Armenia",
+      "start_date": "2025-09-08",
+      "end_date": "2025-09-12",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-06-15"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "June 15 2025",
+      "abstract_display": "?",
+      "comments": "for students in astronomy"
+    },
+    {
+      "id": "ag-meeting-2025",
+      "title": "Annual Meeting of German Astronomical Society",
+      "url": "https://ag2025.astronomische-gesellschaft.de/",
+      "location": "Goerlitz, Germany",
+      "start_date": "2025-09-15",
+      "end_date": "2025-09-19",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-08-15"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-07-31"
+        }
+      ],
+      "registration_display": "Aug. 15 2025",
+      "abstract_display": "July 31 2025",
+      "comments": "Early bird (-50EUR) = 2025-07-15"
+    },
+    {
+      "id": "eanam-10",
+      "title": "EANAM 10: 10th East Asia Numerical Astrophysics Meeting",
+      "url": "https://coma.kasi.re.kr/eanam10/",
+      "location": "Jeju Island, South Korea",
+      "start_date": "2025-09-15",
+      "end_date": "2025-09-19",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-07-31"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-07-31"
+        }
+      ],
+      "registration_display": "July 31 2025",
+      "abstract_display": "July 31 2025",
+      "comments": ""
+    },
+    {
+      "id": "asbd-3",
+      "title": "International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)",
+      "url": "https://www.bao.am/meetings/meetings/ASBD3/index.php",
+      "location": "Byurakan, Armenia",
+      "start_date": "2025-09-15",
+      "end_date": "2025-09-19",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-09-12"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-06-15"
+        }
+      ],
+      "registration_display": "Sept. 12 2025",
+      "abstract_display": "June 15 2025",
+      "comments": ""
+    },
+    {
+      "id": "cas-annual-meeting-2025",
+      "title": "Chinese Astro. Society Annual Meeting 2025",
+      "url": "https://2025casmeeting.casconf.cn/",
+      "location": "Xiamen Univ., Xiamen, China",
+      "start_date": "2025-10-31",
+      "end_date": "2025-11-04",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-09-15"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-09-15"
+        }
+      ],
+      "registration_display": "Sept. 15 2025",
+      "abstract_display": "Sept. 15 2025",
+      "comments": ""
+    },
+    {
+      "id": "et-annual-meeting-2025",
+      "title": "The 4th Einstein Telescope Annual Meeting",
+      "url": "https://indico.ego-gw.it/event/916/",
+      "location": "Univ. Rijeka/Zagreb, Opatija, Croatia",
+      "start_date": "2025-11-11",
+      "end_date": "2025-11-14",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-10-19"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-09-22"
+        }
+      ],
+      "registration_display": "Oct. 19 2025",
+      "abstract_display": "Sept. 22 2025",
+      "comments": ""
+    },
+    {
+      "id": "eama-11",
+      "title": "EAMA 11: 11th East Asian Meeting on Astronomy",
+      "url": "https://naoj-global.mtk.nao.ac.jp/eama11/",
+      "location": "TOKI MESSE, Niigata, Japan",
+      "start_date": "2025-12-08",
+      "end_date": "2025-12-12",
+      "registration_deadlines": [
+        {
+          "label": "Round 1",
+          "date": "2025-08-31"
+        },
+        {
+          "label": "Round 2",
+          "date": "2025-10-31"
+        },
+        {
+          "label": "Final",
+          "date": "2025-12-05"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-06-12"
+        }
+      ],
+      "registration_display": "Round 1: Aug. 31 2025; Round 2: Oct. 31 2025; Final: Dec. 5 2025",
+      "abstract_display": "June 12 2025",
+      "comments": ""
+    },
+    {
+      "id": "epf-2025",
+      "title": "The International Conference \"Exoplanets and Planet Formation\" (EPF 2025)",
+      "url": "https://indico-tdli.sjtu.edu.cn/event/4089/",
+      "location": "Shanghai, China",
+      "start_date": "2025-12-08",
+      "end_date": "2025-12-12",
+      "registration_deadlines": [
+        {
+          "label": "Early",
+          "date": "2025-09-20"
+        },
+        {
+          "label": "Regular",
+          "date": "2025-11-01"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-10-10"
+        }
+      ],
+      "registration_display": "Early: Sept. 20 2025; Regular: Nov. 1 2025",
+      "abstract_display": "Oct. 10 2025",
+      "comments": "Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU)"
+    },
+    {
+      "id": "cosmic-collisions-2026",
+      "title": "Cosmic Collisions Conference",
+      "url": "https://www.nyuadcc26.com/",
+      "location": "New York University Abu Dhabi Conference Center, Abu Dhabi",
+      "start_date": "2026-01-12",
+      "end_date": "2026-01-16",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "Open: July 1 2025; deadline TBA",
+      "abstract_display": "Opens July 1 2025; deadline TBA",
+      "comments": ""
+    },
+    {
+      "id": "dualsphysics-8th-workshop",
+      "title": "8th DualSPHysics",
+      "url": "https://dual.sphysics.org/8thworkshop/",
+      "location": "EPhysLab Ourense Spain",
+      "start_date": "2026-01-27",
+      "end_date": "2026-01-29",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-11-14"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-10-24"
+        }
+      ],
+      "registration_display": "Nov. 14 2025",
+      "abstract_display": "Oct. 24 2025",
+      "comments": ""
+    },
+    {
+      "id": "et-ecr-workshop-2026",
+      "title": "Einstein telescope science workshop for early career researchers",
+      "url": "https://sites.google.com/view/et-ecr-workshop-2026-sapienza/home?authuser=0",
+      "location": "La Sapienza University, Rome, Italy",
+      "start_date": "2026-02-18",
+      "end_date": "2026-02-20",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "Open until filled spots",
+      "abstract_display": "Open until filled spots",
+      "comments": ""
+    },
+    {
+      "id": "iocu-2026",
+      "title": "The 3rd International Online Conference on Universe",
+      "url": "https://sciforum.net/event/IOCU2026",
+      "location": "Online",
+      "start_date": "2026-03-04",
+      "end_date": "2026-03-06",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-03-01"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-12-02"
+        }
+      ],
+      "registration_display": "Mar. 1 2026",
+      "abstract_display": "Dec. 2 2025",
+      "comments": "one session called \"Galaxies, Clusters and Compact Objects\""
+    },
+    {
+      "id": "acamar-11",
+      "title": "ACAMAR 11 - Australia-Chinese Astronomy Collaboration",
+      "url": "https://acamar.org.au/event/acamar-11/",
+      "location": "Geraldton, West Australia",
+      "start_date": "2026-03-24",
+      "end_date": "2026-03-26",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2025-12-05"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-01-30"
+        }
+      ],
+      "registration_display": "Dec. 5 2025",
+      "abstract_display": "Jan. 30 2026",
+      "comments": "includes all fields of astronomy"
+    }
+  ]
+}

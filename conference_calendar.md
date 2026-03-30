@@ -16,6 +16,7 @@
 |29 June – 3 July 2026| SwissTech Convention Centre, Lausanne, Switzerland| [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp)| grant app / abstract = 3 March 2026 | | |
 |27-31 July 2026| DotCampus, Rome, Italy | [AstroStat School 7th Edition](https://astrostat-academy.github.io/website-school-7/) | To be announced | To be announced | detailed programme to be published closer to the school date |
 |16-22 Aug 2026| Quy Nhon, ICISE, Vietnam| [MODEST26](https://astro-silkroad.eu/conferences/modest26)| open | 31 Mar 2026 | |
+|17-21 Aug 2026| University of Cologne, Cologne, Germany | [Cologne-Bonn Symposium on the habitats of massive stars across cosmic time](https://sfb1601.astro.uni-koeln.de/symposium2026/) | Early bird: 1 Apr 2026; Regular: 30 Jun 2026 | 15 Apr 2026 | hybrid participation available |
 |Oct. 26-28 2026| University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | 31 May 2026 | 31 May 2026 | talk submission; speakers selected in June 2026 |
 | 7 - 11 September 2026| Garching, Germany | AG meeting 2026 | | | Rainer will apply for a star cluster splinter meeting |
 |Aug. 17-21 2026| Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | 17 Jul 2026 | 31 May 2026 | travel support deadline: 24 Apr 2026 |

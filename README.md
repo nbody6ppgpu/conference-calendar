@@ -1,5 +1,17 @@
 # Conference Calendar
 
+click https://nbody6ppgpu.github.io/conference-calendar/
+
+In this webpage, you can subscribe to all conferences in your calendar application. You will receive notifications for abstract submission deadlines and registration deadlines. Each event includes a default reminder set for “2 days before.”
+
+# How to contribute / how to add new conference?
+
+1. Create a new issue; put the conference link.
+2. After creation, reply and say `@copilot follow AGENTS.md and create a PR to add the conference above`. Then AI will do the stuff.
+3. If AI does not work then just @kaiwu-astro to call the AI...
+
+## For Repository Maintainers
+
 This repository now maintains the conference calendar using a “structured data + auto-generation” approach.
 
 - The single source of truth is `data/conferences.yml`.
@@ -13,7 +25,7 @@ This repository now maintains the conference calendar using a “structured data
 Currently, this repository offers two reminder methods:
 
 1. **ICS Calendar Notifications**:  
-   After subscribing to `site/conference_calendar.ics` in your calendar application, you will receive notifications for specific deadlines. Each event includes a default reminder set for “2 days before.”
+   As mentioned above.
 
 2. **GitHub Issue Notifications**:  
    The repository automatically maintains a daily issue titled in the fixed format `Deadline reminders for YYYY-MM-DD`, listing the conference deadlines due that day.
@@ -52,7 +64,7 @@ This way, you’ll receive a GitHub notification whenever the workflow updates o
 - If the workflow runs multiple times on the same day, it will update the existing issue rather than creating duplicates.
 - If the repository remains inactive for an extended period, GitHub may pause scheduled workflows. To resume, simply re-enable Actions or manually run the workflow once.
 
-## For Repository Maintainers
+## Maintaince notes
 
 ### 1. Enable GitHub Actions
 

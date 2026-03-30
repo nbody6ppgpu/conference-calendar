@@ -33,6 +33,8 @@ def main() -> None:
         build_index_html(conferences, today, args.repo_url),
         encoding="utf-8",
     )
+    # Disable GitHub Pages' implicit Jekyll pipeline for this prebuilt static site.
+    (site_dir / ".nojekyll").write_text("", encoding="utf-8")
 
 
 if __name__ == "__main__":

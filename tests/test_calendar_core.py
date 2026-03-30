@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import textwrap
@@ -261,6 +262,28 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertIn("ACAMAR 11", markdown)
         self.assertIn("MODEST26", payload["body"])
         self.assertEqual(json.loads(json.dumps(payload))["label"], "deadline-reminder")
+
+    def test_build_script_writes_nojekyll_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            markdown_output = Path(temp_dir) / "calendar.md"
+            site_dir = Path(temp_dir) / "site"
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPTS_DIR / "build_calendar.py"),
+                    "--data",
+                    str(REPO_ROOT / "data" / "conferences.yml"),
+                    "--markdown-output",
+                    str(markdown_output),
+                    "--site-dir",
+                    str(site_dir),
+                    "--today",
+                    "2026-03-30",
+                ],
+                check=True,
+                cwd=REPO_ROOT,
+            )
+            self.assertTrue((site_dir / ".nojekyll").exists())
 
 
 if __name__ == "__main__":

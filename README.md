@@ -1,106 +1,108 @@
 # Conference Calendar
 
-这个仓库现在采用“结构化数据 + 自动生成”的方式维护会议日历。
+This repository now maintains the conference calendar using a “structured data + auto-generation” approach.
 
-- 唯一数据源是 `data/conferences.yml`
-- `conference_calendar.md`、`site/index.html`、`site/conference_calendar.ics`、`site/conference_calendar.json` 都是生成产物
-- 每天会生成一个 GitHub Issue，用于提醒距离 deadline 还有 `30 / 14 / 7 / 3 / 1` 天的会议
+- The single source of truth is `data/conferences.yml`.
 
-## 我能收到哪些提醒
+- `conference_calendar.md`, `site/index.html`, `site/conference_calendar.ics`, and `site/conference_calendar.json` are all generated outputs.
 
-这个仓库目前有两种提醒方式：
+- A GitHub Issue is created daily to remind users of conferences with deadlines remaining in `30 / 14 / 7 / 3 / 1` days.
 
-1. `ICS 日历提醒`
-   你把 `site/conference_calendar.ics` 订阅到自己的日历应用后，会收到 concrete deadline 事件；每个事件默认内置一个 `2 天前` 的提醒。
+## What Reminders Can I Receive?
 
-2. `GitHub Issue 提醒`
-   仓库每天会自动维护一个 issue，标题格式固定为 `Deadline reminders for YYYY-MM-DD`，内容是当天命中的会议 deadline。
+Currently, this repository offers two reminder methods:
 
-## 如果你只是想“收到提醒”
+1. **ICS Calendar Notifications**:  
+   After subscribing to `site/conference_calendar.ics` in your calendar application, you will receive notifications for specific deadlines. Each event includes a default reminder set for “2 days before.”
 
-### 方式 1：订阅 ICS
+2. **GitHub Issue Notifications**:  
+   The repository automatically maintains a daily issue titled in the fixed format `Deadline reminders for YYYY-MM-DD`, listing the conference deadlines due that day.
 
-1. 打开 GitHub Pages 页面。
-2. 复制 `conference_calendar.ics` 链接。
-3. 在你的日历客户端里选择“通过 URL 订阅日历”或类似功能。
-4. 在日历客户端里给事件设置默认提醒。
+## If You Just Want to “Receive Reminders”
 
-说明：
+### Method 1: Subscribe to ICS
 
-- ICS 文件只包含具体的 `registration deadline` / `abstract deadline`，不包含会议开始-结束日期。
-- 每个 ICS 事件默认带一个 `deadline 前 2 天` 的提醒。
-- 如果同一个会议的 registration deadline 和 abstract deadline 正好是同一天，ICS 里只创建一个事件，并把两类 deadline 合并显示。
-- 对 `TBA`、`open`、`?` 这类没有具体日期的 deadline，不会生成 ICS 事件，也不会自动提醒。
+1. Open the GitHub Pages site.
+2. Copy the link to `conference_calendar.ics`.
+3. In your calendar client, choose “Subscribe to calendar via URL” or a similar option.
+4. Set a default reminder for events within your calendar client.
 
-### 方式 2：接收 GitHub Issue 通知
+**Notes:**
 
-如果你想收到每天的 GitHub deadline issue：
+- The ICS file only includes specific `registration deadline` and `abstract deadline` events; it does not contain conference start/end dates.
+- Each ICS event comes with a default reminder set for “2 days before the deadline.”
+- If both the registration and abstract deadlines for a conference fall on the same day, only one event will be created in the ICS, combining both types of deadlines.
+- Deadlines marked as `TBA`, `open`, or `?` (without a specific date) will not generate ICS events or automatic reminders.
 
-1. 打开仓库主页。
-2. 点击右上角 `Watch`。
-3. 选择 `Custom`。
-4. 勾选 `Issues`。
-5. 到你的 GitHub `Settings -> Notifications` 里确认 Web 或 Email 通知是开启的。
+### Method 2: Receive GitHub Issue Notifications
 
-这样每天工作流更新或新建 reminder issue 时，你就能收到 GitHub 通知。
+To receive daily GitHub deadline issues:
 
-补充说明：
+1. Go to the repository’s main page.
+2. Click the “Watch” button in the upper-right corner.
+3. Select “Custom.”
+4. Check the “Issues” box.
+5. Verify in your GitHub `Settings -> Notifications` that Web or Email notifications are enabled.
 
-- reminder issue 使用固定标签 `deadline-reminder`
-- 同一天重复运行工作流时，会更新同一个 issue，不会重复轰炸
-- 如果仓库长期无活动，GitHub 可能暂停 scheduled workflows；这时重新启用 Actions 或手动运行一次工作流即可恢复
+This way, you’ll receive a GitHub notification whenever the workflow updates or creates a new reminder issue.
 
-## 如果你是仓库维护者
+**Additional Notes:**
 
-### 1. 启用 GitHub Actions
+- Reminder issues are tagged with the fixed label `deadline-reminder`.
+- If the workflow runs multiple times on the same day, it will update the existing issue rather than creating duplicates.
+- If the repository remains inactive for an extended period, GitHub may pause scheduled workflows. To resume, simply re-enable Actions or manually run the workflow once.
 
-这个仓库依赖三个工作流：
+## For Repository Maintainers
+
+### 1. Enable GitHub Actions
+
+This repository relies on three workflows:
 
 - `.github/workflows/ci.yml`
 - `.github/workflows/deploy-pages.yml`
 - `.github/workflows/deadline-reminders.yml`
 
-你需要：
+You need to:
 
-1. 在仓库的 `Actions` 页面启用 Actions。
-2. 确认默认分支是 `main`。
-3. 保持 `main` 分支上的工作流文件可执行。
+1. Enable Actions on the repository’s “Actions” page.
+2. Ensure the default branch is `main`.
+3. Keep the workflow files on the `main` branch executable.
 
-### 2. 启用 GitHub Pages
+### 2. Enable GitHub Pages
 
-这个仓库通过官方 Pages workflow 发布 `site/` 产物。
+The repository uses the official Pages workflow to publish the contents of the `site/` directory.
 
-建议检查：
+It’s recommended to check:
 
-1. `Settings -> Pages`
-2. Source 选择 `GitHub Actions`
+1. `Settings -> Pages`.
+2. Set the source to “GitHub Actions.”
 
-完成后，`Deploy Pages` 工作流会自动发布生成的静态页面。
+Once configured, the `Deploy Pages` workflow will automatically publish the generated static pages.
 
-### 3. 手动触发一次初始化部署
+### 3. Manually Trigger an Initial Deployment
 
-首次启用后，建议手动运行两次工作流确认一切正常：
+After first enabling the repository, it’s advisable to manually run two workflows to confirm everything is functioning correctly:
 
 1. `Deploy Pages`
 2. `Deadline Reminders`
 
-这样你可以立即确认：
+This will allow you to immediately verify:
 
-- Pages 页面是否可访问
-- `conference_calendar.ics` 是否可下载
-- reminder issue 是否成功创建
+- Whether the Pages site is accessible.
+- Whether `conference_calendar.ics` can be downloaded.
+- Whether reminder issues are being successfully created.
 
-## 如何更新会议数据
+## How to Update Conference Data
 
-只编辑：
+Only edit:
 
 - `data/conferences.yml`
 
-不要手工编辑：
+Do not manually edit:
 
 - `conference_calendar.md`
 
-更新后本地执行：
+After making changes, run the following commands locally:
 
 ```bash
 python3 -m pip install -r requirements.txt
@@ -108,7 +110,7 @@ python3 scripts/build_calendar.py
 python3 -m unittest discover -s tests -v
 ```
 
-然后提交这些文件：
+Then commit these files:
 
 - `data/conferences.yml`
 - `conference_calendar.md`
@@ -116,17 +118,17 @@ python3 -m unittest discover -s tests -v
 - `site/conference_calendar.ics`
 - `site/conference_calendar.json`
 
-## Deadline reminder 的规则
+## Deadline Reminder Rules
 
-- 只对有具体日期的 deadline 生效
-- 检查窗口固定为 `30 / 14 / 7 / 3 / 1` 天前
-- 业务日期按 `Europe/Berlin` 计算
-- 每天只维护一个 issue
+- Only applies to deadlines with specific dates.
+- Checks are performed at fixed intervals: `30 / 14 / 7 / 3 / 1` days before the deadline.
+- Dates are calculated based on the `Europe/Berlin` time zone.
+- Only one issue is maintained per day.
 
-## 目录说明
+## Directory Structure
 
-- `data/conferences.yml`: 唯一真相源
-- `scripts/build_calendar.py`: 生成 Markdown / HTML / ICS / JSON
-- `scripts/build_reminders.py`: 生成每日 reminder issue payload
-- `tests/`: 校验、生成、ICS、reminder 回归测试
-- `site/`: GitHub Pages 发布产物
+- `data/conferences.yml`: The single source of truth.
+- `scripts/build_calendar.py`: Generates Markdown, HTML, ICS, and JSON files.
+- `scripts/build_reminders.py`: Creates the payload for the daily reminder issue.
+- `tests/`: Contains validation, generation, ICS, and reminder regression tests.
+- `site/`: The output published by GitHub Pages.

@@ -1,0 +1,70 @@
+name: Monthly Copilot Cleanup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 2 * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run Copilot cleanup task
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          copilot -p "Read AGENTS.md and clean the calendar. Treat an event as outdated if end_date < today. Update only data/conferences.yml when underlying conference data changed. Do not hand-edit conference_calendar.md. After updating YAML, stop after saving your changes." \
+            --allow "shell(git:*),read,write" \
+            --no-ask-user
+
+      - name: Rebuild generated outputs
+        run: python scripts/build_calendar.py
+
+      - name: Create pull request
+        id: create-pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: copilot/monthly-calendar-cleanup
+          commit-message: |
+            Clean outdated conference entries
+
+            Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+          title: Clean outdated conference entries
+          body: |
+            ## Summary
+            - run the scheduled Copilot cleanup task from AGENTS.md
+            - rebuild generated calendar outputs after YAML updates
+
+            ## Test plan
+            - [x] python scripts/build_calendar.py
+
+            🤖 Generated with GitHub Copilot CLI and Claude Code
+          delete-branch: true
+
+      - name: Report result
+        run: |
+          if [ -n "${{ steps.create-pr.outputs.pull-request-number }}" ]; then
+            echo "Created PR #${{ steps.create-pr.outputs.pull-request-number }}"
+          else
+            echo "No calendar changes detected; skipping PR creation."
+          fi

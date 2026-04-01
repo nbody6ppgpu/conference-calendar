@@ -47,8 +47,6 @@ jobs:
           branch: copilot/monthly-calendar-cleanup
           commit-message: |
             Clean outdated conference entries
-
-            Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
           title: Clean outdated conference entries
           body: |
             ## Summary
@@ -57,8 +55,6 @@ jobs:
 
             ## Test plan
             - [x] python scripts/build_calendar.py
-
-            🤖 Generated with GitHub Copilot CLI and Claude Code
           delete-branch: true
 
       - name: Report result

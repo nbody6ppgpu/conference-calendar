@@ -3,7 +3,7 @@ name: Monthly Copilot Cleanup
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 3 2 * *"
+    - cron: "17 3 3 * *"
 
 permissions:
   contents: write
@@ -34,8 +34,18 @@ jobs:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           copilot -p "Read AGENTS.md and clean the calendar. Treat an event as outdated if end_date < today. Update only data/conferences.yml when underlying conference data changed. Do not hand-edit conference_calendar.md. After updating YAML, stop after saving your changes." \
-            --allow "shell(git:*),read,write" \
             --no-ask-user
+
+      - name: Ensure only data/conferences.yml was modified
+        run: |
+          changed="$(git diff --name-only)"
+          echo "Changed files: $changed"
+          disallowed="$(echo "$changed" | grep -vE '^data/conferences\.yml$' | grep -v '^$')"
+          if [ -n "$disallowed" ]; then
+            echo "Unexpected files changed. Only data/conferences.yml is allowed:"
+            echo "$disallowed"
+            exit 1
+          fi
 
       - name: Rebuild generated outputs
         run: python scripts/build_calendar.py

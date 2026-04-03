@@ -395,6 +395,21 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: hwo-uk-community-workshop-2026
+    title: Habitable Worlds Observatory UK Community Workshop
+    url: https://sites.google.com/view/hwouk/
+    location: Darwin Building, UCL, Gower Street, London, WC1E 6BT, UK
+    start_date: 2026-06-24
+    end_date: 2026-06-25
+    registration_deadlines:
+      - label: Conference registration
+        date: 2026-06-01
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-05-11
+    registration_display: ""
+    abstract_display: ""
+    comments: fourth UK community workshop
   - id: eas-2026
     title: EAS2026
     url: https://eas.unige.ch/EAS2026/grants.jsp

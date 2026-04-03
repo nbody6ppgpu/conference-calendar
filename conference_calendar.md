@@ -12,6 +12,7 @@ This file is generated from `data/conferences.yml` by `python3 scripts/build_cal
 | May 18-22 2026 | New Uzbekistan Univ., Tashkent, Uzbekistan | [14th Silk Road / 2nd Silk Road AREA conference](https://astro-silkroad.eu/conferences/silkroad14) | Mar. 18 2026 | Mar. 18 2026 | abstract submitted with registration |
 | May 18-22 2026 | Masaryk Univ. Brno, Czech Rep. | [IAUS405: Traversing the Galactic Center in Space and Time](https://gc2026.muni.cz/) | Mar. 31 2026 | Dec. 15 2025 |  |
 | June 15-19 2026 | RWTH Aachen University, Germany | [XVI ET Symposium 2026](https://indico.ego-gw.it/event/960/overview) | Early bird: May 1 2026 |  |  |
+| June 24-25 2026 | Darwin Building, UCL, Gower Street, London, WC1E 6BT, UK | [Habitable Worlds Observatory UK Community Workshop](https://sites.google.com/view/hwouk/) | Conference registration: June 1 2026 | Abstract submission: May 11 2026 | fourth UK community workshop |
 | June 29 - July 3 2026 | SwissTech Convention Centre, Lausanne, Switzerland | [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp) | Grant application / abstract: Mar. 3 2026 |  |  |
 | July 27-31 2026 | DotCampus, Rome, Italy | [AstroStat School 7th Edition](https://astrostat-academy.github.io/website-school-7/) | To be announced | To be announced | detailed programme to be published closer to the school date |
 | Aug. 16-22 2026 | Quy Nhon, ICISE, Vietnam | [MODEST26](https://astro-silkroad.eu/conferences/modest26) | open | Mar. 31 2026 |  |

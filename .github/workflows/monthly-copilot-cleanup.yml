@@ -3,7 +3,7 @@ name: Monthly Copilot Cleanup
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 3 3 * *"
+    - cron: "17 3 4 * *"
 
 permissions:
   contents: write
@@ -31,10 +31,12 @@ jobs:
 
       - name: Run Copilot cleanup task
         env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           copilot -p "Read AGENTS.md and clean the calendar. Treat an event as outdated if end_date < today. Update only data/conferences.yml when underlying conference data changed. Do not hand-edit conference_calendar.md. Do not edit any other files. After updating YAML, stop after saving your changes." \
-            --no-ask-user
+            --no-ask-user \
+            --allow-tool='shell(git:*)' \
+            --allow-tool=write
 
       - name: Ensure only data/conferences.yml was modified
         run: |

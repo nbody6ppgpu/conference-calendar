@@ -40,12 +40,27 @@ jobs:
 
       - name: Ensure only data/conferences.yml was modified
         run: |
-          changed="$(git diff --name-only)"
-          echo "Changed files: $changed"
-          disallowed="$(echo "$changed" | grep -vE '^data/conferences\.yml$' | grep -v '^$')"
-          if [ -n "$disallowed" ]; then
-            echo "Unexpected files changed. Only data/conferences.yml is allowed:"
-            echo "$disallowed"
+          set -euo pipefail
+      
+          # Get changed files robustly (one per line)
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMRT)
+      
+          echo "Changed files:"
+          printf ' - %s\n' "${files[@]:-}"
+      
+          allowed='data/conferences.yml'
+          disallowed=()
+      
+          for f in "${files[@]:-}"; do
+            [[ -z "$f" ]] && continue
+            if [[ "$f" != "$allowed" ]]; then
+              disallowed+=("$f")
+            fi
+          done
+      
+          if (( ${#disallowed[@]} > 0 )); then
+            echo "Unexpected files changed. Only $allowed is allowed:"
+            printf ' - %s\n' "${disallowed[@]}"
             exit 1
           fi
 

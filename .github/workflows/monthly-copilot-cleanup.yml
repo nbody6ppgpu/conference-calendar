@@ -36,16 +36,31 @@ jobs:
           copilot -p "Read AGENTS.md and clean the calendar. Treat an event as outdated if end_date < today. Update only data/conferences.yml when underlying conference data changed. Do not hand-edit conference_calendar.md. Do not edit any other files. After updating YAML, stop after saving your changes." \
             --no-ask-user \
             --allow-tool='shell(git:*)' \
-            --allow-tool=write
+            --allow-tool=write || gh auth status
 
       - name: Ensure only data/conferences.yml was modified
         run: |
-          changed="$(git diff --name-only)"
-          echo "Changed files: $changed"
-          disallowed="$(echo "$changed" | grep -vE '^data/conferences\.yml$' | grep -v '^$')"
-          if [ -n "$disallowed" ]; then
-            echo "Unexpected files changed. Only data/conferences.yml is allowed:"
-            echo "$disallowed"
+          set -euo pipefail
+      
+          # Get changed files robustly (one per line)
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMRT)
+      
+          echo "Changed files:"
+          printf ' - %s\n' "${files[@]:-}"
+      
+          allowed='data/conferences.yml'
+          disallowed=()
+      
+          for f in "${files[@]:-}"; do
+            [[ -z "$f" ]] && continue
+            if [[ "$f" != "$allowed" ]]; then
+              disallowed+=("$f")
+            fi
+          done
+      
+          if (( ${#disallowed[@]} > 0 )); then
+            echo "Unexpected files changed. Only $allowed is allowed:"
+            printf ' - %s\n' "${disallowed[@]}"
             exit 1
           fi
 

@@ -69,9 +69,8 @@ jobs:
 
       - name: Create pull request
         id: create-pr
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.PAT_PR }}
           branch: copilot/monthly-calendar-cleanup
           commit-message: |
             Clean outdated conference entries

@@ -490,6 +490,21 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: Rainer will apply for a star cluster splinter meeting
+  - id: bwhpc-symposium-2026
+    title: 12th bwHPC Symposium
+    url: https://indico.kit.edu/event/5505/overview
+    location: Universität Konstanz, Konstanz, Germany
+    start_date: 2026-09-24
+    end_date: 2026-09-24
+    registration_deadlines:
+      - label: Registration
+        date: 2026-09-14
+    abstract_deadlines:
+      - label: Abstract
+        date: 2026-08-03
+    registration_display: ""
+    abstract_display: ""
+    comments: Free of charge; open to researchers from all scientific fields
   - id: yagn-2026
     title: Young Astronomers on Active Galactic Nuclei (YAGN)
     url: https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html

@@ -19,6 +19,7 @@ This file is generated from `data/conferences.yml` by `python3 scripts/build_cal
 | Aug. 17-21 2026 | University of Cologne, Cologne, Germany | [Cologne-Bonn Symposium on the habitats of massive stars across cosmic time](https://sfb1601.astro.uni-koeln.de/symposium2026/) | Early bird: Apr. 1 2026; Regular: June 30 2026 | Apr. 15 2026 | hybrid participation available |
 | Aug. 17-21 2026 | Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | July 17 2026 | May 31 2026 | travel support deadline: 2026-04-24 |
 | Sept. 7-11 2026 | Garching, Germany | AG meeting 2026 |  |  | Rainer will apply for a star cluster splinter meeting |
+| Sept. 24 2026 | Universität Konstanz, Konstanz, Germany | [12th bwHPC Symposium](https://indico.kit.edu/event/5505/overview) | Sept. 14 2026 | Aug. 3 2026 | Free of charge; open to researchers from all scientific fields |
 | Oct. 26-28 2026 | University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | May 31 2026 | May 31 2026 | talk submission; speakers selected in June 2026 |
 | Nov. 22-26 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | ? | ? |  |
 

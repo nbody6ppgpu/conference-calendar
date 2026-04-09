@@ -299,6 +299,9 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       border-radius: 999px;
       padding: 10px 16px;
     }}
+    .links-note {{
+      margin-top: 14px;
+    }}
     .panel {{
       background: rgba(255, 250, 242, 0.92);
       border: 1px solid var(--line);
@@ -337,11 +340,12 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <p>Generated from structured YAML and rebuilt automatically.</p>
       <h1>Conference Calendar</h1>
       <p>Subscribe to the ICS feed for deadline reminders only, or browse the latest upcoming and past events below. Reminder issues are computed from concrete deadline dates only.</p>
-      <p>Subscribe this calendar (with auto update) using: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
       <div class="links">
+        <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>
         <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
         <a href="{escape(repo_url)}">Repository</a>
       </div>
+      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
     </section>
     <section class="panel">
       <h2>Upcoming events</h2>

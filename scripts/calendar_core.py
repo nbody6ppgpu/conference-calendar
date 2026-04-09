@@ -345,7 +345,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
         <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
         <a href="{escape(repo_url)}">Repository</a>
       </div>
-      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
+      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
     </section>
     <section class="panel">
       <h2>Upcoming events</h2>

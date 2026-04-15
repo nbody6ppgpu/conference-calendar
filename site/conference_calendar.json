@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-04-09",
+  "generated_on": "2026-04-15",
   "upcoming": [
     {
       "id": "aprim-2026",
@@ -127,6 +127,29 @@
       "abstract_deadlines": [],
       "registration_display": "Grant application / abstract: Mar. 3 2026",
       "abstract_display": "",
+      "comments": ""
+    },
+    {
+      "id": "expanding-horizons-2026",
+      "title": "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S",
+      "url": "https://www.eso.org/sci/meetings/2026/ExpH.html",
+      "location": "Garching near Munich, Germany",
+      "start_date": "2026-07-13",
+      "end_date": "2026-07-17",
+      "registration_deadlines": [
+        {
+          "label": "Registration and fee payment close",
+          "date": "2026-05-25"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Deadline for abstract submission",
+          "date": "2026-04-24"
+        }
+      ],
+      "registration_display": "Registration and fee payment close: May 25 2026",
+      "abstract_display": "Deadline for abstract submission: Apr. 24 2026",
       "comments": ""
     },
     {

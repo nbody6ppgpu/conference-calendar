@@ -15,10 +15,14 @@ import yaml
 
 REMINDER_OFFSETS = (30, 14, 7, 3, 1)
 SOURCE_NOTE = (
-    "Check our new conference calendar at this link: https://nbody6ppgpu.github.io/conference-calendar/ . Bookmark it!"
+    "Check our new conference calendar at this link: https://nbody6ppgpu.github.io/conference-calendar/ <-- Bookmark it! "
+    "\n"
+    "\n"
     "This file is still maintained for backward compatibility, and is automatically generated from `data/conferences.yml` by "
     "`python3 scripts/build_calendar.py`. "
-    "Do not add events by editing the generated markdown. Add a new conference here: https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md "
+    "\n"
+    "\n"
+    "Found a new interesting conference? Do not edit this generated markdown, but tell us here: https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md "
 )
 TRAVEL_MONEY_ROWS = [
     (

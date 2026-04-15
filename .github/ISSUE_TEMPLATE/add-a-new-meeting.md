@@ -8,4 +8,5 @@ assignees: ''
 
 ---
 
-Put the conference URL here, create the issue, then you are good to go; nothing else needs to be done. It will trigger AI to add the conference.
+Put the conference URL here, create the issue, then you are good to go; nothing else needs to be done. Just do **not** take away the `[new]` tag in the title.
+It will trigger AI to add the conference.

@@ -343,9 +343,8 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
 <body>
   <main>
     <section class="hero">
-      <p>Generated from structured YAML and rebuilt automatically.</p>
       <h1>Conference Calendar</h1>
-      <p>Subscribe to the ICS feed for deadline reminders only, or browse the latest upcoming and past events below. Reminder issues are computed from concrete deadline dates only.</p>
+      <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
       <div class="links">
         <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>
         <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>

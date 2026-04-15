@@ -15,8 +15,10 @@ import yaml
 
 REMINDER_OFFSETS = (30, 14, 7, 3, 1)
 SOURCE_NOTE = (
-    "This file is generated from `data/conferences.yml` by "
-    "`python3 scripts/build_calendar.py`."
+    "Check our new conference calendar at this link: https://nbody6ppgpu.github.io/conference-calendar/ . Bookmark it!"
+    "This file is still maintained for backward compatibility, and is automatically generated from `data/conferences.yml` by "
+    "`python3 scripts/build_calendar.py`. "
+    "Do not add events by editing the generated markdown. Add a new conference here: https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md "
 )
 TRAVEL_MONEY_ROWS = [
     (
@@ -346,6 +348,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
         <a href="{escape(repo_url)}">Repository</a>
       </div>
       <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
+      <p class="links-note">Found a new interesting conference? Tell us here: <a href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md</a></p>
     </section>
     <section class="panel">
       <h2>Upcoming events</h2>

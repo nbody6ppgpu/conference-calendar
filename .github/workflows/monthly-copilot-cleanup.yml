@@ -33,7 +33,7 @@ jobs:
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          copilot -p "Read AGENTS.md and clean the calendar. " \
+          copilot -p "Read AGENTS.md and clean the calendar. DO NOT run build script." \
             --no-ask-user \
             --allow-all-tools || gh auth status
 

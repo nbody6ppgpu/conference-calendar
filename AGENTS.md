@@ -14,5 +14,6 @@
    - Update only **`data/conferences.yml`**. Do **not** hand-edit `conference_calendar.md`.
    - Step a: in `data/conferences.yml`, for every event inside "Conference Calendar" but NOT under "Past events", evaluate if it is outdated. Outdated means `end_date < today`. Move every outdated events from "Conference Calendar" into "Past events". 
    - Step b: for every event inside "Conference Calendar" but NOT under "Past events", check  `start_date`, `end_date`, `registration_deadlines`, `abstract_deadlines` , if any of them is empty or contain no date, you EXPLORE the corresponding conference url and try updating the entry.
-   - Step c: evalute whether you have moved any outdated conferences in Step 1 or updated any missing fields in Step 2. If any underlying conference data has changed, run **`python3 scripts/build_calendar.py`**.
+   - Step c: evalute whether you have moved any outdated conferences in Step 1 or updated any missing fields in Step 2.
+   - Step d (optional): if user explicitly ask you not to run build script, you stop here and do not execute this step. Else, evaluate if anything has changed in `data/conferences.yml`; if yes you run **`python3 scripts/build_calendar.py`**.
 

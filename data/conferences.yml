@@ -1,4 +1,5 @@
 conferences:
+  # Past events
   - id: nic-symposium-2025
     title: NIC Symposium 2025
     url: https://www.john-von-neumann-institut.de/en/news/nic-symposium/nic-symposium-2025
@@ -337,6 +338,7 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: includes all fields of astronomy
+  # Conference Calendar
   - id: aprim-2026
     title: 2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)
     url: https://aprim2026.org/
@@ -391,7 +393,9 @@ conferences:
     registration_deadlines:
       - label: Early bird
         date: 2026-05-01
-    abstract_deadlines: []
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-04-12
     registration_display: ""
     abstract_display: ""
     comments: ""
@@ -417,12 +421,18 @@ conferences:
     start_date: 2026-06-29
     end_date: 2026-07-03
     registration_deadlines:
-      - label: Grant application / abstract
+      - label: Early bird registration
+        date: 2026-04-27
+      - label: Regular registration
+        date: 2026-06-28
+      - label: Virtual access registration
+        date: 2026-07-03
+    abstract_deadlines:
+      - label: Abstract submission
         date: 2026-03-03
-    abstract_deadlines: []
     registration_display: ""
     abstract_display: ""
-    comments: ""
+    comments: Registration and abstract submission opened on 2026-01-29
   - id: expanding-horizons-2026
     title: "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S"
     url: https://www.eso.org/sci/meetings/2026/ExpH.html
@@ -455,13 +465,17 @@ conferences:
     location: Quy Nhon, ICISE, Vietnam
     start_date: 2026-08-16
     end_date: 2026-08-22
-    registration_deadlines: []
+    registration_deadlines:
+      - label: Early bird
+        date: 2026-06-29
     abstract_deadlines:
-      - label: Abstract
+      - label: Oral consideration
         date: 2026-03-31
-    registration_display: open
+      - label: Final abstract deadline
+        date: 2026-04-12
+    registration_display: Late registration possible after early-bird deadline
     abstract_display: ""
-    comments: ""
+    comments: Registration opened
   - id: iaus-408
     title: "IAUS 408: Unraveling the joint lives of Stars and Exoplanets"
     url: https://pandore.astro.uliege.be/IAUS408/
@@ -547,8 +561,14 @@ conferences:
     location: Bariloche, Argentina
     start_date: 2026-11-22
     end_date: 2026-11-26
-    registration_deadlines: []
-    abstract_deadlines: []
-    registration_display: "?"
-    abstract_display: "?"
-    comments: ""
+    registration_deadlines:
+      - label: Early bird registration
+        date: 2026-06-01
+      - label: Regular registration
+        date: 2026-08-01
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-04-30
+    registration_display: Late rate after 2026-08-01
+    abstract_display: ""
+    comments: Abstract submission open 2026-04-01 to 2026-04-30

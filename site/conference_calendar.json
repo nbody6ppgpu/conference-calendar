@@ -83,9 +83,14 @@
           "date": "2026-05-01"
         }
       ],
-      "abstract_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract submission",
+          "date": "2026-04-12"
+        }
+      ],
       "registration_display": "Early bird: May 1 2026",
-      "abstract_display": "",
+      "abstract_display": "Abstract submission: Apr. 12 2026",
       "comments": ""
     },
     {
@@ -120,14 +125,27 @@
       "end_date": "2026-07-03",
       "registration_deadlines": [
         {
-          "label": "Grant application / abstract",
+          "label": "Early bird registration",
+          "date": "2026-04-27"
+        },
+        {
+          "label": "Regular registration",
+          "date": "2026-06-28"
+        },
+        {
+          "label": "Virtual access registration",
+          "date": "2026-07-03"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract submission",
           "date": "2026-03-03"
         }
       ],
-      "abstract_deadlines": [],
-      "registration_display": "Grant application / abstract: Mar. 3 2026",
-      "abstract_display": "",
-      "comments": ""
+      "registration_display": "Early bird registration: Apr. 27 2026; Regular registration: June 28 2026; Virtual access registration: July 3 2026",
+      "abstract_display": "Abstract submission: Mar. 3 2026",
+      "comments": "Registration and abstract submission opened on 2026-01-29"
     },
     {
       "id": "expanding-horizons-2026",
@@ -172,16 +190,25 @@
       "location": "Quy Nhon, ICISE, Vietnam",
       "start_date": "2026-08-16",
       "end_date": "2026-08-22",
-      "registration_deadlines": [],
-      "abstract_deadlines": [
+      "registration_deadlines": [
         {
-          "label": "Abstract",
-          "date": "2026-03-31"
+          "label": "Early bird",
+          "date": "2026-06-29"
         }
       ],
-      "registration_display": "open",
-      "abstract_display": "Mar. 31 2026",
-      "comments": ""
+      "abstract_deadlines": [
+        {
+          "label": "Oral consideration",
+          "date": "2026-03-31"
+        },
+        {
+          "label": "Final abstract deadline",
+          "date": "2026-04-12"
+        }
+      ],
+      "registration_display": "Late registration possible after early-bird deadline",
+      "abstract_display": "Oral consideration: Mar. 31 2026; Final abstract deadline: Apr. 12 2026",
+      "comments": "Registration opened"
     },
     {
       "id": "cologne-bonn-symposium-2026",
@@ -258,7 +285,7 @@
       ],
       "registration_display": "Early registration: July 15 2026; Regular registration: Aug. 31 2026",
       "abstract_display": "Abstract submission: May 31 2026",
-      "comments": "Registration and abstract submission are not yet open"
+      "comments": "star cluster splinter meeting by convenor Rainer, Stefanie Walch-Gassner, Ralf Klessen, Thorsten Naab"
     },
     {
       "id": "bwhpc-symposium-2026",
@@ -313,11 +340,25 @@
       "location": "Bariloche, Argentina",
       "start_date": "2026-11-22",
       "end_date": "2026-11-26",
-      "registration_deadlines": [],
-      "abstract_deadlines": [],
-      "registration_display": "?",
-      "abstract_display": "?",
-      "comments": ""
+      "registration_deadlines": [
+        {
+          "label": "Early bird registration",
+          "date": "2026-06-01"
+        },
+        {
+          "label": "Regular registration",
+          "date": "2026-08-01"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract submission",
+          "date": "2026-04-30"
+        }
+      ],
+      "registration_display": "Late rate after 2026-08-01",
+      "abstract_display": "Abstract submission: Apr. 30 2026",
+      "comments": "Abstract submission open 2026-04-01 to 2026-04-30"
     }
   ],
   "past": [

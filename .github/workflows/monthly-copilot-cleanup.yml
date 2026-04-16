@@ -35,8 +35,7 @@ jobs:
         run: |
           copilot -p "Read AGENTS.md and clean the calendar. " \
             --no-ask-user \
-            --allow-tool='shell(git:*)' \
-            --allow-tool=write || gh auth status
+            --allow-all-tools || gh auth status
 
       - name: Ensure only data/conferences.yml was modified
         run: |

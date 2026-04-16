@@ -495,16 +495,22 @@ conferences:
     abstract_display: ""
     comments: hybrid participation available
   - id: ag-meeting-2026
-    title: AG meeting 2026
-    url: ""
+    title: Annual Meeting of the Astronomische Gesellschaft 2026
+    url: https://ag2026.astronomische-gesellschaft.de/
     location: Garching, Germany
     start_date: 2026-09-07
     end_date: 2026-09-11
-    registration_deadlines: []
-    abstract_deadlines: []
+    registration_deadlines:
+      - label: Early registration
+        date: 2026-07-15
+      - label: Regular registration
+        date: 2026-08-31
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-05-31
     registration_display: ""
     abstract_display: ""
-    comments: Rainer will apply for a star cluster splinter meeting
+    comments: Registration and abstract submission are not yet open
   - id: bwhpc-symposium-2026
     title: 12th bwHPC Symposium
     url: https://indico.kit.edu/event/5505/overview

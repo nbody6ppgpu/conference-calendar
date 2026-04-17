@@ -572,3 +572,20 @@ conferences:
     registration_display: Late rate after 2026-08-01
     abstract_display: ""
     comments: Abstract submission open 2026-04-01 to 2026-04-30
+  - id: hwo-2026
+    title: HWO2026
+    url: https://hwo2026.sciencesconf.org
+    location: Near Paris, France
+    start_date: 2026-11-30
+    end_date: 2026-12-04
+    registration_deadlines:
+      - label: Early-bird registration
+        date: 2026-06-30
+      - label: Registration closes
+        date: 2026-11-08
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-05-31
+    registration_display: ""
+    abstract_display: ""
+    comments: ""

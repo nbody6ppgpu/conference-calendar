@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-04-17",
+  "generated_on": "2026-04-24",
   "upcoming": [
     {
       "id": "aprim-2026",
@@ -259,6 +259,24 @@
       "registration_display": "July 17 2026",
       "abstract_display": "May 31 2026",
       "comments": "travel support deadline: 2026-04-24"
+    },
+    {
+      "id": "bridging-it-cost-meeting-2026",
+      "title": "Bridging It: Connecting Observations and Models of (Exo)planets and their Formation",
+      "url": "https://sites.google.com/view/bridging-it-cost-meeting/home",
+      "location": "MPIA, Heidelberg, Germany",
+      "start_date": "2026-09-01",
+      "end_date": "2026-09-04",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-04-24"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "Apr. 24 2026",
+      "abstract_display": "TBA",
+      "comments": ""
     },
     {
       "id": "ag-meeting-2026",

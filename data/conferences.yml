@@ -508,6 +508,19 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: hybrid participation available
+  - id: bridging-it-cost-meeting-2026
+    title: "Bridging It: Connecting Observations and Models of (Exo)planets and their Formation"
+    url: https://sites.google.com/view/bridging-it-cost-meeting/home
+    location: MPIA, Heidelberg, Germany
+    start_date: 2026-09-01
+    end_date: 2026-09-04
+    registration_deadlines:
+      - label: Registration
+        date: 2026-04-24
+    abstract_deadlines: []
+    registration_display: ""
+    abstract_display: TBA
+    comments: ""
   - id: ag-meeting-2026
     title: Annual Meeting of the Astronomische Gesellschaft 2026
     url: https://ag2026.astronomische-gesellschaft.de/

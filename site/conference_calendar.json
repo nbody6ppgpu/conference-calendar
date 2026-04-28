@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-04-24",
+  "generated_on": "2026-04-28",
   "upcoming": [
     {
       "id": "aprim-2026",
@@ -350,6 +350,33 @@
       "registration_display": "May 31 2026",
       "abstract_display": "May 31 2026",
       "comments": "talk submission; speakers selected in June 2026"
+    },
+    {
+      "id": "nuclei-2026",
+      "title": "Galaxy nuclei – Diversity, Dynamics, and Hidden Mass in Galactic Centers (NUCLEI 2026)",
+      "url": "https://www.eso.org/sci/meetings/2026/NUCLEI_2026.html",
+      "location": "ESO Santiago, Chile",
+      "start_date": "2026-11-16",
+      "end_date": "2026-11-20",
+      "registration_deadlines": [
+        {
+          "label": "Registration & abstract submission",
+          "date": "2026-06-20"
+        },
+        {
+          "label": "Registration payment",
+          "date": "2026-08-31"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract submission",
+          "date": "2026-06-20"
+        }
+      ],
+      "registration_display": "Registration & abstract submission: June 20 2026; Registration payment: Aug. 31 2026",
+      "abstract_display": "Abstract submission: June 20 2026",
+      "comments": ""
     },
     {
       "id": "iaus-411",

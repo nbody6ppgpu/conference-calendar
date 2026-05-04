@@ -518,8 +518,8 @@ conferences:
       - label: Registration
         date: 2026-04-24
     abstract_deadlines: []
-    registration_display: ""
-    abstract_display: TBA
+    registration_display: Registration is now closed
+    abstract_display: Registration and abstract submission are now closed
     comments: ""
   - id: ag-meeting-2026
     title: Annual Meeting of the Astronomische Gesellschaft 2026

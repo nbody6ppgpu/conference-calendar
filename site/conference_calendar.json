@@ -1,29 +1,6 @@
 {
-  "generated_on": "2026-05-05",
+  "generated_on": "2026-05-11",
   "upcoming": [
-    {
-      "id": "aprim-2026",
-      "title": "2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)",
-      "url": "https://aprim2026.org/",
-      "location": "Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China",
-      "start_date": "2026-05-04",
-      "end_date": "2026-05-08",
-      "registration_deadlines": [
-        {
-          "label": "Registration",
-          "date": "2026-02-05"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Abstract",
-          "date": "2025-12-05"
-        }
-      ],
-      "registration_display": "Feb. 5 2026",
-      "abstract_display": "Dec. 5 2025",
-      "comments": "IAU travel grant application deadline 2025-12-05"
-    },
     {
       "id": "silk-road-14",
       "title": "14th Silk Road / 2nd Silk Road AREA conference",
@@ -373,6 +350,29 @@
       "registration_display": "May 31 2026",
       "abstract_display": "May 31 2026",
       "comments": "talk submission; speakers selected in June 2026"
+    },
+    {
+      "id": "stars-on-the-run-iii-2026",
+      "title": "Stars On the Run III",
+      "url": "https://conf.koushare.com/conf/StarsOntheRun/",
+      "location": "UCAS Yanqi Lake Campus, Beijing, China",
+      "start_date": "2026-11-02",
+      "end_date": "2026-11-06",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-09-30"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-09-01"
+        }
+      ],
+      "registration_display": "Sept. 30 2026",
+      "abstract_display": "Sept. 1 2026",
+      "comments": "Hypervelocity stars, etc. Nov. 2-6, 2026, Beijing, China"
     },
     {
       "id": "nuclei-2026",
@@ -949,6 +949,29 @@
       "registration_display": "Dec. 5 2025",
       "abstract_display": "Jan. 30 2026",
       "comments": "includes all fields of astronomy"
+    },
+    {
+      "id": "aprim-2026",
+      "title": "2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)",
+      "url": "https://aprim2026.org/",
+      "location": "Hong Kong Convention and Exhibition Centre, Hong Kong SAR, China",
+      "start_date": "2026-05-04",
+      "end_date": "2026-05-08",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-02-05"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-12-05"
+        }
+      ],
+      "registration_display": "Feb. 5 2026",
+      "abstract_display": "Dec. 5 2025",
+      "comments": "IAU travel grant application deadline 2025-12-05"
     }
   ]
 }

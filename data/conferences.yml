@@ -583,6 +583,21 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: talk submission; speakers selected in June 2026
+  - id: stars-on-the-run-iii
+    title: Stars On the Run III
+    url: https://conf.koushare.com/conf/StarsOntheRun/
+    location: University of Chinese Academy of Sciences, Huairou, Beijing, China
+    start_date: 2026-11-02
+    end_date: 2026-11-06
+    registration_deadlines:
+      - label: Registration Deadline
+        date: 2026-09-30
+    abstract_deadlines:
+      - label: Abstract Submission Deadline
+        date: 2026-09-01
+    registration_display: ""
+    abstract_display: ""
+    comments: ""
   - id: nuclei-2026
     title: "Galaxy nuclei – Diversity, Dynamics, and Hidden Mass in Galactic Centers (NUCLEI 2026)"
     url: https://www.eso.org/sci/meetings/2026/NUCLEI_2026.html

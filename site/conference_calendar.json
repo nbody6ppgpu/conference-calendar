@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-05-05",
+  "generated_on": "2026-05-08",
   "upcoming": [
     {
       "id": "aprim-2026",
@@ -373,6 +373,29 @@
       "registration_display": "May 31 2026",
       "abstract_display": "May 31 2026",
       "comments": "talk submission; speakers selected in June 2026"
+    },
+    {
+      "id": "stars-on-the-run-iii",
+      "title": "Stars On the Run III",
+      "url": "https://conf.koushare.com/conf/StarsOntheRun/",
+      "location": "University of Chinese Academy of Sciences, Huairou, Beijing, China",
+      "start_date": "2026-11-02",
+      "end_date": "2026-11-06",
+      "registration_deadlines": [
+        {
+          "label": "Registration Deadline",
+          "date": "2026-09-30"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract Submission Deadline",
+          "date": "2026-09-01"
+        }
+      ],
+      "registration_display": "Registration Deadline: Sept. 30 2026",
+      "abstract_display": "Abstract Submission Deadline: Sept. 1 2026",
+      "comments": ""
     },
     {
       "id": "nuclei-2026",

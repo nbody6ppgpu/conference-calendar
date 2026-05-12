@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-05-11",
+  "generated_on": "2026-05-12",
   "upcoming": [
     {
       "id": "silk-road-14",
@@ -68,6 +68,24 @@
       ],
       "registration_display": "Early bird: May 1 2026",
       "abstract_display": "Abstract submission: Apr. 12 2026",
+      "comments": ""
+    },
+    {
+      "id": "lrd2026",
+      "title": "LRD2026 Workshop",
+      "url": "https://sites.google.com/uniroma1.it/lrdworkshop2026/",
+      "location": "Online",
+      "start_date": "2026-06-22",
+      "end_date": "2026-06-24",
+      "registration_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Flash talk abstract submission",
+          "date": "2026-05-24"
+        }
+      ],
+      "registration_display": "Registration open; deadline not specified",
+      "abstract_display": "Flash talk abstract submission: May 24 2026",
       "comments": ""
     },
     {

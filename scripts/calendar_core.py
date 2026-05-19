@@ -307,6 +307,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
     }}
     .links-note {{
       margin-top: 14px;
+      font-size: 0.88rem;
     }}
     .panel {{
       background: rgba(255, 250, 242, 0.92);
@@ -352,7 +353,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
         <a href="{escape(repo_url)}">Repository</a>
       </div>
       <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
-      <p class="links-note">Found a new interesting conference? Tell us here: <a href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md</a></p>
+      <p class="links-note">Found a new interesting conference? <a href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">Tell us here</a>.</p>
     </section>
     <section class="panel">
       <h2>Upcoming events</h2>

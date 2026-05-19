@@ -344,7 +344,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
 <body>
   <main>
     <section class="hero">
-      <h1>Conference Calendar</h1>
+      <h1>NBODY Conference Calendar</h1>
       <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
       <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
       <div class="links">

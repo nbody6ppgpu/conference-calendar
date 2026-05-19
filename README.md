@@ -17,6 +17,7 @@ This repository now maintains the conference calendar using a “structured data
 - The single source of truth is `data/conferences.yml`.
 
 - `conference_calendar.md`, `site/index.html`, `site/conference_calendar.ics`, and `site/conference_calendar.json` are all generated outputs.
+- Do not edit `site/index.html` directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html`, then run `python3 scripts/build_calendar.py`.
 
 ## What Reminders Can I Receive?
 

@@ -251,7 +251,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Conference Calendar</title>
+  <title>NBODY Conference Calendar</title>
   <style>
     :root {{
       --bg: #f3efe6;
@@ -344,6 +344,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
   <main>
     <section class="hero">
       <h1>Conference Calendar</h1>
+      <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
       <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
       <div class="links">
         <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>

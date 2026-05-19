@@ -1,5 +1,5 @@
 {
-  "generated_on": "2026-05-12",
+  "generated_on": "2026-05-19",
   "upcoming": [
     {
       "id": "silk-road-14",
@@ -277,6 +277,33 @@
       "registration_display": "July 17 2026",
       "abstract_display": "May 31 2026",
       "comments": "travel support deadline: 2026-04-24"
+    },
+    {
+      "id": "multiple-planet-systems-2026",
+      "title": "Multiple Planet Systems",
+      "url": "https://exo-mps.eu",
+      "location": "Sofia University \"St. Kliment Ohridski\", Sofia, Bulgaria",
+      "start_date": "2026-08-31",
+      "end_date": "2026-09-04",
+      "registration_deadlines": [
+        {
+          "label": "General participation",
+          "date": "2026-07-15"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Contributed talks (extended)",
+          "date": "2026-05-31"
+        },
+        {
+          "label": "Poster presentations",
+          "date": "2026-06-30"
+        }
+      ],
+      "registration_display": "General participation: July 15 2026",
+      "abstract_display": "Contributed talks (extended): May 31 2026; Poster presentations: June 30 2026",
+      "comments": ""
     },
     {
       "id": "bridging-it-cost-meeting-2026",

@@ -3,7 +3,15 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from calendar_core import build_ics, build_index_html, build_json, build_markdown, get_today, load_conferences
+from calendar_core import (
+    build_ics,
+    build_index_html,
+    build_json,
+    build_markdown,
+    build_past_events_html,
+    get_today,
+    load_conferences,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -31,6 +39,10 @@ def main() -> None:
     (site_dir / "conference_calendar.json").write_text(build_json(conferences, today), encoding="utf-8")
     (site_dir / "index.html").write_text(
         build_index_html(conferences, today, args.repo_url),
+        encoding="utf-8",
+    )
+    (site_dir / "past-events.html").write_text(
+        build_past_events_html(conferences, today),
         encoding="utf-8",
     )
     # Disable GitHub Pages' implicit Jekyll pipeline for this prebuilt static site.

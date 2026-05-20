@@ -244,14 +244,63 @@ def build_ics(conferences: Iterable[Conference]) -> str:
 def build_index_html(conferences: Iterable[Conference], today: date, repo_url: str) -> str:
     upcoming, past = split_conferences(conferences, today)
     upcoming_rows = _html_rows(upcoming)
-    past_rows = _html_rows(past)
     webcal_url = _build_webcal_url(repo_url)
+    past_count = len(past)
+    return _build_site_html(
+        title="NBODY Conference Calendar",
+        today=today,
+        body=f"""
+    <section class="hero">
+      <h1>NBODY Conference Calendar</h1>
+      <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
+      <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
+      <div class="links">
+        <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>
+        <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
+        <a href="{escape(repo_url)}">Repository</a>
+      </div>
+      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
+      <p class="links-note">Found a new interesting conference? <a href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">Tell us here</a>.</p>
+    </section>
+    <section class="panel">
+      <h2>Upcoming events</h2>
+      {_html_table(upcoming_rows)}
+    </section>
+    <section class="archive-link">
+      <a href="./past-events.html">Click here to see past events</a>
+      <span>{past_count} archived event{"s" if past_count != 1 else ""}</span>
+    </section>""",
+    )
+
+
+def build_past_events_html(conferences: Iterable[Conference], today: date) -> str:
+    _upcoming, past = split_conferences(conferences, today)
+    past_rows = _html_rows(past)
+    return _build_site_html(
+        title="Past Events - NBODY Conference Calendar",
+        today=today,
+        body=f"""
+    <section class="hero compact">
+      <h1>Past Events</h1>
+      <p>Archived meetings from the NBODY Conference Calendar.</p>
+      <div class="links">
+        <a href="./">Back to current calendar</a>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Past events</h2>
+      {_html_table(past_rows)}
+    </section>""",
+    )
+
+
+def _build_site_html(title: str, today: date, body: str) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NBODY Conference Calendar</title>
+  <title>{escape(title)}</title>
   <style>
     :root {{
       --bg: #f3efe6;
@@ -292,6 +341,9 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       box-shadow: 0 18px 40px rgba(28, 27, 24, 0.08);
       margin-bottom: 28px;
     }}
+    .hero.compact {{
+      margin-bottom: 24px;
+    }}
     .links {{
       display: flex;
       gap: 12px;
@@ -308,6 +360,28 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
     .links-note {{
       margin-top: 14px;
       font-size: 0.88rem;
+    }}
+    .archive-link {{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      background: rgba(255, 250, 242, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 24px;
+    }}
+    .archive-link a {{
+      display: inline-block;
+      text-decoration: none;
+      color: white;
+      background: var(--accent);
+      border-radius: 999px;
+      padding: 10px 16px;
+    }}
+    .archive-link span {{
+      color: var(--muted);
     }}
     .panel {{
       background: rgba(255, 250, 242, 0.92);
@@ -343,54 +417,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
 </head>
 <body>
   <main>
-    <section class="hero">
-      <h1>NBODY Conference Calendar</h1>
-      <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
-      <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
-      <div class="links">
-        <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>
-        <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
-        <a href="{escape(repo_url)}">Repository</a>
-      </div>
-      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
-      <p class="links-note">Found a new interesting conference? <a href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">Tell us here</a>.</p>
-    </section>
-    <section class="panel">
-      <h2>Upcoming events</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Location</th>
-            <th>Meeting title and link</th>
-            <th>Registration Deadline</th>
-            <th>Abstract Deadline</th>
-            <th>Comments</th>
-          </tr>
-        </thead>
-        <tbody>
-          {upcoming_rows}
-        </tbody>
-      </table>
-    </section>
-    <section class="panel">
-      <h2>Past events</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Location</th>
-            <th>Meeting title and link</th>
-            <th>Registration Deadline</th>
-            <th>Abstract Deadline</th>
-            <th>Comments</th>
-          </tr>
-        </thead>
-        <tbody>
-          {past_rows}
-        </tbody>
-      </table>
-    </section>
+{body}
     <footer>
       <p>Generated for {escape(today.isoformat())} using Europe/Berlin date logic.</p>
     </footer>
@@ -562,6 +589,24 @@ def _html_rows(conferences: Iterable[Conference]) -> str:
     if not row_html:
         row_html.append("<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>")
     return "\n          ".join(row_html)
+
+
+def _html_table(rows: str) -> str:
+    return f"""<table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Meeting title and link</th>
+            <th>Registration Deadline</th>
+            <th>Abstract Deadline</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows}
+        </tbody>
+      </table>"""
 
 
 def _conference_payload(conference: Conference) -> dict[str, object]:

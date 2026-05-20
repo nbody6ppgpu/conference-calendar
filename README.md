@@ -16,8 +16,8 @@ This repository now maintains the conference calendar using a “structured data
 
 - The single source of truth is `data/conferences.yml`.
 
-- `conference_calendar.md`, `site/index.html`, `site/conference_calendar.ics`, and `site/conference_calendar.json` are all generated outputs.
-- Do not edit `site/index.html` directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html`, then run `python3 scripts/build_calendar.py`.
+- `conference_calendar.md`, `site/index.html`, `site/past-events.html`, `site/conference_calendar.ics`, and `site/conference_calendar.json` are all generated outputs.
+- Do not edit generated HTML directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html` or `build_past_events_html`, then run `python3 scripts/build_calendar.py`.
 
 ## What Reminders Can I Receive?
 
@@ -102,12 +102,13 @@ Then commit these files:
 - `data/conferences.yml`
 - `conference_calendar.md`
 - `site/index.html`
+- `site/past-events.html`
 - `site/conference_calendar.ics`
 - `site/conference_calendar.json`
 
 ## Directory Structure
 
 - `data/conferences.yml`: The single source of truth.
-- `scripts/build_calendar.py`: Generates Markdown, HTML, ICS, and JSON files.
+- `scripts/build_calendar.py`: Generates Markdown, main/archive HTML pages, ICS, and JSON files.
 - `tests/`: Contains validation, generation, ICS, and reminder-related regression tests.
 - `site/`: The output published by GitHub Pages.

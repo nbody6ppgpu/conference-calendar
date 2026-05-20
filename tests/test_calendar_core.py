@@ -18,7 +18,9 @@ if str(SCRIPTS_DIR) not in sys.path:
 from calendar_core import (  # noqa: E402
     ValidationError,
     build_ics,
+    build_index_html,
     build_markdown,
+    build_past_events_html,
     build_reminder_payload,
     deadline_display,
     find_reminders,
@@ -153,6 +155,52 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertIn("TBA", markdown)
         self.assertIn("?", markdown)
 
+    def test_site_splits_past_events_onto_archive_page(self) -> None:
+        path = write_yaml(
+            {
+                "conferences": [
+                    {
+                        "id": "future",
+                        "title": "Future Event",
+                        "url": "https://example.com/future",
+                        "location": "Future City",
+                        "start_date": "2026-06-01",
+                        "end_date": "2026-06-02",
+                        "registration_deadlines": [],
+                        "abstract_deadlines": [],
+                        "registration_display": "TBA",
+                        "abstract_display": "",
+                        "comments": "",
+                    },
+                    {
+                        "id": "past",
+                        "title": "Past Event",
+                        "url": "https://example.com/past",
+                        "location": "Past City",
+                        "start_date": "2026-03-01",
+                        "end_date": "2026-03-02",
+                        "registration_deadlines": [],
+                        "abstract_deadlines": [],
+                        "registration_display": "",
+                        "abstract_display": "",
+                        "comments": "",
+                    },
+                ]
+            }
+        )
+        conferences = load_conferences(path)
+        today = __import__("datetime").date(2026, 3, 30)
+        index_html = build_index_html(conferences, today, "https://github.com/nbody6ppgpu/conference-calendar")
+        past_html = build_past_events_html(conferences, today)
+
+        self.assertIn("./past-events.html", index_html)
+        self.assertIn("Click here to see past events", index_html)
+        self.assertIn("Future Event", index_html)
+        self.assertNotIn("Past Event", index_html)
+        self.assertIn("./", past_html)
+        self.assertIn("Past Event", past_html)
+        self.assertNotIn("Future Event", past_html)
+
     def test_auto_display_formats_multiple_deadlines(self) -> None:
         path = write_yaml(
             {
@@ -263,7 +311,7 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertIn("MODEST26", payload["body"])
         self.assertEqual(json.loads(json.dumps(payload))["label"], "deadline-reminder")
 
-    def test_build_script_writes_nojekyll_marker(self) -> None:
+    def test_build_script_writes_static_site_pages_and_nojekyll_marker(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             markdown_output = Path(temp_dir) / "calendar.md"
             site_dir = Path(temp_dir) / "site"
@@ -283,6 +331,8 @@ class CalendarCoreTests(unittest.TestCase):
                 check=True,
                 cwd=REPO_ROOT,
             )
+            self.assertTrue((site_dir / "index.html").exists())
+            self.assertTrue((site_dir / "past-events.html").exists())
             self.assertTrue((site_dir / ".nojekyll").exists())
 
 

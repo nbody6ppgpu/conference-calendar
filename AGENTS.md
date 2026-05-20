@@ -6,7 +6,7 @@
 1. **When you are given a URL link:**
    - EXPLORE the give url
    - Update only **`data/conferences.yml`**. Do **not** hand-edit `conference_calendar.md`.
-   - `site/index.html` is generated. Do not edit it directly; edit `scripts/calendar_core.py` (`build_index_html`) for page template/static text, then run `python3 scripts/build_calendar.py`.
+   - `site/index.html` and `site/past-events.html` are generated. Do not edit them directly; edit `scripts/calendar_core.py` (`build_index_html` / `build_past_events_html`) for page template/static text, then run `python3 scripts/build_calendar.py`.
    - If there are multiple registration/abstract deadlines, split them into structured array items with **`label` + `date`**.
    - If a deadline only has text like **`TBA`**, **`open`**, or **`?`**, keep it in **`registration_display`** / **`abstract_display`** instead of inventing a date.
    - You do not fill in the `comments` field unless instructed by user.
@@ -17,4 +17,4 @@
    - Step a: in `data/conferences.yml`, for every event inside "Conference Calendar" but NOT under "Past events", evaluate if it is outdated. Outdated means `end_date < today`. Move every outdated events from "Conference Calendar" into "Past events". 
    - Step b: for every event inside "Conference Calendar" but NOT under "Past events", check  `start_date`, `end_date`, `registration_deadlines`, `abstract_deadlines` , if any of them is empty or contain no date, you EXPLORE the corresponding conference url and try updating the entry. You do not fill in the `comments` field unless instructed by user.
    - Step c: evalute whether you have moved any outdated conferences in Step 1 or updated any missing fields in Step 2.
-   - Step d (optional): if user explicitly ask you not to run build script, you stop here and do not execute this step. Else, evaluate if anything has changed in `data/conferences.yml`; if yes you run **`python3 scripts/build_calendar.py`**.
+   - Step d (optional): if user explicitly ask you not to run build script, you stop here and do not execute this step. Else, evaluate if anything has changed in `data/conferences.yml`; if yes you run **`python3 scripts/build_calendar.py`**. This rebuilds both the main GitHub Pages page and the Past events page.

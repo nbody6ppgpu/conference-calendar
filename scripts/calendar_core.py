@@ -197,7 +197,6 @@ def build_json(conferences: Iterable[Conference], today: date) -> str:
 
 def build_ics(conferences: Iterable[Conference]) -> str:
     events: list[str] = []
-    dtstamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     for conference in conferences:
         for deadline_date, items in _group_deadlines_for_ics(conference).items():
             summary = f"{conference.title} - " + " / ".join(item["summary_part"] for item in items)
@@ -207,6 +206,18 @@ def build_ics(conferences: Iterable[Conference]) -> str:
             if conference.url:
                 description_parts.append(f"Link: {conference.url}")
             uid_parts = [conference.id, deadline_date.isoformat(), *[str(item["uid_part"]) for item in items]]
+            dtstamp = stable_dtstamp(
+                "deadline",
+                conference.id,
+                conference.title,
+                conference.location,
+                conference.url,
+                conference.comments,
+                deadline_date.isoformat(),
+                summary,
+                "; ".join(description_parts),
+                *[str(item["uid_part"]) for item in items],
+            )
             events.append(
                 "\n".join(
                     [
@@ -242,7 +253,15 @@ def build_ics(conferences: Iterable[Conference]) -> str:
 
 
 def build_meeting_ics(conference: Conference) -> str:
-    dtstamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    dtstamp = stable_dtstamp(
+        "meeting",
+        conference.id,
+        conference.title,
+        conference.location,
+        conference.url,
+        conference.start_date.isoformat(),
+        conference.end_date.isoformat(),
+    )
     return "\n".join(
         [
             "BEGIN:VCALENDAR",
@@ -279,7 +298,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
       <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
       <div class="links">
-        <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>
+        <a href="{escape(webcal_url)}">Subscribe to deadline reminders (auto update)</a>
         <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
         <a href="{escape(repo_url)}">Repository</a>
       </div>
@@ -549,6 +568,13 @@ def render_reminder_issue(reminders: list[dict[str, object]], today: date, timez
 def stable_uid(*parts: str) -> str:
     digest = hashlib.sha1("::".join(parts).encode("utf-8")).hexdigest()
     return f"{digest}@conference-calendar"
+
+
+def stable_dtstamp(*parts: str) -> str:
+    digest = hashlib.sha1("::".join(parts).encode("utf-8")).hexdigest()
+    seconds = int(digest[:12], 16) % (100 * 366 * 24 * 60 * 60)
+    value = datetime(2000, 1, 1, tzinfo=UTC) + timedelta(seconds=seconds)
+    return value.strftime("%Y%m%dT%H%M%SZ")
 
 
 def _group_deadlines_for_ics(conference: Conference) -> dict[date, list[dict[str, str]]]:

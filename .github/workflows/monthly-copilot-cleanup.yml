@@ -63,9 +63,6 @@ jobs:
             exit 1
           fi
 
-      - name: Rebuild generated outputs
-        run: python scripts/build_calendar.py
-
       - name: Create pull request
         id: create-pr
         uses: peter-evans/create-pull-request@v8
@@ -77,10 +74,10 @@ jobs:
           body: |
             ## Summary
             - run the scheduled Copilot cleanup task from AGENTS.md
-            - rebuild generated calendar outputs after YAML updates
+            - update only the source conference data
 
             ## Test plan
-            - [x] python scripts/build_calendar.py
+            - [x] verified PR contains only data/conferences.yml
           delete-branch: true
 
       - name: Report result

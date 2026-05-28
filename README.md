@@ -15,9 +15,9 @@ In this webpage, you can subscribe to all conferences in your calendar applicati
 This repository now maintains the conference calendar using a “structured data + auto-generation” approach.
 
 - The single source of truth is `data/conferences.yml`.
-
-- `conference_calendar.md`, `site/index.html`, `site/past-events.html`, `site/conference_calendar.ics`, and `site/conference_calendar.json` are all generated outputs.
+- `conference_calendar.md` and the entire `site/` directory are generated outputs. They are ignored by git and should not be included in pull requests.
 - Do not edit generated HTML directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html` or `build_past_events_html`, then run `python3 scripts/build_calendar.py`.
+- GitHub Pages builds the site from `data/conferences.yml` during deployment.
 
 ## What Reminders Can I Receive?
 
@@ -85,11 +85,12 @@ Only edit:
 
 - `data/conferences.yml`
 
-Do not manually edit:
+Do not commit generated outputs:
 
 - `conference_calendar.md`
+- `site/`
 
-After making changes, run the following commands locally:
+After making changes, run the following commands locally to preview and verify:
 
 ```bash
 python3 -m pip install -r requirements.txt
@@ -97,18 +98,13 @@ python3 scripts/build_calendar.py
 python3 -m unittest discover -s tests -v
 ```
 
-Then commit these files:
+Then commit only source changes, normally:
 
 - `data/conferences.yml`
-- `conference_calendar.md`
-- `site/index.html`
-- `site/past-events.html`
-- `site/conference_calendar.ics`
-- `site/conference_calendar.json`
 
 ## Directory Structure
 
 - `data/conferences.yml`: The single source of truth.
 - `scripts/build_calendar.py`: Generates Markdown, main/archive HTML pages, ICS, and JSON files.
 - `tests/`: Contains validation, generation, ICS, and reminder-related regression tests.
-- `site/`: The output published by GitHub Pages.
+- `site/`: Generated local preview output and the artifact published by GitHub Pages.

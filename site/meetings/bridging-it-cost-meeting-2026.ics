@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//conference-calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:de89df276a5c0c2fe6e1c98c02a4c8ca7fdc2ffd@conference-calendar
+DTSTAMP:20260528T103239Z
+DTSTART;VALUE=DATE:20260901
+DTEND;VALUE=DATE:20260905
+SUMMARY:Bridging It: Connecting Observations and Models of (Exo)planets and their Formation
+LOCATION:MPIA\, Heidelberg\, Germany
+DESCRIPTION:https://sites.google.com/view/bridging-it-cost-meeting/home
+END:VEVENT
+END:VCALENDAR

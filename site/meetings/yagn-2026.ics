@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//conference-calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:4ab8d18056ccdf196a07cc24badbbb46e8bc941c@conference-calendar
+DTSTAMP:20260528T103240Z
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261029
+SUMMARY:Young Astronomers on Active Galactic Nuclei (YAGN)
+LOCATION:University of Seville\, Seville\, Spain
+DESCRIPTION:https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html
+END:VEVENT
+END:VCALENDAR

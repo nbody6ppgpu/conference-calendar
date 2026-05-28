@@ -20,6 +20,7 @@ from calendar_core import (  # noqa: E402
     build_ics,
     build_index_html,
     build_markdown,
+    build_meeting_ics,
     build_past_events_html,
     build_reminder_payload,
     deadline_display,
@@ -195,11 +196,15 @@ class CalendarCoreTests(unittest.TestCase):
 
         self.assertIn("./past-events.html", index_html)
         self.assertIn("Click here to see past events", index_html)
+        self.assertIn("Get meeting schedule .ics", index_html)
+        self.assertIn('<a href="./meetings/future.ics">Get .ics</a>', index_html)
         self.assertIn("Future Event", index_html)
         self.assertNotIn("Past Event", index_html)
         self.assertIn("./", past_html)
         self.assertIn("Past Event", past_html)
         self.assertNotIn("Future Event", past_html)
+        self.assertNotIn("Get meeting schedule .ics", past_html)
+        self.assertNotIn("Get .ics", past_html)
 
     def test_auto_display_formats_multiple_deadlines(self) -> None:
         path = write_yaml(
@@ -271,6 +276,39 @@ class CalendarCoreTests(unittest.TestCase):
             [line for line in ics_two.splitlines() if line.startswith("UID:")],
         )
 
+    def test_meeting_ics_contains_schedule_only(self) -> None:
+        path = write_yaml(
+            {
+                "conferences": [
+                    {
+                        "id": "meeting-ics-test",
+                        "title": "Meeting ICS Test",
+                        "url": "https://example.com/meeting",
+                        "location": "Test City",
+                        "start_date": "2026-07-10",
+                        "end_date": "2026-07-12",
+                        "registration_deadlines": [{"label": "Registration", "date": "2026-05-01"}],
+                        "abstract_deadlines": [{"label": "Abstract", "date": "2026-04-01"}],
+                        "registration_display": "",
+                        "abstract_display": "",
+                        "comments": "Do not include this note",
+                    }
+                ]
+            }
+        )
+        conference = load_conferences(path)[0]
+        ics = build_meeting_ics(conference)
+
+        self.assertIn("DTSTART;VALUE=DATE:20260710", ics)
+        self.assertIn("DTEND;VALUE=DATE:20260713", ics)
+        self.assertIn("SUMMARY:Meeting ICS Test", ics)
+        self.assertIn("LOCATION:Test City", ics)
+        self.assertIn("DESCRIPTION:https://example.com/meeting", ics)
+        self.assertNotIn("VALARM", ics)
+        self.assertNotIn("Registration", ics)
+        self.assertNotIn("Abstract", ics)
+        self.assertNotIn("Do not include this note", ics)
+
     def test_reminders_select_only_matching_offsets_and_payload_is_deterministic(self) -> None:
         path = write_yaml(
             {
@@ -313,14 +351,49 @@ class CalendarCoreTests(unittest.TestCase):
 
     def test_build_script_writes_static_site_pages_and_nojekyll_marker(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
+            data_path = write_yaml(
+                {
+                    "conferences": [
+                        {
+                            "id": "future-build",
+                            "title": "Future Build Event",
+                            "url": "https://example.com/future",
+                            "location": "Future City",
+                            "start_date": "2026-06-01",
+                            "end_date": "2026-06-02",
+                            "registration_deadlines": [],
+                            "abstract_deadlines": [],
+                            "registration_display": "",
+                            "abstract_display": "",
+                            "comments": "",
+                        },
+                        {
+                            "id": "past-build",
+                            "title": "Past Build Event",
+                            "url": "https://example.com/past",
+                            "location": "Past City",
+                            "start_date": "2026-03-01",
+                            "end_date": "2026-03-02",
+                            "registration_deadlines": [],
+                            "abstract_deadlines": [],
+                            "registration_display": "",
+                            "abstract_display": "",
+                            "comments": "",
+                        },
+                    ]
+                }
+            )
             markdown_output = Path(temp_dir) / "calendar.md"
             site_dir = Path(temp_dir) / "site"
+            meetings_dir = site_dir / "meetings"
+            meetings_dir.mkdir(parents=True)
+            (meetings_dir / "stale.ics").write_text("stale", encoding="utf-8")
             subprocess.run(
                 [
                     sys.executable,
                     str(SCRIPTS_DIR / "build_calendar.py"),
                     "--data",
-                    str(REPO_ROOT / "data" / "conferences.yml"),
+                    str(data_path),
                     "--markdown-output",
                     str(markdown_output),
                     "--site-dir",
@@ -334,6 +407,9 @@ class CalendarCoreTests(unittest.TestCase):
             self.assertTrue((site_dir / "index.html").exists())
             self.assertTrue((site_dir / "past-events.html").exists())
             self.assertTrue((site_dir / ".nojekyll").exists())
+            self.assertTrue((meetings_dir / "future-build.ics").exists())
+            self.assertFalse((meetings_dir / "past-build.ics").exists())
+            self.assertFalse((meetings_dir / "stale.ics").exists())
 
 
 if __name__ == "__main__":

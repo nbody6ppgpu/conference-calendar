@@ -1,52 +1,6 @@
 {
-  "generated_on": "2026-05-20",
+  "generated_on": "2026-05-28",
   "upcoming": [
-    {
-      "id": "silk-road-14",
-      "title": "14th Silk Road / 2nd Silk Road AREA conference",
-      "url": "https://astro-silkroad.eu/conferences/silkroad14",
-      "location": "New Uzbekistan Univ., Tashkent, Uzbekistan",
-      "start_date": "2026-05-18",
-      "end_date": "2026-05-22",
-      "registration_deadlines": [
-        {
-          "label": "Registration",
-          "date": "2026-03-18"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Abstract",
-          "date": "2026-03-18"
-        }
-      ],
-      "registration_display": "Mar. 18 2026",
-      "abstract_display": "Mar. 18 2026",
-      "comments": "abstract submitted with registration"
-    },
-    {
-      "id": "iaus-405",
-      "title": "IAUS405: Traversing the Galactic Center in Space and Time",
-      "url": "https://gc2026.muni.cz/",
-      "location": "Masaryk Univ. Brno, Czech Rep.",
-      "start_date": "2026-05-18",
-      "end_date": "2026-05-22",
-      "registration_deadlines": [
-        {
-          "label": "Registration",
-          "date": "2026-03-31"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Abstract",
-          "date": "2025-12-15"
-        }
-      ],
-      "registration_display": "Mar. 31 2026",
-      "abstract_display": "Dec. 15 2025",
-      "comments": ""
-    },
     {
       "id": "et-symposium-2026",
       "title": "XVI ET Symposium 2026",
@@ -1017,6 +971,52 @@
       "registration_display": "Feb. 5 2026",
       "abstract_display": "Dec. 5 2025",
       "comments": "IAU travel grant application deadline 2025-12-05"
+    },
+    {
+      "id": "silk-road-14",
+      "title": "14th Silk Road / 2nd Silk Road AREA conference",
+      "url": "https://astro-silkroad.eu/conferences/silkroad14",
+      "location": "New Uzbekistan Univ., Tashkent, Uzbekistan",
+      "start_date": "2026-05-18",
+      "end_date": "2026-05-22",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-03-18"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-03-18"
+        }
+      ],
+      "registration_display": "Mar. 18 2026",
+      "abstract_display": "Mar. 18 2026",
+      "comments": "abstract submitted with registration"
+    },
+    {
+      "id": "iaus-405",
+      "title": "IAUS405: Traversing the Galactic Center in Space and Time",
+      "url": "https://gc2026.muni.cz/",
+      "location": "Masaryk Univ. Brno, Czech Rep.",
+      "start_date": "2026-05-18",
+      "end_date": "2026-05-22",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-03-31"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2025-12-15"
+        }
+      ],
+      "registration_display": "Mar. 31 2026",
+      "abstract_display": "Dec. 15 2025",
+      "comments": ""
     }
   ]
 }

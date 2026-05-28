@@ -12,6 +12,7 @@ from calendar_core import (
     get_today,
     load_conferences,
 )
+from build_meeting_ics import write_meeting_ics_files
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,6 +37,7 @@ def main() -> None:
 
     markdown_path.write_text(build_markdown(conferences, today), encoding="utf-8")
     (site_dir / "conference_calendar.ics").write_text(build_ics(conferences), encoding="utf-8")
+    write_meeting_ics_files(conferences, today, site_dir)
     (site_dir / "conference_calendar.json").write_text(build_json(conferences, today), encoding="utf-8")
     (site_dir / "index.html").write_text(
         build_index_html(conferences, today, args.repo_url),

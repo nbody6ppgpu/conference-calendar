@@ -4,8 +4,9 @@ import json
 import subprocess
 import sys
 import tempfile
-import textwrap
 import unittest
+from dataclasses import replace
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -35,6 +36,10 @@ def write_yaml(payload: dict) -> Path:
     with handle:
         yaml.safe_dump(payload, handle, allow_unicode=True, sort_keys=False)
     return Path(handle.name)
+
+
+def _dtstamp_lines(ics: str) -> list[str]:
+    return [line for line in ics.splitlines() if line.startswith("DTSTAMP:")]
 
 
 class CalendarCoreTests(unittest.TestCase):
@@ -264,6 +269,7 @@ class CalendarCoreTests(unittest.TestCase):
         ics_one = build_ics(conferences)
         ics_two = build_ics(conferences)
         self.assertEqual(ics_one.count("BEGIN:VEVENT"), 2)
+        self.assertEqual(ics_one, ics_two)
         self.assertIn(
             f"UID:{stable_uid('ics-test', '2026-04-01', 'abstract:Poster', 'registration:Registration')}",
             ics_one,
@@ -271,10 +277,18 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertIn(f"UID:{stable_uid('ics-test', '2026-03-28', 'abstract:Abstract')}", ics_one)
         self.assertIn("SUMMARY:ICS Test - Abstract deadline (Poster) / Registration deadline", ics_one)
         self.assertIn("TRIGGER:-P2D", ics_one)
-        self.assertEqual(
-            [line for line in ics_one.splitlines() if line.startswith("UID:")],
-            [line for line in ics_two.splitlines() if line.startswith("UID:")],
-        )
+
+        conference = conferences[0]
+        changed_deadline = replace(conference.registration_deadlines[0], date=date(2026, 4, 2))
+        changed_cases = [
+            replace(conference, title="ICS Test Updated"),
+            replace(conference, location="Updated Place"),
+            replace(conference, url="https://example.com/updated"),
+            replace(conference, registration_deadlines=(changed_deadline,)),
+        ]
+        for changed in changed_cases:
+            with self.subTest(field=changed):
+                self.assertNotEqual(_dtstamp_lines(ics_one), _dtstamp_lines(build_ics([changed])))
 
     def test_meeting_ics_contains_schedule_only(self) -> None:
         path = write_yaml(
@@ -298,6 +312,7 @@ class CalendarCoreTests(unittest.TestCase):
         )
         conference = load_conferences(path)[0]
         ics = build_meeting_ics(conference)
+        self.assertEqual(ics, build_meeting_ics(conference))
 
         self.assertIn("DTSTART;VALUE=DATE:20260710", ics)
         self.assertIn("DTEND;VALUE=DATE:20260713", ics)
@@ -308,6 +323,17 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertNotIn("Registration", ics)
         self.assertNotIn("Abstract", ics)
         self.assertNotIn("Do not include this note", ics)
+
+        changed_cases = [
+            replace(conference, title="Meeting ICS Test Updated"),
+            replace(conference, start_date=date(2026, 7, 11)),
+            replace(conference, end_date=date(2026, 7, 13)),
+            replace(conference, location="Updated City"),
+            replace(conference, url="https://example.com/updated-meeting"),
+        ]
+        for changed in changed_cases:
+            with self.subTest(field=changed):
+                self.assertNotEqual(_dtstamp_lines(ics), _dtstamp_lines(build_meeting_ics(changed)))
 
     def test_reminders_select_only_matching_offsets_and_payload_is_deterministic(self) -> None:
         path = write_yaml(

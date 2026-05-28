@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//conference-calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:efbf93c62d5ae6dfa759b54c406993e67b9a297d@conference-calendar
+DTSTAMP:20260528T103239Z
+DTSTART;VALUE=DATE:20260624
+DTEND;VALUE=DATE:20260626
+SUMMARY:Habitable Worlds Observatory UK Community Workshop
+LOCATION:Darwin Building\, UCL\, Gower Street\, London\, WC1E 6BT\, UK
+DESCRIPTION:https://sites.google.com/view/hwouk/
+END:VEVENT
+END:VCALENDAR

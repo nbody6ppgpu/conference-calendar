@@ -241,9 +241,33 @@ def build_ics(conferences: Iterable[Conference]) -> str:
     )
 
 
+def build_meeting_ics(conference: Conference) -> str:
+    dtstamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    return "\n".join(
+        [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//conference-calendar//EN",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+            "BEGIN:VEVENT",
+            f"UID:{stable_uid('meeting', conference.id)}",
+            f"DTSTAMP:{dtstamp}",
+            f"DTSTART;VALUE=DATE:{conference.start_date.strftime('%Y%m%d')}",
+            f"DTEND;VALUE=DATE:{(conference.end_date + timedelta(days=1)).strftime('%Y%m%d')}",
+            f"SUMMARY:{_ics_escape(conference.title)}",
+            f"LOCATION:{_ics_escape(conference.location)}",
+            f"DESCRIPTION:{_ics_escape(conference.url)}",
+            "END:VEVENT",
+            "END:VCALENDAR",
+            "",
+        ]
+    )
+
+
 def build_index_html(conferences: Iterable[Conference], today: date, repo_url: str) -> str:
     upcoming, past = split_conferences(conferences, today)
-    upcoming_rows = _html_rows(upcoming)
+    upcoming_rows = _html_rows(upcoming, include_meeting_ics=True)
     webcal_url = _build_webcal_url(repo_url)
     past_count = len(past)
     return _build_site_html(
@@ -264,7 +288,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
     </section>
     <section class="panel">
       <h2>Upcoming events</h2>
-      {_html_table(upcoming_rows)}
+      {_html_table(upcoming_rows, include_meeting_ics=True)}
     </section>
     <section class="archive-link">
       <a href="./past-events.html">Click here to see past events</a>
@@ -568,13 +592,18 @@ def _conference_rows(conferences: Iterable[Conference]) -> list[str]:
     return rows
 
 
-def _html_rows(conferences: Iterable[Conference]) -> str:
+def _html_rows(conferences: Iterable[Conference], include_meeting_ics: bool = False) -> str:
     row_html = []
     for conference in conferences:
         title = (
             f'<a href="{escape(conference.url)}">{escape(conference.title)}</a>'
             if conference.url
             else escape(conference.title)
+        )
+        meeting_ics_cell = (
+            f'<td><a href="./meetings/{escape(conference.id)}.ics">Get .ics</a></td>'
+            if include_meeting_ics
+            else ""
         )
         row_html.append(
             "<tr>"
@@ -584,23 +613,31 @@ def _html_rows(conferences: Iterable[Conference]) -> str:
             f"<td>{escape(deadline_display(conference.registration_deadlines, conference.registration_display))}</td>"
             f"<td>{escape(deadline_display(conference.abstract_deadlines, conference.abstract_display))}</td>"
             f"<td>{escape(conference.comments)}</td>"
+            f"{meeting_ics_cell}"
             "</tr>"
         )
     if not row_html:
-        row_html.append("<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>")
+        extra_cell = "<td>-</td>" if include_meeting_ics else ""
+        row_html.append(f"<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>{extra_cell}</tr>")
     return "\n          ".join(row_html)
 
 
-def _html_table(rows: str) -> str:
+def _html_table(rows: str, include_meeting_ics: bool = False) -> str:
+    headers = [
+        "Date",
+        "Location",
+        "Meeting title and link",
+        "Registration Deadline",
+        "Abstract Deadline",
+        "Comments",
+    ]
+    if include_meeting_ics:
+        headers.append("Get meeting schedule .ics")
+    header_html = "\n            ".join(f"<th>{header}</th>" for header in headers)
     return f"""<table>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Location</th>
-            <th>Meeting title and link</th>
-            <th>Registration Deadline</th>
-            <th>Abstract Deadline</th>
-            <th>Comments</th>
+            {header_html}
           </tr>
         </thead>
         <tbody>

@@ -298,7 +298,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
       <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
       <div class="links">
-        <a href="{escape(webcal_url)}">Subscribe this calendar (with auto update)</a>
+        <a href="{escape(webcal_url)}">Subscribe to deadline reminders (auto update)</a>
         <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
         <a href="{escape(repo_url)}">Repository</a>
       </div>

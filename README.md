@@ -7,7 +7,7 @@ In this webpage, you can subscribe to all conferences in your calendar applicati
 # How to contribute / how to add new conference?
 
 1. Create a new issue; put the conference link.
-2. After creation, reply and say `@copilot follow AGENTS.md and create a PR to add the conference above`. Then AI will do the stuff.
+2. Leave the text `[new]` or `[ai]` in the issue title, then AI will start working.
 3. If AI does not work then just @kaiwu-astro to call the AI...
 
 ## For Repository Maintainers

@@ -338,7 +338,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: includes all fields of astronomy
-  # Conference Calendar
   - id: aprim-2026
     title: 2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)
     url: https://aprim2026.org/
@@ -384,6 +383,7 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  # Conference Calendar
   - id: et-symposium-2026
     title: XVI ET Symposium 2026
     url: https://indico.ego-gw.it/event/960/overview

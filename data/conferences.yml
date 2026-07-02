@@ -436,16 +436,12 @@ conferences:
     registration_deadlines:
       - label: Early bird registration
         date: 2026-04-27
-      - label: Regular registration
-        date: 2026-06-28
-      - label: Virtual access registration
-        date: 2026-07-03
     abstract_deadlines:
       - label: Abstract submission
         date: 2026-03-03
     registration_display: ""
     abstract_display: ""
-    comments: Registration and abstract submission opened on 2026-01-29
+    comments: ""
   - id: expanding-horizons-2026
     title: "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S"
     url: https://www.eso.org/sci/meetings/2026/ExpH.html

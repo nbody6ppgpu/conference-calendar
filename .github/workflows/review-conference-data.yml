@@ -1,0 +1,105 @@
+name: Review conference data
+
+on:
+  pull_request:
+    paths:
+      - data/conferences.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stop for forked pull requests
+        if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+        run: |
+          echo "This workflow auto-fixes conference data only for pull requests from branches in this repository."
+          echo "Forked pull requests do not receive the write-capable token or repository secrets needed to run Copilot and push repairs."
+          echo "Please run the conference data reviewer manually and update data/conferences.yml."
+          exit 1
+
+      - uses: actions/checkout@v4
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+
+      - name: Install Copilot CLI
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: npm install -g @github/copilot
+
+      - uses: actions/setup-python@v5
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        with:
+          python-version: "3.13"
+
+      - name: Install Python dependencies
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: python -m pip install -r requirements.txt
+
+      - name: Fetch pull request base
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: git fetch origin "${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}" --depth=1
+
+      - name: Run conference data reviewer
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          REVIEW_BASE_REF: origin/${{ github.event.pull_request.base.ref }}
+        run: |
+          copilot -p "$(cat .github/prompts/conference-data-reviewer.md)" \
+            --no-ask-user \
+            --allow-all-tools || gh auth status
+
+      - name: Verify generated outputs build
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: python3 scripts/build_calendar.py --markdown-output "$RUNNER_TEMP/conference_calendar.md" --site-dir "$RUNNER_TEMP/site"
+
+      - name: Ensure only data/conferences.yml was modified
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: |
+          set -euo pipefail
+
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMRT)
+
+          echo "Changed files:"
+          printf ' - %s\n' "${files[@]:-}"
+
+          allowed='data/conferences.yml'
+          disallowed=()
+
+          for f in "${files[@]:-}"; do
+            [[ -z "$f" ]] && continue
+            if [[ "$f" != "$allowed" ]]; then
+              disallowed+=("$f")
+            fi
+          done
+
+          if (( ${#disallowed[@]} > 0 )); then
+            echo "Unexpected files changed. Only $allowed is allowed:"
+            printf ' - %s\n' "${disallowed[@]}"
+            exit 1
+          fi
+
+      - name: Commit reviewer repairs
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- data/conferences.yml; then
+            echo "No reviewer repairs to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/conferences.yml
+          git commit -m "Review conference data"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

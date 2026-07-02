@@ -37,6 +37,17 @@ jobs:
             --no-ask-user \
             --allow-all-tools || gh auth status
 
+      - name: Run conference data reviewer
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          copilot -p "$(cat .github/prompts/conference-data-reviewer.md)" \
+            --no-ask-user \
+            --allow-all-tools || gh auth status
+
+      - name: Verify generated outputs build
+        run: python3 scripts/build_calendar.py --markdown-output "$RUNNER_TEMP/conference_calendar.md" --site-dir "$RUNNER_TEMP/site"
+
       - name: Ensure only data/conferences.yml was modified
         run: |
           set -euo pipefail
@@ -74,9 +85,12 @@ jobs:
           body: |
             ## Summary
             - run the scheduled Copilot cleanup task from AGENTS.md
+            - run the conference data reviewer against changed entries
             - update only the source conference data
 
             ## Test plan
+            - [x] ran the conference data reviewer
+            - [x] built generated outputs with temporary paths
             - [x] verified PR contains only data/conferences.yml
           delete-branch: true
 

@@ -18,3 +18,14 @@
    - Step b: for every event inside "Conference Calendar" but NOT under "Past events", check  `start_date`, `end_date`, `registration_deadlines`, `abstract_deadlines` , if any of them is empty or contain no date, you EXPLORE the corresponding conference url and try updating the entry. You do not fill in the `comments` field unless instructed by user.
    - Step c: evalute whether you have moved any outdated conferences in Step 1 or updated any missing fields in Step 2.
    - Step d (optional): if user explicitly ask you not to run build script, you stop here and do not execute this step. Else, evaluate if anything has changed in `data/conferences.yml`; if yes you run **`python3 scripts/build_calendar.py`** for local verification. This rebuilds local preview outputs and deletes stale per-meeting schedule ICS files automatically, but those generated files should not be committed.
+
+3. **When asked to review changed conference data (reviewer mode):**
+   - Reviewer mode is a factual verification and repair pass for conference entries changed in the current PR or automation run. It is not a full-table cleanup.
+   - Identify the changed conference entries from the current PR diff or current working-tree diff for **`data/conferences.yml`**. Review only those entries unless a directly related moved/renamed entry is needed to understand the diff.
+   - For each changed entry, EXPLORE the conference URL again using the rule above. Do not rely on the current YAML value as authoritative.
+   - Verify **`title`**, **`url`**, **`location`**, **`start_date`**, **`end_date`**, **`registration_deadlines`**, **`abstract_deadlines`**, **`registration_display`**, and **`abstract_display`**.
+   - If dates are ambiguous, missing, `TBA`, `open`, or `?`, do not invent dates. Use **`registration_display`** / **`abstract_display`** for text-only deadline states.
+   - If you find incorrect, shifted, stale, or unsupported values, directly repair only **`data/conferences.yml`**.
+   - Do not change **`comments`** unless the original user issue or task explicitly requested it.
+   - For GitHub Actions verification builds, use temporary outputs to keep generated files out of the PR:
+     **`python3 scripts/build_calendar.py --markdown-output "$RUNNER_TEMP/conference_calendar.md" --site-dir "$RUNNER_TEMP/site"`**.

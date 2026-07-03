@@ -457,17 +457,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
-  - id: astrostat-school-7
-    title: AstroStat School 7th Edition
-    url: https://astrostat-academy.github.io/website-school-7/
-    location: DotCampus, Rome, Italy
-    start_date: 2026-07-27
-    end_date: 2026-07-31
-    registration_deadlines: []
-    abstract_deadlines: []
-    registration_display: To be announced
-    abstract_display: To be announced
-    comments: detailed programme to be published closer to the school date
   - id: minggatu-forum-2026
     title: The First Minggatu Forum on Astronomy Frontier
     url: http://meeting.nmgqyc.com/meetingpc/

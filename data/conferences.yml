@@ -383,7 +383,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
-  # Conference Calendar
   - id: et-symposium-2026
     title: XVI ET Symposium 2026
     url: https://indico.ego-gw.it/event/960/overview
@@ -442,6 +441,7 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  # Conference Calendar
   - id: expanding-horizons-2026
     title: "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S"
     url: https://www.eso.org/sci/meetings/2026/ExpH.html

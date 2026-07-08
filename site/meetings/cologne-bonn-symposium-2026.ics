@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//conference-calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:6cd44eb6f65a1daf76f8af01e4773e49ab7826e1@conference-calendar
+DTSTAMP:20940621T085839Z
+DTSTART;VALUE=DATE:20260817
+DTEND;VALUE=DATE:20260822
+SUMMARY:Cologne-Bonn Symposium on the habitats of massive stars across cosmic time
+LOCATION:University of Cologne\, Cologne\, Germany
+DESCRIPTION:https://sfb1601.astro.uni-koeln.de/symposium2026/
+END:VEVENT
+END:VCALENDAR

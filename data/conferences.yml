@@ -568,6 +568,19 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: star cluster splinter meeting by convenor Rainer, Stefanie Walch-Gassner, Ralf Klessen, Thorsten Naab
+  - id: cosmology-from-home-2026
+    title: Cosmology from Home 2026
+    url: https://cosmologyfromhome.com/registration/
+    location: Online
+    start_date: 2026-09-21
+    end_date: 2026-10-02
+    registration_deadlines: []
+    abstract_deadlines:
+      - label: Equal-consideration abstract submission
+        date: 2026-08-18
+    registration_display: Open; no fixed registration deadline listed
+    abstract_display: ""
+    comments: ""
   - id: bwhpc-symposium-2026
     title: 12th bwHPC Symposium
     url: https://indico.kit.edu/event/5505/overview

@@ -32,7 +32,7 @@ jobs:
           github.event.sender.login != 'Copilot' &&
           github.event.sender.login != 'copilot-swe-agent[bot]'
         env:
-          GH_TOKEN: ${{ secrets.ISSUE_ASSIGN_TOKEN }}
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BASE_REF: ${{ github.event.pull_request.base.ref }}
         run: |
           set -euo pipefail

@@ -677,3 +677,14 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: young-planets-urbs-vetus-2027
+    title: "Young Planets in Urbs Vetus: Detection, Characterisation, and Evolution at the Dawn of Comparative Demographics"
+    url: https://indico.ict.inaf.it/e/young-planets-2027
+    location: Orvieto, Italy
+    start_date: 2027-03-16
+    end_date: 2027-03-18
+    registration_deadlines: []
+    abstract_deadlines: []
+    registration_display: ""
+    abstract_display: ""
+    comments: ""

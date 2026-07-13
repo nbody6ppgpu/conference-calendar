@@ -51,7 +51,7 @@ jobs:
       - name: Run conference data reviewer
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.KAI_COPILOT }}
           REVIEW_BASE_REF: origin/${{ github.event.pull_request.base.ref }}
         run: |
           copilot -p "$(cat .github/prompts/conference-data-reviewer.md)" \

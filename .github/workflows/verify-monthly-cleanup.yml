@@ -1,0 +1,113 @@
+name: Verify Monthly Calendar Cleanup
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'automation/monthly-calendar-cleanup-') &&
+      startsWith(github.event.pull_request.title, 'Monthly calendar cleanup:')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Verify cleanup date and source-file scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          prefix='automation/monthly-calendar-cleanup-'
+          cleanup_date="${HEAD_REF#"$prefix"}"
+          python3 - "$cleanup_date" <<'PY'
+          import sys
+          from datetime import date
+
+          try:
+              date.fromisoformat(sys.argv[1])
+          except ValueError as exc:
+              raise SystemExit(f"invalid cleanup date in branch name: {sys.argv[1]}") from exc
+          PY
+
+          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA...HEAD")
+          if (( ${#changed_files[@]} == 0 )); then
+            echo "::error::Monthly cleanup PR has an empty diff."
+            exit 1
+          fi
+          if (( ${#changed_files[@]} != 1 )) || [[ "${changed_files[0]:-}" != "data/conferences.yml" ]]; then
+            echo "::error::Monthly cleanup PR changed unexpected files: ${changed_files[*]}"
+            exit 1
+          fi
+
+          git diff --check "$BASE_SHA...HEAD"
+          echo "Cleanup date: $cleanup_date"
+          echo "Changed file: ${changed_files[0]}"
+
+      - name: Verify the base had expected cleanup work
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          cleanup_date="${HEAD_REF#automation/monthly-calendar-cleanup-}"
+          base_data="$RUNNER_TEMP/base-conferences.yml"
+          base_report="$RUNNER_TEMP/base-cleanup-plan.json"
+          git show "$BASE_SHA:data/conferences.yml" > "$base_data"
+          python3 scripts/cleanup_calendar.py \
+            --data "$base_data" \
+            --today "$cleanup_date" \
+            --dry-run \
+            --report "$base_report"
+
+          expected_count="$(jq -r '.expected_count' "$base_report")"
+          if [[ "$expected_count" == '0' ]]; then
+            echo "::error::The base branch had no deterministic cleanup work, so this PR is not a valid monthly cleanup."
+            exit 1
+          fi
+
+          check_args=()
+          mapfile -t expected_ids < <(jq -r '.expected_ids[]' "$base_report")
+          for conference_id in "${expected_ids[@]}"; do
+            check_args+=(--expected-id "$conference_id")
+          done
+          python3 scripts/cleanup_calendar.py \
+            --today "$cleanup_date" \
+            --check \
+            --baseline "$base_data" \
+            "${check_args[@]}"
+
+      - name: Run tests and verify generated outputs
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          cleanup_date="${HEAD_REF#automation/monthly-calendar-cleanup-}"
+          python3 -m unittest discover -s tests -v
+          build_dir="$(mktemp -d "$RUNNER_TEMP/calendar-build.XXXXXX")"
+          python3 scripts/build_calendar.py \
+            --today "$cleanup_date" \
+            --markdown-output "$build_dir/conference_calendar.md" \
+            --site-dir "$build_dir/site"

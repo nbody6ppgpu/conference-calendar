@@ -14,6 +14,8 @@
 
 2. **When asked to clean the table or clean the calendar:**
    - Update only **`data/conferences.yml`**. Do **not** hand-edit or commit generated outputs such as `conference_calendar.md`, `site/`, or generated per-meeting ICS files under `site/meetings/`.
+   - The monthly automation uses `python3 scripts/cleanup_calendar.py --today YYYY-MM-DD`. It computes the target section from each event's `end_date`; the YAML comments are layout markers, not the source of truth for whether an event is past or active.
+   - Compute the cleanup date once in the workflow and reuse it for the scan, edit, verification, and build. Do not recalculate `today` between those steps.
    - Step a: in `data/conferences.yml`, for every event inside "Conference Calendar" but NOT under "Past events", evaluate if it is outdated. Outdated means `end_date < today`. Move every outdated events from "Conference Calendar" into "Past events". 
    - Step b: for every event inside "Conference Calendar" but NOT under "Past events", check  `start_date`, `end_date`, `registration_deadlines`, `abstract_deadlines` , if any of them is empty or contain no date, you EXPLORE the corresponding conference url and try updating the entry. You do not fill in the `comments` field unless instructed by user.
    - Step c: evalute whether you have moved any outdated conferences in Step 1 or updated any missing fields in Step 2.

@@ -16,6 +16,9 @@ This repository now maintains the conference calendar using a “structured data
 
 - The single source of truth is `data/conferences.yml`.
 - `conference_calendar.md` and the entire `site/` directory are generated outputs. They are ignored by git and should not be included in pull requests.
+- Monthly archive placement is deterministic: the scheduled workflow runs `scripts/cleanup_calendar.py` with one fixed `Europe/Berlin` cleanup date and creates a PR only when the source data needs a change.
+- Copilot is used by the separate conference-data reviewer workflow after a real `data/conferences.yml` PR exists; cleanup and metadata fact-checking are separate tasks.
+- The monthly workflow uses the `PERSONAL_ACCESS_TOKEN` repository secret to push its branch and open the draft PR. That token must have Contents: Read and write and Pull requests: Read and write permission on this repository.
 - Do not edit generated HTML directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html` or `build_past_events_html`, then run `python3 scripts/build_calendar.py`.
 - GitHub Pages builds the site from `data/conferences.yml` during deployment.
 
@@ -95,6 +98,7 @@ After making changes, run the following commands locally to preview and verify:
 ```bash
 python3 -m pip install -r requirements.txt
 python3 scripts/build_calendar.py
+python3 scripts/cleanup_calendar.py --today 2026-08-04 --dry-run
 python3 -m unittest discover -s tests -v
 ```
 
@@ -106,5 +110,6 @@ Then commit only source changes, normally:
 
 - `data/conferences.yml`: The single source of truth.
 - `scripts/build_calendar.py`: Generates Markdown, main/archive HTML pages, ICS, and JSON files.
+- `scripts/cleanup_calendar.py`: Computes and applies date-based archive placement with a fixed cleanup date.
 - `tests/`: Contains validation, generation, ICS, and reminder-related regression tests.
 - `site/`: Generated local preview output and the artifact published by GitHub Pages.

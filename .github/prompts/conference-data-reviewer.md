@@ -8,6 +8,7 @@ Scope:
 - If a pull request base ref is available, inspect `git diff "$REVIEW_BASE_REF"...HEAD -- data/conferences.yml` and identify the changed conference entries.
 - If no pull request base ref is available, inspect `git diff -- data/conferences.yml` and identify the changed conference entries.
 - Review only those changed entries. Do not clean or reorganize the full calendar.
+- A deterministic cleanup workflow owns date-based archive placement. Do not move entries between the past and active sections while reviewing metadata.
 - Modify only `data/conferences.yml`.
 - Do not edit generated outputs such as `conference_calendar.md`, `site/`, or `site/meetings/`.
 

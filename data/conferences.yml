@@ -441,7 +441,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
-  # Conference Calendar
   - id: expanding-horizons-2026
     title: "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S"
     url: https://www.eso.org/sci/meetings/2026/ExpH.html
@@ -457,6 +456,7 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  # Conference Calendar
   - id: minggatu-forum-2026
     title: The First Minggatu Forum on Astronomy Frontier
     url: http://meeting.nmgqyc.com/meetingpc/

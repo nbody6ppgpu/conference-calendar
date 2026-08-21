@@ -688,3 +688,16 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: modest27
+    title: Modelling and Observing DEnse STellar systems 2027 (MODEST-27)
+    url: https://www.ictp-saifr.org/modestc2027/
+    location: IFT-UNESP, São Paulo, Brazil
+    start_date: 2027-07-12
+    end_date: 2027-07-16
+    registration_deadlines:
+      - label: Registration deadline
+        date: 2027-05-14
+    abstract_deadlines: []
+    registration_display: ""
+    abstract_display: ""
+    comments: ""

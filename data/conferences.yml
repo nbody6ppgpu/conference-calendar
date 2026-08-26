@@ -643,6 +643,19 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: chaica-7
+    title: "Challenges and Innovations in Computational Astrophysics VII (ChaICA-7)"
+    url: https://iaub1commission.github.io/index/chaica7/
+    location: Online (Zoom)
+    start_date: 2026-11-17
+    end_date: 2026-11-19
+    registration_deadlines: []
+    abstract_deadlines:
+      - label: Abstract submission deadline
+        date: 2026-10-01
+    registration_display: Registration opens on 2026-08-15; no fixed registration deadline listed
+    abstract_display: ""
+    comments: SOC includes Michiko Fujii, Steven Rieder, Christian M. Boily
   - id: iaus-411
     title: "IAUS 411: Star Clusters as Guides to Galaxies"
     url: https://iaus411.fcaglp.unlp.edu.ar/

@@ -714,3 +714,18 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: asc-2027
+    title: ASC 2027
+    url: https://cadiz-meeting2027.ugr.es/
+    location: Facultad de Filosofía y Letras, Universidad de Cádiz, Cádiz, Spain
+    start_date: 2027-08-02
+    end_date: 2027-08-06
+    registration_deadlines:
+      - label: Early Bird
+        date: 2027-05-26
+      - label: Standard
+        date: 2027-06-23
+    abstract_deadlines: []
+    registration_display: Registration opens before January 2027
+    abstract_display: Abstract deadline before May 2027
+    comments: ""

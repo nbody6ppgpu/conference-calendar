@@ -7,6 +7,10 @@ on:
       - synchronize
       - reopened
       - ready_for_review
+    branches:
+      - main
+    paths:
+      - "data/conferences.yml"
 
 permissions:
   contents: read

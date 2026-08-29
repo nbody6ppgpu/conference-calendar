@@ -8,6 +8,8 @@ assignees: ''
 
 ---
 
+**请不要删除标题中的 `[new]` 标签，否则无法触发 AI 自动添加。**
+
 URL link for the meeting:
 
 

@@ -1,129 +1,6 @@
 {
-  "generated_on": "2026-07-08",
+  "generated_on": "2026-08-29",
   "upcoming": [
-    {
-      "id": "expanding-horizons-2026",
-      "title": "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S",
-      "url": "https://www.eso.org/sci/meetings/2026/ExpH.html",
-      "location": "Garching near Munich, Germany",
-      "start_date": "2026-07-13",
-      "end_date": "2026-07-17",
-      "registration_deadlines": [
-        {
-          "label": "Registration and fee payment close",
-          "date": "2026-05-25"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Deadline for abstract submission",
-          "date": "2026-04-24"
-        }
-      ],
-      "registration_display": "Registration and fee payment close: May 25 2026",
-      "abstract_display": "Deadline for abstract submission: Apr. 24 2026",
-      "comments": ""
-    },
-    {
-      "id": "minggatu-forum-2026",
-      "title": "The First Minggatu Forum on Astronomy Frontier",
-      "url": "http://meeting.nmgqyc.com/meetingpc/",
-      "location": "Hohhot, Inner Mongolia, China",
-      "start_date": "2026-08-06",
-      "end_date": "2026-08-09",
-      "registration_deadlines": [
-        {
-          "label": "Registration",
-          "date": "2026-07-15"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Abstract",
-          "date": "2026-05-31"
-        }
-      ],
-      "registration_display": "July 15 2026",
-      "abstract_display": "May 31 2026",
-      "comments": ""
-    },
-    {
-      "id": "modest26",
-      "title": "MODEST26",
-      "url": "https://astro-silkroad.eu/conferences/modest26",
-      "location": "Quy Nhon, ICISE, Vietnam",
-      "start_date": "2026-08-16",
-      "end_date": "2026-08-22",
-      "registration_deadlines": [
-        {
-          "label": "Early bird",
-          "date": "2026-06-29"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Oral consideration",
-          "date": "2026-03-31"
-        },
-        {
-          "label": "Final abstract deadline",
-          "date": "2026-04-12"
-        }
-      ],
-      "registration_display": "Late registration possible after early-bird deadline",
-      "abstract_display": "Oral consideration: Mar. 31 2026; Final abstract deadline: Apr. 12 2026",
-      "comments": "Registration opened"
-    },
-    {
-      "id": "cologne-bonn-symposium-2026",
-      "title": "Cologne-Bonn Symposium on the habitats of massive stars across cosmic time",
-      "url": "https://sfb1601.astro.uni-koeln.de/symposium2026/",
-      "location": "University of Cologne, Cologne, Germany",
-      "start_date": "2026-08-17",
-      "end_date": "2026-08-21",
-      "registration_deadlines": [
-        {
-          "label": "Early bird",
-          "date": "2026-04-01"
-        },
-        {
-          "label": "Regular",
-          "date": "2026-06-30"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Abstract",
-          "date": "2026-04-15"
-        }
-      ],
-      "registration_display": "Early bird: Apr. 1 2026; Regular: June 30 2026",
-      "abstract_display": "Apr. 15 2026",
-      "comments": "hybrid participation available"
-    },
-    {
-      "id": "iaus-408",
-      "title": "IAUS 408: Unraveling the joint lives of Stars and Exoplanets",
-      "url": "https://pandore.astro.uliege.be/IAUS408/",
-      "location": "Liege, Belgium",
-      "start_date": "2026-08-17",
-      "end_date": "2026-08-21",
-      "registration_deadlines": [
-        {
-          "label": "Registration",
-          "date": "2026-07-17"
-        }
-      ],
-      "abstract_deadlines": [
-        {
-          "label": "Abstract",
-          "date": "2026-05-31"
-        }
-      ],
-      "registration_display": "July 17 2026",
-      "abstract_display": "May 31 2026",
-      "comments": "travel support deadline: 2026-04-24"
-    },
     {
       "id": "multiple-planet-systems-2026",
       "title": "Multiple Planet Systems",
@@ -197,6 +74,24 @@
       "comments": "star cluster splinter meeting by convenor Rainer, Stefanie Walch-Gassner, Ralf Klessen, Thorsten Naab"
     },
     {
+      "id": "cosmology-from-home-2026",
+      "title": "Cosmology from Home 2026",
+      "url": "https://cosmologyfromhome.com/registration/",
+      "location": "Online",
+      "start_date": "2026-09-21",
+      "end_date": "2026-10-02",
+      "registration_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Equal-consideration abstract submission",
+          "date": "2026-08-18"
+        }
+      ],
+      "registration_display": "Open; no fixed registration deadline listed",
+      "abstract_display": "Equal-consideration abstract submission: Aug. 18 2026",
+      "comments": ""
+    },
+    {
       "id": "bwhpc-symposium-2026",
       "title": "12th bwHPC Symposium",
       "url": "https://indico.kit.edu/event/5505/overview",
@@ -263,7 +158,7 @@
       ],
       "registration_display": "Sept. 30 2026",
       "abstract_display": "Sept. 1 2026",
-      "comments": "Hypervelocity stars, etc. Nov. 2-6, 2026, Beijing, China"
+      "comments": ""
     },
     {
       "id": "nuclei-2026",
@@ -291,6 +186,24 @@
       "registration_display": "Registration & abstract submission: June 20 2026; Registration payment: Aug. 31 2026",
       "abstract_display": "Abstract submission: June 20 2026",
       "comments": ""
+    },
+    {
+      "id": "chaica-7",
+      "title": "Challenges and Innovations in Computational Astrophysics VII (ChaICA-7)",
+      "url": "https://iaub1commission.github.io/index/chaica7/",
+      "location": "Online (Zoom)",
+      "start_date": "2026-11-17",
+      "end_date": "2026-11-19",
+      "registration_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract submission deadline",
+          "date": "2026-10-01"
+        }
+      ],
+      "registration_display": "Registration opens on 2026-08-15; no fixed registration deadline listed",
+      "abstract_display": "Abstract submission deadline: Oct. 1 2026",
+      "comments": "SOC includes Michiko Fujii, Steven Rieder, Christian M. Boily"
     },
     {
       "id": "iaus-411",
@@ -344,6 +257,77 @@
       ],
       "registration_display": "Early-bird registration: June 30 2026; Registration closes: Nov. 8 2026",
       "abstract_display": "Abstract submission: May 31 2026",
+      "comments": ""
+    },
+    {
+      "id": "young-planets-urbs-vetus-2027",
+      "title": "Young Planets in Urbs Vetus: Detection, Characterisation, and Evolution at the Dawn of Comparative Demographics",
+      "url": "https://indico.ict.inaf.it/e/young-planets-2027",
+      "location": "Orvieto, Italy",
+      "start_date": "2027-03-16",
+      "end_date": "2027-03-18",
+      "registration_deadlines": [],
+      "abstract_deadlines": [],
+      "registration_display": "",
+      "abstract_display": "",
+      "comments": ""
+    },
+    {
+      "id": "eas-2027",
+      "title": "EAS 2027: European Astronomical Society Annual Meeting",
+      "url": "https://eas.unige.ch/EAS_meeting/",
+      "location": "Austria Centre Vienna, Vienna, Austria",
+      "start_date": "2027-06-21",
+      "end_date": "2027-06-25",
+      "registration_deadlines": [],
+      "abstract_deadlines": [
+        {
+          "label": "Call for Sessions",
+          "date": "2026-09-30"
+        }
+      ],
+      "registration_display": "",
+      "abstract_display": "Call for Sessions: Sept. 30 2026",
+      "comments": ""
+    },
+    {
+      "id": "modest27",
+      "title": "Modelling and Observing DEnse STellar systems 2027 (MODEST-27)",
+      "url": "https://www.ictp-saifr.org/modestc2027/",
+      "location": "IFT-UNESP, São Paulo, Brazil",
+      "start_date": "2027-07-12",
+      "end_date": "2027-07-16",
+      "registration_deadlines": [
+        {
+          "label": "Registration deadline",
+          "date": "2027-05-14"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "Registration deadline: May 14 2027",
+      "abstract_display": "",
+      "comments": ""
+    },
+    {
+      "id": "asc-2027",
+      "title": "ASC 2027",
+      "url": "https://cadiz-meeting2027.ugr.es/",
+      "location": "Facultad de Filosofía y Letras, Universidad de Cádiz, Cádiz, Spain",
+      "start_date": "2027-08-02",
+      "end_date": "2027-08-06",
+      "registration_deadlines": [
+        {
+          "label": "Early Bird",
+          "date": "2027-05-26"
+        },
+        {
+          "label": "Standard",
+          "date": "2027-06-23"
+        }
+      ],
+      "abstract_deadlines": [],
+      "registration_display": "Registration opens before January 2027",
+      "abstract_display": "Abstract deadline before May 2027",
       "comments": ""
     }
   ],
@@ -996,6 +980,129 @@
       "registration_display": "Early bird registration: Apr. 27 2026",
       "abstract_display": "Abstract submission: Mar. 3 2026",
       "comments": ""
+    },
+    {
+      "id": "expanding-horizons-2026",
+      "title": "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S",
+      "url": "https://www.eso.org/sci/meetings/2026/ExpH.html",
+      "location": "Garching near Munich, Germany",
+      "start_date": "2026-07-13",
+      "end_date": "2026-07-17",
+      "registration_deadlines": [
+        {
+          "label": "Registration and fee payment close",
+          "date": "2026-05-25"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Deadline for abstract submission",
+          "date": "2026-04-24"
+        }
+      ],
+      "registration_display": "Registration and fee payment close: May 25 2026",
+      "abstract_display": "Deadline for abstract submission: Apr. 24 2026",
+      "comments": ""
+    },
+    {
+      "id": "minggatu-forum-2026",
+      "title": "The First Minggatu Forum on Astronomy Frontier",
+      "url": "http://meeting.nmgqyc.com/meetingpc/",
+      "location": "Hohhot, Inner Mongolia, China",
+      "start_date": "2026-08-06",
+      "end_date": "2026-08-09",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-07-15"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-05-31"
+        }
+      ],
+      "registration_display": "July 15 2026",
+      "abstract_display": "May 31 2026",
+      "comments": ""
+    },
+    {
+      "id": "modest26",
+      "title": "MODEST26",
+      "url": "https://astro-silkroad.eu/conferences/modest26",
+      "location": "Quy Nhon, ICISE, Vietnam",
+      "start_date": "2026-08-16",
+      "end_date": "2026-08-22",
+      "registration_deadlines": [
+        {
+          "label": "Early bird",
+          "date": "2026-06-29"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Oral consideration",
+          "date": "2026-03-31"
+        },
+        {
+          "label": "Final abstract deadline",
+          "date": "2026-04-12"
+        }
+      ],
+      "registration_display": "Late registration possible after early-bird deadline",
+      "abstract_display": "Oral consideration: Mar. 31 2026; Final abstract deadline: Apr. 12 2026",
+      "comments": "Registration opened"
+    },
+    {
+      "id": "cologne-bonn-symposium-2026",
+      "title": "Cologne-Bonn Symposium on the habitats of massive stars across cosmic time",
+      "url": "https://sfb1601.astro.uni-koeln.de/symposium2026/",
+      "location": "University of Cologne, Cologne, Germany",
+      "start_date": "2026-08-17",
+      "end_date": "2026-08-21",
+      "registration_deadlines": [
+        {
+          "label": "Early bird",
+          "date": "2026-04-01"
+        },
+        {
+          "label": "Regular",
+          "date": "2026-06-30"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-04-15"
+        }
+      ],
+      "registration_display": "Early bird: Apr. 1 2026; Regular: June 30 2026",
+      "abstract_display": "Apr. 15 2026",
+      "comments": "hybrid participation available"
+    },
+    {
+      "id": "iaus-408",
+      "title": "IAUS 408: Unraveling the joint lives of Stars and Exoplanets",
+      "url": "https://pandore.astro.uliege.be/IAUS408/",
+      "location": "Liege, Belgium",
+      "start_date": "2026-08-17",
+      "end_date": "2026-08-21",
+      "registration_deadlines": [
+        {
+          "label": "Registration",
+          "date": "2026-07-17"
+        }
+      ],
+      "abstract_deadlines": [
+        {
+          "label": "Abstract",
+          "date": "2026-05-31"
+        }
+      ],
+      "registration_display": "July 17 2026",
+      "abstract_display": "May 31 2026",
+      "comments": "travel support deadline: 2026-04-24"
     }
   ]
 }

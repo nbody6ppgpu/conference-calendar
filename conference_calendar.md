@@ -12,20 +12,21 @@ Found a new interesting conference? Do not edit this generated markdown, but tel
 
 | Date | Location | Meeting title and link | Registration Deadline | Abstract Deadline | Comments |
 |-|-|-|-|-|-|
-| July 13-17 2026 | Garching near Munich, Germany | [EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S](https://www.eso.org/sci/meetings/2026/ExpH.html) | Registration and fee payment close: May 25 2026 | Deadline for abstract submission: Apr. 24 2026 |  |
-| Aug. 6-9 2026 | Hohhot, Inner Mongolia, China | [The First Minggatu Forum on Astronomy Frontier](http://meeting.nmgqyc.com/meetingpc/) | July 15 2026 | May 31 2026 |  |
-| Aug. 16-22 2026 | Quy Nhon, ICISE, Vietnam | [MODEST26](https://astro-silkroad.eu/conferences/modest26) | Late registration possible after early-bird deadline | Oral consideration: Mar. 31 2026; Final abstract deadline: Apr. 12 2026 | Registration opened |
-| Aug. 17-21 2026 | University of Cologne, Cologne, Germany | [Cologne-Bonn Symposium on the habitats of massive stars across cosmic time](https://sfb1601.astro.uni-koeln.de/symposium2026/) | Early bird: Apr. 1 2026; Regular: June 30 2026 | Apr. 15 2026 | hybrid participation available |
-| Aug. 17-21 2026 | Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | July 17 2026 | May 31 2026 | travel support deadline: 2026-04-24 |
 | Aug. 31 - Sept. 4 2026 | Sofia University "St. Kliment Ohridski", Sofia, Bulgaria | [Multiple Planet Systems](https://exo-mps.eu) | General participation: July 15 2026 | Contributed talks (extended): May 31 2026; Poster presentations: June 30 2026 |  |
 | Sept. 1-4 2026 | MPIA, Heidelberg, Germany | [Bridging It: Connecting Observations and Models of (Exo)planets and their Formation](https://sites.google.com/view/bridging-it-cost-meeting/home) | Registration is now closed | Registration and abstract submission are now closed |  |
 | Sept. 7-11 2026 | Garching, Germany | [Annual Meeting of the Astronomische Gesellschaft 2026](https://ag2026.astronomische-gesellschaft.de/) | Early registration: July 15 2026; Regular registration: Aug. 31 2026 | Abstract submission: June 30 2026 | star cluster splinter meeting by convenor Rainer, Stefanie Walch-Gassner, Ralf Klessen, Thorsten Naab |
+| Sept. 21 - Oct. 2 2026 | Online | [Cosmology from Home 2026](https://cosmologyfromhome.com/registration/) | Open; no fixed registration deadline listed | Equal-consideration abstract submission: Aug. 18 2026 |  |
 | Sept. 24 2026 | Universität Konstanz, Konstanz, Germany | [12th bwHPC Symposium](https://indico.kit.edu/event/5505/overview) | Sept. 14 2026 | Aug. 3 2026 | Free of charge; open to researchers from all scientific fields |
 | Oct. 26-28 2026 | University of Seville, Seville, Spain | [Young Astronomers on Active Galactic Nuclei (YAGN)](https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html) | May 31 2026 | May 31 2026 | talk submission; speakers selected in June 2026 |
-| Nov. 2-6 2026 | UCAS Yanqi Lake Campus, Beijing, China | [Stars On the Run III](https://conf.koushare.com/conf/StarsOntheRun/) | Sept. 30 2026 | Sept. 1 2026 | Hypervelocity stars, etc. Nov. 2-6, 2026, Beijing, China |
+| Nov. 2-6 2026 | UCAS Yanqi Lake Campus, Beijing, China | [Stars On the Run III](https://conf.koushare.com/conf/StarsOntheRun/) | Sept. 30 2026 | Sept. 1 2026 |  |
 | Nov. 16-20 2026 | ESO Santiago, Chile | [Galaxy nuclei – Diversity, Dynamics, and Hidden Mass in Galactic Centers (NUCLEI 2026)](https://www.eso.org/sci/meetings/2026/NUCLEI_2026.html) | Registration & abstract submission: June 20 2026; Registration payment: Aug. 31 2026 | Abstract submission: June 20 2026 |  |
+| Nov. 17-19 2026 | Online (Zoom) | [Challenges and Innovations in Computational Astrophysics VII (ChaICA-7)](https://iaub1commission.github.io/index/chaica7/) | Registration opens on 2026-08-15; no fixed registration deadline listed | Abstract submission deadline: Oct. 1 2026 | SOC includes Michiko Fujii, Steven Rieder, Christian M. Boily |
 | Nov. 22-26 2026 | Bariloche, Argentina | [IAUS 411: Star Clusters as Guides to Galaxies](https://iaus411.fcaglp.unlp.edu.ar/) | Late rate after 2026-08-01 | Abstract submission: Apr. 30 2026 | Abstract submission open 2026-04-01 to 2026-04-30 |
 | Nov. 30 - Dec. 4 2026 | Near Paris, France | [HWO2026](https://hwo2026.sciencesconf.org) | Early-bird registration: June 30 2026; Registration closes: Nov. 8 2026 | Abstract submission: May 31 2026 |  |
+| Mar. 16-18 2027 | Orvieto, Italy | [Young Planets in Urbs Vetus: Detection, Characterisation, and Evolution at the Dawn of Comparative Demographics](https://indico.ict.inaf.it/e/young-planets-2027) |  |  |  |
+| June 21-25 2027 | Austria Centre Vienna, Vienna, Austria | [EAS 2027: European Astronomical Society Annual Meeting](https://eas.unige.ch/EAS_meeting/) |  | Call for Sessions: Sept. 30 2026 |  |
+| July 12-16 2027 | IFT-UNESP, São Paulo, Brazil | [Modelling and Observing DEnse STellar systems 2027 (MODEST-27)](https://www.ictp-saifr.org/modestc2027/) | Registration deadline: May 14 2027 |  |  |
+| Aug. 2-6 2027 | Facultad de Filosofía y Letras, Universidad de Cádiz, Cádiz, Spain | [ASC 2027](https://cadiz-meeting2027.ugr.es/) | Registration opens before January 2027 | Abstract deadline before May 2027 |  |
 
 ## Past events
 
@@ -62,5 +63,10 @@ Found a new interesting conference? Do not edit this generated markdown, but tel
 | June 22-24 2026 | Online | [LRD2026 Workshop](https://sites.google.com/uniroma1.it/lrdworkshop2026/) | Registration open; deadline not specified | Flash talk abstract submission: May 24 2026 |  |
 | June 24-25 2026 | Darwin Building, UCL, Gower Street, London, WC1E 6BT, UK | [Habitable Worlds Observatory UK Community Workshop](https://sites.google.com/view/hwouk/) | Conference registration: June 1 2026 | Abstract submission: May 11 2026 | fourth UK community workshop |
 | June 29 - July 3 2026 | SwissTech Convention Centre, Lausanne, Switzerland | [EAS2026](https://eas.unige.ch/EAS2026/grants.jsp) | Early bird registration: Apr. 27 2026 | Abstract submission: Mar. 3 2026 |  |
+| July 13-17 2026 | Garching near Munich, Germany | [EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S](https://www.eso.org/sci/meetings/2026/ExpH.html) | Registration and fee payment close: May 25 2026 | Deadline for abstract submission: Apr. 24 2026 |  |
+| Aug. 6-9 2026 | Hohhot, Inner Mongolia, China | [The First Minggatu Forum on Astronomy Frontier](http://meeting.nmgqyc.com/meetingpc/) | July 15 2026 | May 31 2026 |  |
+| Aug. 16-22 2026 | Quy Nhon, ICISE, Vietnam | [MODEST26](https://astro-silkroad.eu/conferences/modest26) | Late registration possible after early-bird deadline | Oral consideration: Mar. 31 2026; Final abstract deadline: Apr. 12 2026 | Registration opened |
+| Aug. 17-21 2026 | University of Cologne, Cologne, Germany | [Cologne-Bonn Symposium on the habitats of massive stars across cosmic time](https://sfb1601.astro.uni-koeln.de/symposium2026/) | Early bird: Apr. 1 2026; Regular: June 30 2026 | Apr. 15 2026 | hybrid participation available |
+| Aug. 17-21 2026 | Liege, Belgium | [IAUS 408: Unraveling the joint lives of Stars and Exoplanets](https://pandore.astro.uliege.be/IAUS408/) | July 17 2026 | May 31 2026 | travel support deadline: 2026-04-24 |
 
 *Note: after edit please click* `Preview` *on the top left to see whether the table shows properly.*

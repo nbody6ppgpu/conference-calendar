@@ -900,6 +900,20 @@ TRIGGER:-P2D
 END:VALARM
 END:VEVENT
 BEGIN:VEVENT
+UID:ed644c5279b50684769b3a459dec6f33a3dfa5a0@conference-calendar
+DTSTAMP:20261217T090808Z
+DTSTART;VALUE=DATE:20260818
+DTEND;VALUE=DATE:20260819
+SUMMARY:Cosmology from Home 2026 - Abstract deadline (Equal-consideration abstract submission)
+DESCRIPTION:Abstract deadline (Equal-consideration abstract submission): 2026-08-18\; Link: https://cosmologyfromhome.com/registration/
+URL:https://cosmologyfromhome.com/registration/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Cosmology from Home 2026 - Abstract deadline (Equal-consideration abstract submission)
+TRIGGER:-P2D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
 UID:7bdf4f4cb4d2407868536023d22124ad2638488c@conference-calendar
 DTSTAMP:20790526T192953Z
 DTSTART;VALUE=DATE:20260803
@@ -943,11 +957,11 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:209865037f035caebf7c7c025c88ee73dacdcc1c@conference-calendar
-DTSTAMP:20740708T090544Z
+DTSTAMP:20440208T033229Z
 DTSTART;VALUE=DATE:20260901
 DTEND;VALUE=DATE:20260902
 SUMMARY:Stars On the Run III - Abstract deadline
-DESCRIPTION:Abstract deadline: 2026-09-01\; Notes: Hypervelocity stars\, etc. Nov. 2-6\, 2026\, Beijing\, China\; Link: https://conf.koushare.com/conf/StarsOntheRun/
+DESCRIPTION:Abstract deadline: 2026-09-01\; Link: https://conf.koushare.com/conf/StarsOntheRun/
 URL:https://conf.koushare.com/conf/StarsOntheRun/
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -957,11 +971,11 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:cdf2bea5d75bc8e14d344bf00ec6b5b980fc6c83@conference-calendar
-DTSTAMP:20270313T014603Z
+DTSTAMP:20221210T062101Z
 DTSTART;VALUE=DATE:20260930
 DTEND;VALUE=DATE:20261001
 SUMMARY:Stars On the Run III - Registration deadline
-DESCRIPTION:Registration deadline: 2026-09-30\; Notes: Hypervelocity stars\, etc. Nov. 2-6\, 2026\, Beijing\, China\; Link: https://conf.koushare.com/conf/StarsOntheRun/
+DESCRIPTION:Registration deadline: 2026-09-30\; Link: https://conf.koushare.com/conf/StarsOntheRun/
 URL:https://conf.koushare.com/conf/StarsOntheRun/
 BEGIN:VALARM
 ACTION:DISPLAY
@@ -994,6 +1008,20 @@ URL:https://www.eso.org/sci/meetings/2026/NUCLEI_2026.html
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Galaxy nuclei – Diversity\, Dynamics\, and Hidden Mass in Galactic Centers (NUCLEI 2026) - Registration deadline (Registration payment)
+TRIGGER:-P2D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b28f52748b232fd2c7e3def00a46cd2b050788ef@conference-calendar
+DTSTAMP:20160304T120815Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261002
+SUMMARY:Challenges and Innovations in Computational Astrophysics VII (ChaICA-7) - Abstract deadline (Abstract submission deadline)
+DESCRIPTION:Abstract deadline (Abstract submission deadline): 2026-10-01\; Notes: SOC includes Michiko Fujii\, Steven Rieder\, Christian M. Boily\; Link: https://iaub1commission.github.io/index/chaica7/
+URL:https://iaub1commission.github.io/index/chaica7/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Challenges and Innovations in Computational Astrophysics VII (ChaICA-7) - Abstract deadline (Abstract submission deadline)
 TRIGGER:-P2D
 END:VALARM
 END:VEVENT
@@ -1078,6 +1106,62 @@ URL:https://hwo2026.sciencesconf.org
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:HWO2026 - Registration deadline (Registration closes)
+TRIGGER:-P2D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:aa4f64059d70e82f76be2ebc8ac075c91a14c862@conference-calendar
+DTSTAMP:20671003T175927Z
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20261001
+SUMMARY:EAS 2027: European Astronomical Society Annual Meeting - Abstract deadline (Call for Sessions)
+DESCRIPTION:Abstract deadline (Call for Sessions): 2026-09-30\; Link: https://eas.unige.ch/EAS_meeting/
+URL:https://eas.unige.ch/EAS_meeting/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:EAS 2027: European Astronomical Society Annual Meeting - Abstract deadline (Call for Sessions)
+TRIGGER:-P2D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:512c48d158207f2918b495bf59f9b8a0764bdae2@conference-calendar
+DTSTAMP:20680820T115830Z
+DTSTART;VALUE=DATE:20270514
+DTEND;VALUE=DATE:20270515
+SUMMARY:Modelling and Observing DEnse STellar systems 2027 (MODEST-27) - Registration deadline (Registration deadline)
+DESCRIPTION:Registration deadline (Registration deadline): 2027-05-14\; Link: https://www.ictp-saifr.org/modestc2027/
+URL:https://www.ictp-saifr.org/modestc2027/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Modelling and Observing DEnse STellar systems 2027 (MODEST-27) - Registration deadline (Registration deadline)
+TRIGGER:-P2D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:b105d3264d7fc8568dc10faa40733b0a664afe67@conference-calendar
+DTSTAMP:20661026T104603Z
+DTSTART;VALUE=DATE:20270526
+DTEND;VALUE=DATE:20270527
+SUMMARY:ASC 2027 - Registration deadline (Early Bird)
+DESCRIPTION:Registration deadline (Early Bird): 2027-05-26\; Link: https://cadiz-meeting2027.ugr.es/
+URL:https://cadiz-meeting2027.ugr.es/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:ASC 2027 - Registration deadline (Early Bird)
+TRIGGER:-P2D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:692a843f79196fe1b3ac200400ee7a68246b8590@conference-calendar
+DTSTAMP:20091010T072300Z
+DTSTART;VALUE=DATE:20270623
+DTEND;VALUE=DATE:20270624
+SUMMARY:ASC 2027 - Registration deadline (Standard)
+DESCRIPTION:Registration deadline (Standard): 2027-06-23\; Link: https://cadiz-meeting2027.ugr.es/
+URL:https://cadiz-meeting2027.ugr.es/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:ASC 2027 - Registration deadline (Standard)
 TRIGGER:-P2D
 END:VALARM
 END:VEVENT

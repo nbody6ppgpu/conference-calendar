@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//conference-calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:73a9c661fdb0cdcfa503f2f5fe52f303b3d656de@conference-calendar
+DTSTAMP:20410823T061849Z
+DTSTART;VALUE=DATE:20270316
+DTEND;VALUE=DATE:20270319
+SUMMARY:Young Planets in Urbs Vetus: Detection\, Characterisation\, and Evolution at the Dawn of Comparative Demographics
+LOCATION:Orvieto\, Italy
+DESCRIPTION:https://indico.ict.inaf.it/e/young-planets-2027
+END:VEVENT
+END:VCALENDAR

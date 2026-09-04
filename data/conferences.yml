@@ -456,7 +456,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
-  # Conference Calendar
   - id: minggatu-forum-2026
     title: The First Minggatu Forum on Astronomy Frontier
     url: http://meeting.nmgqyc.com/meetingpc/
@@ -504,23 +503,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: "travel support deadline: 2026-04-24"
-  - id: multiple-planet-systems-2026
-    title: Multiple Planet Systems
-    url: https://exo-mps.eu
-    location: Sofia University "St. Kliment Ohridski", Sofia, Bulgaria
-    start_date: 2026-08-31
-    end_date: 2026-09-04
-    registration_deadlines:
-      - label: General participation
-        date: 2026-07-15
-    abstract_deadlines:
-      - label: Contributed talks (extended)
-        date: 2026-05-31
-      - label: Poster presentations
-        date: 2026-06-30
-    registration_display: ""
-    abstract_display: ""
-    comments: ""
   - id: cologne-bonn-symposium-2026
     title: Cologne-Bonn Symposium on the habitats of massive stars across cosmic time
     url: https://sfb1601.astro.uni-koeln.de/symposium2026/
@@ -538,6 +520,24 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: hybrid participation available
+  # Conference Calendar
+  - id: multiple-planet-systems-2026
+    title: Multiple Planet Systems
+    url: https://exo-mps.eu
+    location: Sofia University "St. Kliment Ohridski", Sofia, Bulgaria
+    start_date: 2026-08-31
+    end_date: 2026-09-04
+    registration_deadlines:
+      - label: General participation
+        date: 2026-07-15
+    abstract_deadlines:
+      - label: Contributed talks (extended)
+        date: 2026-05-31
+      - label: Poster presentations
+        date: 2026-06-30
+    registration_display: ""
+    abstract_display: ""
+    comments: ""
   - id: bridging-it-cost-meeting-2026
     title: "Bridging It: Connecting Observations and Models of (Exo)planets and their Formation"
     url: https://sites.google.com/view/bridging-it-cost-meeting/home

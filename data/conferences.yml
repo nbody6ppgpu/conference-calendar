@@ -596,6 +596,19 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: Free of charge; open to researchers from all scientific fields
+  - id: bh-nepal-2026
+    title: "8th Nepal Conference: Many faces of stellar-mass black holes"
+    url: https://sites.google.com/view/bh-nepal-2026/home
+    location: Kathmandu, Nepal
+    start_date: 2026-10-11
+    end_date: 2026-10-16
+    registration_deadlines:
+      - label: Registration (on time)
+        date: 2026-06-28
+    abstract_deadlines: []
+    registration_display: Late registration (+50€) after 2026-06-28
+    abstract_display: Abstract selection completed; late submissions considered posters
+    comments: ""
   - id: yagn-2026
     title: Young Astronomers on Active Galactic Nuclei (YAGN)
     url: https://eventos.us.es/146210/detail/young-astronomers-on-active-galactic-nuclei-yagn.html

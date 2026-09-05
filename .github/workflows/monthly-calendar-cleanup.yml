@@ -294,7 +294,14 @@ jobs:
             --markdown-output "$build_dir/conference_calendar.md" \
             --site-dir "$build_dir/site"
 
-          git push --set-upstream origin "$CLEANUP_BRANCH"
+          # claude-code-action leaves its revoked app token in
+          # http.extraheader, which git prefers over any credentials we
+          # supply, so every push after it fails with "Invalid username or
+          # token" until the header is cleared.
+          git config --local --unset-all "http.https://github.com/.extraheader" || true
+          git push --set-upstream \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "$CLEANUP_BRANCH"
 
           existing_pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$CLEANUP_BRANCH" --state open --json url --jq '.[0].url' || true)"
           if [[ -n "$existing_pr" ]]; then

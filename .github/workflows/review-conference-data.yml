@@ -1,4 +1,4 @@
-name: Review conference data
+name: Verify automation scope
 
 on:
   pull_request:
@@ -9,60 +9,27 @@ permissions:
   contents: read
 
 jobs:
-  ask-copilot:
+  # Claude's own pushes retrigger this workflow (paths: data/conferences.yml).
+  # There is no automatic second-pass model review any more — a human
+  # approving the PR is the second pass. This job only checks that an
+  # automated push touched exactly the file it was told to touch.
+  verify-automation-scope:
     runs-on: ubuntu-latest
-    steps:
-      - name: Stop for forked pull requests
-        if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
-        run: |
-          echo "This workflow asks the Copilot coding agent to review conference data only for pull requests from branches in this repository."
-          echo "Forked pull requests do not receive the token needed to comment as this repository."
-          echo "Please run the conference data reviewer manually and update data/conferences.yml."
-          exit 1
-
-      - uses: actions/checkout@v4
-        if: >-
-          github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.sender.login != 'Copilot' &&
-          github.event.sender.login != 'copilot-swe-agent[bot]'
-
-      - name: Ask Copilot coding agent to review conference data
-        if: >-
-          github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.sender.login != 'Copilot' &&
-          github.event.sender.login != 'copilot-swe-agent[bot]'
-        env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
-        run: |
-          set -euo pipefail
-          comment_file="$RUNNER_TEMP/copilot-review-comment.md"
-          {
-            echo "@copilot"
-            echo
-            echo "This pull request's base branch is \`${BASE_REF}\`. Wherever the instructions below refer to \`\$REVIEW_BASE_REF\`, use \`origin/${BASE_REF}\` (e.g. \`git diff origin/${BASE_REF}...HEAD -- data/conferences.yml\`)."
-            echo
-            cat .github/prompts/conference-data-reviewer.md
-          } > "$comment_file"
-          gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
-            -F body="@${comment_file}"
-
-  # Copilot's own pushes retrigger this workflow (paths: data/conferences.yml).
-  # Skip re-asking it to review its own commit, but do check that it only
-  # touched the one file it was told to touch.
-  verify-copilot-scope:
-    runs-on: ubuntu-latest
+    # TODO(smoke-test): confirm the real sender.login for pushes made by
+    # anthropics/claude-code-action@v1 via the installed Claude GitHub App
+    # after merging; this is the action's documented default bot identity
+    # (bot_id 41898282 / bot_name "claude[bot]"), not yet observed live.
     if: >-
       github.event.action == 'synchronize' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      (github.event.sender.login == 'Copilot' || github.event.sender.login == 'copilot-swe-agent[bot]')
+      github.event.sender.login == 'claude[bot]'
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
-      - name: Ensure Copilot only modified data/conferences.yml
+      - name: Ensure the automated push only modified data/conferences.yml
         run: |
           set -euo pipefail
 
@@ -82,7 +49,7 @@ jobs:
           done
 
           if (( ${#disallowed[@]} > 0 )); then
-            echo "Copilot modified unexpected files. Only $allowed is expected:"
+            echo "Automated push modified unexpected files. Only $allowed is expected:"
             printf ' - %s\n' "${disallowed[@]}"
             exit 1
           fi

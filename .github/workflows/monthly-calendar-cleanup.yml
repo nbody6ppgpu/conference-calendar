@@ -269,13 +269,18 @@ jobs:
         if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count == '0'
         run: echo "No archive or enrichment changes were needed this run; no PR created."
 
-      - name: Verify, test, and publish cleanup PR
+      # Push with GITHUB_TOKEN, not the PAT: the branch push itself doesn't
+      # need to be PAT-authored, only the PR creation below does (GitHub
+      # doesn't trigger downstream pull_request workflows for events authored
+      # by GITHUB_TOKEN, but that restriction is about who opens the PR, not
+      # who pushes the branch it points at).
+      - name: Verify, test, and push the cleanup branch
         if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
+        id: publish
         env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
           CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
-          EXPECTED_IDS: ${{ steps.plan.outputs.expected_ids }}
           BASE_SHA: ${{ steps.plan.outputs.base_sha }}
         run: |
           set -euo pipefail
@@ -302,6 +307,16 @@ jobs:
           git push --set-upstream \
             "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
             "$CLEANUP_BRANCH"
+
+      - name: Open the cleanup pull request
+        if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+          EXPECTED_IDS: ${{ steps.plan.outputs.expected_ids }}
+        run: |
+          set -euo pipefail
 
           existing_pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$CLEANUP_BRANCH" --state open --json url --jq '.[0].url' || true)"
           if [[ -n "$existing_pr" ]]; then

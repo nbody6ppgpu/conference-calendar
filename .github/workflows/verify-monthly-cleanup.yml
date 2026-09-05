@@ -68,9 +68,39 @@ jobs:
           echo "Cleanup date: $cleanup_date"
           echo "Changed file: ${changed_files[0]}"
 
-      - name: Verify the base had expected cleanup work
+      # This PR can carry one or two commits: an optional deterministic
+      # archive commit followed by an optional Claude metadata-enrichment
+      # commit (monthly-calendar-cleanup.yml skips the archive commit when
+      # the base branch needs no archive placement, but always attempts
+      # enrichment). The strict equality assertion in
+      # `cleanup_calendar.py --check` can only ever be run against the
+      # archive commit in isolation (base..commit1): by the time enrichment
+      # has run, it may legitimately have filled in an end_date that now
+      # lands before the cleanup date, which would make plan_cleanup() see
+      # entries "in the wrong section" at HEAD even though nothing is wrong.
+      # So we locate commit1 explicitly rather than checking base..HEAD, and
+      # we never weaken the equality check itself to a subset/superset
+      # comparison.
+      #
+      # commit1 is located by the commit-message trailer
+      # `Cleanup-Step: deterministic-archive` that monthly-calendar-cleanup.yml
+      # writes when it makes that commit. Four cases follow from whether that
+      # trailer is present and whether the base branch actually needed
+      # archive work:
+      #   trailer found,     base needs archiving -> run the strict check on
+      #                                               base..commit1
+      #   trailer found,     base needs no archiving -> fail: a PR claiming
+      #                                               archive work that the
+      #                                               base didn't need
+      #   trailer not found, base needs no archiving -> enrichment-only PR;
+      #                                               skip the strict check
+      #   trailer not found, base needs archiving   -> fail: archive work
+      #                                               was required and is
+      #                                               missing from this PR
+      - name: Verify the archive commit against the base, or confirm none was needed
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           set -euo pipefail
@@ -85,22 +115,54 @@ jobs:
             --dry-run \
             --report "$base_report"
 
-          expected_count="$(jq -r '.expected_count' "$base_report")"
-          if [[ "$expected_count" == '0' ]]; then
-            echo "::error::The base branch had no deterministic cleanup work, so this PR is not a valid monthly cleanup."
+          base_expected_count="$(jq -r '.expected_count' "$base_report")"
+
+          mapfile -t trailer_commits < <(
+            git log --format='%H' --grep='^Cleanup-Step: deterministic-archive$' "$BASE_SHA".."$HEAD_SHA"
+          )
+
+          if (( ${#trailer_commits[@]} > 1 )); then
+            echo "::error::Found more than one commit with the deterministic-archive trailer: ${trailer_commits[*]}"
             exit 1
           fi
 
-          check_args=()
-          mapfile -t expected_ids < <(jq -r '.expected_ids[]' "$base_report")
-          for conference_id in "${expected_ids[@]}"; do
-            check_args+=(--expected-id "$conference_id")
-          done
-          python3 scripts/cleanup_calendar.py \
-            --today "$cleanup_date" \
-            --check \
-            --baseline "$base_data" \
-            "${check_args[@]}"
+          if (( ${#trailer_commits[@]} == 1 )); then
+            commit1="${trailer_commits[0]}"
+
+            if [[ "$base_expected_count" == '0' ]]; then
+              echo "::error::Commit $commit1 claims deterministic archive work, but the base branch needed none."
+              exit 1
+            fi
+
+            parent="$(git rev-parse "$commit1^")"
+            if [[ "$parent" != "$BASE_SHA" ]]; then
+              echo "::error::The archive commit $commit1 is not built directly on the PR base ($BASE_SHA); its parent is $parent."
+              exit 1
+            fi
+
+            check_args=()
+            mapfile -t expected_ids < <(jq -r '.expected_ids[]' "$base_report")
+            for conference_id in "${expected_ids[@]}"; do
+              check_args+=(--expected-id "$conference_id")
+            done
+
+            commit1_data="$RUNNER_TEMP/commit1-conferences.yml"
+            git show "$commit1:data/conferences.yml" > "$commit1_data"
+            python3 scripts/cleanup_calendar.py \
+              --data "$commit1_data" \
+              --today "$cleanup_date" \
+              --check \
+              --baseline "$base_data" \
+              "${check_args[@]}"
+
+            echo "Verified deterministic archive commit $commit1 against base $BASE_SHA."
+          else
+            if [[ "$base_expected_count" != '0' ]]; then
+              echo "::error::The base branch needed deterministic archive work, but no commit with the deterministic-archive trailer was found."
+              exit 1
+            fi
+            echo "No deterministic-archive commit present and none was needed; treating this as an enrichment-only PR."
+          fi
 
       - name: Run tests and verify generated outputs
         env:

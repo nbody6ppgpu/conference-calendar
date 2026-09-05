@@ -1,0 +1,47 @@
+name: Notify Claude for tagged issues
+
+on:
+  issues:
+    types:
+      - opened
+
+permissions:
+  issues: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment @claude on matching issues
+        # PERSONAL_ACCESS_TOKEN must be a fine-grained PAT stored as a repository
+        # secret with Issues: Read & Write permission on this repo. This uses a
+        # PAT (not GITHUB_TOKEN) so the comment can be disabled or replayed by
+        # rotating/holding the secret, independent of workflow permissions.
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          script: |
+            const title = context.payload.issue.title || "";
+            const shouldNotify = /\[(new|ai)\]/i.test(title);
+            if (!shouldNotify) {
+              core.info("Issue title does not match [new]/[ai] tag pattern; skipping.");
+              return;
+            }
+
+            const body = [
+              "@claude",
+              "",
+              "<!-- claude-automation: add-conference -->",
+              "Add this conference to `data/conferences.yml` by following",
+              "`AGENTS.md`'s \"Mode 1 — Add a conference from an issue\".",
+              "Use this issue's body for the meeting URL and optional comments text.",
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body,
+            });
+
+            core.info("Posted @claude comment on issue.");

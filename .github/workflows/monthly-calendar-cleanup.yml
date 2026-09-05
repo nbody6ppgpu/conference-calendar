@@ -1,0 +1,353 @@
+name: Monthly Calendar Cleanup
+
+on:
+  workflow_dispatch:
+    inputs:
+      today:
+        description: "Optional cleanup date in YYYY-MM-DD format (Europe/Berlin)"
+        required: false
+        type: string
+  schedule:
+    - cron: "17 3 4 * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+  # Required by claude-code-action's OIDC exchange for the Claude App token.
+  id-token: write
+
+concurrency:
+  group: monthly-calendar-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Plan deterministic cleanup
+        id: plan
+        env:
+          CLEANUP_DATE_INPUT: ${{ inputs.today }}
+        run: |
+          set -euo pipefail
+
+          report="$RUNNER_TEMP/cleanup-plan.json"
+          if [[ -n "$CLEANUP_DATE_INPUT" ]]; then
+            python3 scripts/cleanup_calendar.py \
+              --today "$CLEANUP_DATE_INPUT" \
+              --dry-run \
+              --report "$report"
+          else
+            python3 scripts/cleanup_calendar.py \
+              --dry-run \
+              --report "$report"
+          fi
+
+          cleanup_date="$(jq -r '.cleanup_date' "$report")"
+          expected_count="$(jq -r '.expected_count' "$report")"
+          expected_ids="$(jq -r '.expected_ids | join(",")' "$report")"
+          branch="automation/monthly-calendar-cleanup-${cleanup_date}"
+
+          {
+            echo "base_sha=$(git rev-parse HEAD)"
+            echo "cleanup_date=$cleanup_date"
+            echo "expected_count=$expected_count"
+            echo "expected_ids=$expected_ids"
+            echo "branch=$branch"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Cleanup date: $cleanup_date"
+          if [[ "$expected_count" == '0' ]]; then
+            echo "No entries require date-based archive placement; the archive commit will be skipped, but metadata enrichment still runs."
+          else
+            echo "Expected archive changes: $expected_ids"
+          fi
+
+      - name: Reject duplicate cleanup branches or pull requests
+        id: duplicate
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+        run: |
+          set -euo pipefail
+
+          open_prs="$(gh pr list \
+            --repo "$GITHUB_REPOSITORY" \
+            --state open \
+            --limit 100 \
+            --json url,headRefName,title \
+            --jq '.[] | select((.headRefName | startswith("automation/monthly-calendar-cleanup-")) and (.title | startswith("Monthly calendar cleanup:"))) | .url')"
+          if [[ -n "$open_prs" ]]; then
+            echo "An open monthly cleanup PR already exists:"
+            printf '%s\n' "$open_prs"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git ls-remote --exit-code origin "refs/heads/$CLEANUP_BRANCH" >/dev/null 2>&1; then
+            echo "::error::Cleanup branch already exists without an open PR: $CLEANUP_BRANCH"
+            exit 1
+          fi
+
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Create cleanup branch
+        if: steps.duplicate.outputs.skip != 'true'
+        env:
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$CLEANUP_BRANCH"
+
+      # Commit 1: deterministic archive placement. Skipped entirely when the
+      # plan step found no entries to move (expected_count == 0) -- metadata
+      # enrichment below still runs in that case. The strict --check equality
+      # assertion below runs only against this commit (base..commit1), never
+      # against the final HEAD: enrichment can legitimately fill in an
+      # end_date that lands before the cleanup date, which would make HEAD
+      # fail plan_cleanup's "no entries in the wrong section" invariant
+      # through no fault of its own. Checking commit1 in isolation is what
+      # keeps that invariant meaningful.
+      - name: Apply deterministic cleanup (commit 1)
+        id: cleanup
+        if: steps.duplicate.outputs.skip != 'true' && steps.plan.outputs.expected_count != '0'
+        env:
+          CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
+          EXPECTED_IDS: ${{ steps.plan.outputs.expected_ids }}
+          BASE_SHA: ${{ steps.plan.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+
+          base_data="$RUNNER_TEMP/base-conferences.yml"
+          git show "$BASE_SHA:data/conferences.yml" > "$base_data"
+          python3 scripts/cleanup_calendar.py --today "$CLEANUP_DATE"
+
+          check_args=()
+          if [[ -n "$EXPECTED_IDS" ]]; then
+            IFS=',' read -r -a expected_ids <<< "$EXPECTED_IDS"
+            for conference_id in "${expected_ids[@]}"; do
+              check_args+=(--expected-id "$conference_id")
+            done
+          fi
+          python3 scripts/cleanup_calendar.py \
+            --today "$CLEANUP_DATE" \
+            --check \
+            --baseline "$base_data" \
+            "${check_args[@]}"
+
+          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA")
+          if (( ${#changed_files[@]} != 1 )) || [[ "${changed_files[0]:-}" != "data/conferences.yml" ]]; then
+            echo "::error::Cleanup changed an unexpected file set: ${changed_files[*]:-none}"
+            exit 1
+          fi
+          if git diff --quiet "$BASE_SHA" -- data/conferences.yml; then
+            echo "::error::Cleanup expected a data diff but produced an empty commit candidate."
+            exit 1
+          fi
+          git diff --check
+
+          git add data/conferences.yml
+          git commit \
+            -m "Archive outdated conference entries" \
+            -m "Cleanup-Step: deterministic-archive"
+
+          echo "cleanup_commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Record state before enrichment
+        id: pre_enrich
+        if: steps.duplicate.outputs.skip != 'true'
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      # Commit 2: Claude metadata enrichment (AGENTS.md Mode 2, step b). This
+      # is the only model call in this workflow -- commit 1 above is pure
+      # bash/Python.
+      - name: Run Claude metadata enrichment (commit 2)
+        id: claude
+        if: steps.duplicate.outputs.skip != 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: false
+          claude_args: |
+            --allowedTools Read,Edit,Bash,WebFetch
+            --disallowedTools WebSearch
+          prompt: |
+            Read `.github/prompts/metadata-enrichment.md` and follow it
+            exactly.
+
+            The cleanup date for this run is
+            ${{ steps.plan.outputs.cleanup_date }}. Use that exact date; do
+            not recompute or guess today's date.
+
+      - name: Check Claude's enrichment run succeeded
+        if: steps.duplicate.outputs.skip != 'true' && steps.claude.outputs.conclusion != 'success'
+        run: |
+          echo "::error::Claude Code enrichment run did not conclude successfully (conclusion=${{ steps.claude.outputs.conclusion }})."
+          exit 1
+
+      # Passing `prompt` selects agent mode, which observably creates no
+      # branch of its own and leaves `branch_name` empty -- Claude just works
+      # in the checked-out tree. This guard keeps that assumption honest: if a
+      # future version does cut its own branch, the enrichment commit would
+      # silently land somewhere else and this PR would ship without it.
+      - name: Ensure enrichment stayed on the cleanup branch
+        if: steps.duplicate.outputs.skip != 'true'
+        env:
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+          CLAUDE_BRANCH: ${{ steps.claude.outputs.branch_name }}
+        run: |
+          set -euo pipefail
+
+          current="$(git rev-parse --abbrev-ref HEAD)"
+          if [[ "$current" != "$CLEANUP_BRANCH" ]]; then
+            echo "::error::Enrichment left the workspace on '$current', expected '$CLEANUP_BRANCH'."
+            exit 1
+          fi
+          if [[ -n "$CLAUDE_BRANCH" && "$CLAUDE_BRANCH" != "$CLEANUP_BRANCH" ]]; then
+            echo "::error::Claude Code created its own branch '$CLAUDE_BRANCH' instead of committing onto '$CLEANUP_BRANCH'."
+            exit 1
+          fi
+
+      - name: Finalize enrichment commit and check its scope
+        id: enrich_commit
+        if: steps.duplicate.outputs.skip != 'true'
+        env:
+          PRE_ENRICH_SHA: ${{ steps.pre_enrich.outputs.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ -n "$(git status --porcelain -- data/conferences.yml)" ]]; then
+            mapfile -t dirty_files < <(git status --porcelain | awk '{print $2}')
+            for f in "${dirty_files[@]:-}"; do
+              [[ -z "$f" ]] && continue
+              if [[ "$f" != "data/conferences.yml" ]]; then
+                echo "::error::Enrichment left uncommitted changes outside data/conferences.yml: $f"
+                exit 1
+              fi
+            done
+            git add data/conferences.yml
+            git commit \
+              -m "Enrich monthly calendar metadata" \
+              -m "Cleanup-Step: metadata-enrichment"
+          fi
+
+          mapfile -t enrich_changed < <(git diff --name-only "$PRE_ENRICH_SHA" HEAD)
+          for f in "${enrich_changed[@]:-}"; do
+            [[ -z "$f" ]] && continue
+            if [[ "$f" != "data/conferences.yml" ]]; then
+              echo "::error::Enrichment commit(s) touched an unexpected file: $f"
+              exit 1
+            fi
+          done
+
+      - name: Determine whether any commit was produced
+        id: commits
+        if: steps.duplicate.outputs.skip != 'true'
+        env:
+          BASE_SHA: ${{ steps.plan.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+          count="$(git rev-list --count "$BASE_SHA"..HEAD)"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+
+      - name: Report when there is nothing to publish
+        if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count == '0'
+        run: echo "No archive or enrichment changes were needed this run; no PR created."
+
+      # Push with GITHUB_TOKEN, not the PAT: the branch push itself doesn't
+      # need to be PAT-authored, only the PR creation below does (GitHub
+      # doesn't trigger downstream pull_request workflows for events authored
+      # by GITHUB_TOKEN, but that restriction is about who opens the PR, not
+      # who pushes the branch it points at).
+      - name: Verify, test, and push the cleanup branch
+        if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+          BASE_SHA: ${{ steps.plan.outputs.base_sha }}
+        run: |
+          set -euo pipefail
+
+          mapfile -t changed_files < <(git diff --name-only "$BASE_SHA" HEAD)
+          if (( ${#changed_files[@]} != 1 )) || [[ "${changed_files[0]:-}" != "data/conferences.yml" ]]; then
+            echo "::error::Cleanup PR changed an unexpected file set: ${changed_files[*]:-none}"
+            exit 1
+          fi
+
+          git diff --check "$BASE_SHA" HEAD
+          python3 -m unittest discover -s tests -v
+          build_dir="$(mktemp -d "$RUNNER_TEMP/calendar-build.XXXXXX")"
+          python3 scripts/build_calendar.py \
+            --today "$CLEANUP_DATE" \
+            --markdown-output "$build_dir/conference_calendar.md" \
+            --site-dir "$build_dir/site"
+
+          # claude-code-action leaves its revoked app token in
+          # http.extraheader, which git prefers over any credentials we
+          # supply, so every push after it fails with "Invalid username or
+          # token" until the header is cleared.
+          git config --local --unset-all "http.https://github.com/.extraheader" || true
+          git push --set-upstream \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "$CLEANUP_BRANCH"
+
+      - name: Open the cleanup pull request
+        if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+          EXPECTED_IDS: ${{ steps.plan.outputs.expected_ids }}
+        run: |
+          set -euo pipefail
+
+          existing_pr="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$CLEANUP_BRANCH" --state open --json url --jq '.[0].url' || true)"
+          if [[ -n "$existing_pr" ]]; then
+            echo "::error::A pull request for $CLEANUP_BRANCH already exists (opened outside this step, e.g. by the Claude Code action itself): $existing_pr"
+            exit 1
+          fi
+
+          body_file="$RUNNER_TEMP/monthly-cleanup-pr.md"
+          {
+            echo "<!-- monthly-cleanup: date=$CLEANUP_DATE; expected_ids=$EXPECTED_IDS -->"
+            echo
+            echo "This draft PR was produced by the monthly calendar cleanup workflow."
+            echo
+            echo "Cleanup date (\`Europe/Berlin\`): \`$CLEANUP_DATE\`"
+            echo
+            echo "Entries expected to move: \`${EXPECTED_IDS:-none}\`"
+            echo
+            cat .github/prompts/monthly-calendar-cleanup.md
+            echo
+            echo "This PR may carry up to two commits: a deterministic archive"
+            echo "commit (identified by the commit-message trailer"
+            echo "\`Cleanup-Step: deterministic-archive\`) and a Claude metadata"
+            echo "enrichment commit. \`verify-monthly-cleanup.yml\` locates the"
+            echo "archive commit by that trailer and checks it in isolation from"
+            echo "any later enrichment commit."
+          } > "$body_file"
+
+          gh pr create \
+            --repo "$GITHUB_REPOSITORY" \
+            --head "$CLEANUP_BRANCH" \
+            --base main \
+            --draft \
+            --title "Monthly calendar cleanup: $CLEANUP_DATE" \
+            --body-file "$body_file"

@@ -200,12 +200,11 @@ jobs:
           echo "::error::Claude Code enrichment run did not conclude successfully (conclusion=${{ steps.claude.outputs.conclusion }})."
           exit 1
 
-      # claude-code-action documents branch creation for issue/PR-triggered
-      # runs but says nothing about schedule/workflow_dispatch runs with no
-      # entity context. If it ever decides to cut its own `claude/...` branch
-      # here instead of committing onto the cleanup branch we checked out, the
-      # enrichment commit would silently land somewhere else and this PR would
-      # ship without it. Fail loudly instead.
+      # Passing `prompt` selects agent mode, which observably creates no
+      # branch of its own and leaves `branch_name` empty -- Claude just works
+      # in the checked-out tree. This guard keeps that assumption honest: if a
+      # future version does cut its own branch, the enrichment commit would
+      # silently land somewhere else and this PR would ship without it.
       - name: Ensure enrichment stayed on the cleanup branch
         if: steps.duplicate.outputs.skip != 'true'
         env:

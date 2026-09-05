@@ -25,12 +25,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Passing `prompt` puts claude-code-action in agent mode, where it only
+      # runs Claude against the checked-out workspace: it creates no branch,
+      # makes no commit, and leaves `branch_name` empty. (Branch/commit/PR
+      # machinery belongs to tag mode, which takes its instructions from the
+      # @claude comment body instead.) So this workflow owns every git
+      # operation itself, deterministically, around the model call.
+      - name: Create the working branch
+        id: branch
+        env:
+          BRANCH: claude/issue-${{ github.event.issue.number }}-${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          git config user.name "claude[bot]"
+          git config user.email "41898282+claude[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          echo "name=$BRANCH" >> "$GITHUB_OUTPUT"
+
       - name: Run Claude to add the conference entry
         id: claude
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          branch_prefix: "claude/issue-${{ github.event.issue.number }}-"
           show_full_output: false
           claude_args: |
             --allowedTools Read,Edit,Bash,WebFetch
@@ -46,8 +62,8 @@ jobs:
             ${{ github.event.issue.body }}
 
             Add one entry to `data/conferences.yml` for the meeting linked in
-            this issue, verify the build, and commit your change. Do not open
-            a pull request yourself; a separate deterministic step does that.
+            this issue. Leave the edit uncommitted in the working tree: this
+            workflow commits, pushes and opens the pull request itself.
 
       - name: Check Claude's run succeeded
         if: steps.claude.outputs.conclusion != 'success'
@@ -55,19 +71,65 @@ jobs:
           echo "::error::Claude Code run did not conclude successfully (conclusion=${{ steps.claude.outputs.conclusion }})."
           exit 1
 
+      - name: Commit the entry and check its scope
+        run: |
+          set -euo pipefail
+
+          mapfile -t dirty < <(git status --porcelain | awk '{print $NF}')
+          if (( ${#dirty[@]} == 0 )); then
+            echo "::error::Claude made no change to the working tree; there is nothing to publish."
+            exit 1
+          fi
+          for f in "${dirty[@]}"; do
+            if [[ "$f" != "data/conferences.yml" ]]; then
+              echo "::error::Claude modified an unexpected file: $f"
+              exit 1
+            fi
+          done
+
+          git add data/conferences.yml
+          git commit -m "Add conference entry from issue #${{ github.event.issue.number }}"
+
+      - name: Verify the build
+        run: |
+          set -euo pipefail
+          python3 -m pip install -r requirements.txt
+          python3 -m unittest discover -s tests
+          out="$(mktemp -d "$RUNNER_TEMP/build.XXXXXX")"
+          python3 scripts/build_calendar.py \
+            --markdown-output "$out/conference_calendar.md" \
+            --site-dir "$out/site"
+
+      # Push as the Claude GitHub App rather than as the maintainer's PAT, so
+      # that pushes from automation stay distinguishable from human ones and
+      # verify-automation-scope's sender filter keeps working.
+      - name: Push the branch
+        env:
+          CLAUDE_TOKEN: ${{ steps.claude.outputs.github_token }}
+          FALLBACK_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          BRANCH: ${{ steps.branch.outputs.name }}
+        run: |
+          set -euo pipefail
+
+          token="$CLAUDE_TOKEN"
+          if [[ -z "$token" ]]; then
+            echo "::warning::No Claude App token available; pushing with PERSONAL_ACCESS_TOKEN instead."
+            token="$FALLBACK_TOKEN"
+          fi
+          git push "https://x-access-token:${token}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$BRANCH"
+
       - name: Open draft PR for the new entry
-        if: success() && steps.claude.outputs.branch_name != ''
         env:
           GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          CLAUDE_BRANCH: ${{ steps.claude.outputs.branch_name }}
+          BRANCH: ${{ steps.branch.outputs.name }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
         run: |
           set -euo pipefail
 
-          existing="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$CLAUDE_BRANCH" --state open --json url --jq '.[0].url' || true)"
+          existing="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --state open --json url --jq '.[0].url' || true)"
           if [[ -n "$existing" ]]; then
-            echo "::error::A pull request already exists for $CLAUDE_BRANCH: $existing"
+            echo "::error::A pull request already exists for $BRANCH: $existing"
             exit 1
           fi
 
@@ -82,20 +144,17 @@ jobs:
 
           gh pr create \
             --repo "$GITHUB_REPOSITORY" \
-            --head "$CLAUDE_BRANCH" \
+            --head "$BRANCH" \
             --base main \
             --draft \
             --title "Add conference: issue #$ISSUE_NUMBER" \
             --body-file "$body_file"
 
-      # Split from the failure notice below on purpose: a run that fails before
-      # Claude pushes anything has an empty branch_name, and gating the whole
-      # step on it would leave the issue with no signal at all.
       - name: Clean up orphan branch on failure
-        if: failure() && steps.claude.outputs.branch_name != ''
+        if: failure() && steps.branch.outputs.name != ''
         env:
           GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          CLAUDE_BRANCH: ${{ steps.claude.outputs.branch_name }}
+          CLAUDE_BRANCH: ${{ steps.branch.outputs.name }}
         run: |
           set -uo pipefail
 

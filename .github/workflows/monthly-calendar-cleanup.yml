@@ -198,6 +198,30 @@ jobs:
           echo "::error::Claude Code enrichment run did not conclude successfully (conclusion=${{ steps.claude.outputs.conclusion }})."
           exit 1
 
+      # claude-code-action documents branch creation for issue/PR-triggered
+      # runs but says nothing about schedule/workflow_dispatch runs with no
+      # entity context. If it ever decides to cut its own `claude/...` branch
+      # here instead of committing onto the cleanup branch we checked out, the
+      # enrichment commit would silently land somewhere else and this PR would
+      # ship without it. Fail loudly instead.
+      - name: Ensure enrichment stayed on the cleanup branch
+        if: steps.duplicate.outputs.skip != 'true'
+        env:
+          CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
+          CLAUDE_BRANCH: ${{ steps.claude.outputs.branch_name }}
+        run: |
+          set -euo pipefail
+
+          current="$(git rev-parse --abbrev-ref HEAD)"
+          if [[ "$current" != "$CLEANUP_BRANCH" ]]; then
+            echo "::error::Enrichment left the workspace on '$current', expected '$CLEANUP_BRANCH'."
+            exit 1
+          fi
+          if [[ -n "$CLAUDE_BRANCH" && "$CLAUDE_BRANCH" != "$CLEANUP_BRANCH" ]]; then
+            echo "::error::Claude Code created its own branch '$CLAUDE_BRANCH' instead of committing onto '$CLEANUP_BRANCH'."
+            exit 1
+          fi
+
       - name: Finalize enrichment commit and check its scope
         id: enrich_commit
         if: steps.duplicate.outputs.skip != 'true'

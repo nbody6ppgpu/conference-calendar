@@ -17,8 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     # TODO(smoke-test): confirm the real sender.login for pushes made by
     # anthropics/claude-code-action@v1 via the installed Claude GitHub App
-    # after merging; this is the action's documented default bot identity
-    # (bot_id 41898282 / bot_name "claude[bot]"), not yet observed live.
+    # after merging. action.yml (v1) defines bot_name "claude[bot]" / bot_id
+    # 41898282 as the git identity, but the API sender for the push has not
+    # been observed live yet.
     if: >-
       github.event.action == 'synchronize' &&
       github.event.pull_request.head.repo.full_name == github.repository &&

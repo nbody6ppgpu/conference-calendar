@@ -100,23 +100,20 @@ jobs:
             --markdown-output "$out/conference_calendar.md" \
             --site-dir "$out/site"
 
-      # Push as the Claude GitHub App rather than as the maintainer's PAT, so
-      # that pushes from automation stay distinguishable from human ones and
-      # verify-automation-scope's sender filter keeps working.
+      # Not pushed as the Claude GitHub App: claude-code-action revokes its
+      # app token inside its own step (the "Revoke app token" sub-step), so
+      # steps.claude.outputs.github_token is already dead by the time any
+      # later step could use it. We push with the workflow's GITHUB_TOKEN,
+      # which actions/checkout has already persisted. That is fine here
+      # because the model never pushes anything itself in agent mode -- the
+      # "only data/conferences.yml" invariant is asserted above, before the
+      # commit, rather than after the push.
       - name: Push the branch
         env:
-          CLAUDE_TOKEN: ${{ steps.claude.outputs.github_token }}
-          FALLBACK_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           BRANCH: ${{ steps.branch.outputs.name }}
         run: |
           set -euo pipefail
-
-          token="$CLAUDE_TOKEN"
-          if [[ -z "$token" ]]; then
-            echo "::warning::No Claude App token available; pushing with PERSONAL_ACCESS_TOKEN instead."
-            token="$FALLBACK_TOKEN"
-          fi
-          git push "https://x-access-token:${token}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/$BRANCH"
+          git push origin "HEAD:refs/heads/$BRANCH"
 
       - name: Open draft PR for the new entry
         env:

@@ -15,15 +15,17 @@ jobs:
   # automated push touched exactly the file it was told to touch.
   verify-automation-scope:
     runs-on: ubuntu-latest
-    # TODO(smoke-test): confirm the real sender.login for pushes made by
-    # anthropics/claude-code-action@v1 via the installed Claude GitHub App
-    # after merging. action.yml (v1) defines bot_name "claude[bot]" / bot_id
-    # 41898282 as the git identity, but the API sender for the push has not
-    # been observed live yet.
+    # Keyed on the branch namespace rather than on the pushing identity.
+    # Identity turned out to be the wrong key: in agent mode the model never
+    # pushes at all, so a sender == 'claude[bot]' filter would have no traffic
+    # and could not even be exercised by deliberately pushing a bad commit to
+    # an automation branch. The branch prefixes are what actually define
+    # "this PR is supposed to only touch the data file".
     if: >-
       github.event.action == 'synchronize' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.sender.login == 'claude[bot]'
+      (startsWith(github.event.pull_request.head.ref, 'claude/') ||
+       startsWith(github.event.pull_request.head.ref, 'automation/'))
     steps:
       - uses: actions/checkout@v4
         with:

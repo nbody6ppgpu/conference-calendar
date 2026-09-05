@@ -13,6 +13,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  # Required by claude-code-action's OIDC exchange for the Claude App token.
+  id-token: write
 
 concurrency:
   group: monthly-calendar-cleanup

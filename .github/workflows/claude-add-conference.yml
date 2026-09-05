@@ -9,6 +9,10 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  # claude-code-action exchanges a GitHub OIDC token for the Claude App
+  # installation token. Without id-token: write it fails before doing any
+  # work with "Could not fetch an OIDC token".
+  id-token: write
 
 jobs:
   add-conference:
@@ -84,18 +88,29 @@ jobs:
             --title "Add conference: issue #$ISSUE_NUMBER" \
             --body-file "$body_file"
 
-      - name: Clean up orphan branch and notify the issue on failure
+      # Split from the failure notice below on purpose: a run that fails before
+      # Claude pushes anything has an empty branch_name, and gating the whole
+      # step on it would leave the issue with no signal at all.
+      - name: Clean up orphan branch on failure
         if: failure() && steps.claude.outputs.branch_name != ''
         env:
           GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           CLAUDE_BRANCH: ${{ steps.claude.outputs.branch_name }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           set -uo pipefail
 
           gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$CLAUDE_BRANCH" \
             || echo "::warning::Could not delete branch $CLAUDE_BRANCH (it may not have been pushed)."
 
+      - name: Notify the issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -uo pipefail
+
           gh issue comment "$ISSUE_NUMBER" \
             --repo "$GITHUB_REPOSITORY" \
-            --body "Automated attempt to add this conference failed. A maintainer needs to add it manually, or re-run the automation by posting a comment containing \`<!-- claude-automation: add-conference -->\`."
+            --body "Automated attempt to add this conference failed ([run log]($RUN_URL)). A maintainer needs to add it manually, or re-run the automation by posting a comment containing \`<!-- claude-automation: add-conference -->\`."

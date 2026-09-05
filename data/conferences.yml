@@ -722,8 +722,8 @@ conferences:
     end_date: 2027-03-18
     registration_deadlines: []
     abstract_deadlines: []
-    registration_display: ""
-    abstract_display: ""
+    registration_display: "Online registration opens late Sept/early Oct 2026 (TBC); early-bird & presenting-author deadline early Jan 2027 (TBC); registration deadline end of Feb 2027 (TBC)"
+    abstract_display: "Abstract submission opens late Sept/early Oct 2026 (TBC); deadline mid-to-end Nov 2026 (TBC)"
     comments: ""
   - id: eas-2027
     title: "EAS 2027: European Astronomical Society Annual Meeting"

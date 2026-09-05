@@ -101,19 +101,25 @@ jobs:
             --site-dir "$out/site"
 
       # Not pushed as the Claude GitHub App: claude-code-action revokes its
-      # app token inside its own step (the "Revoke app token" sub-step), so
-      # steps.claude.outputs.github_token is already dead by the time any
-      # later step could use it. We push with the workflow's GITHUB_TOKEN,
-      # which actions/checkout has already persisted. That is fine here
-      # because the model never pushes anything itself in agent mode -- the
+      # app token inside its own step, so steps.claude.outputs.github_token is
+      # already dead by the time a later step could use it. It also leaves
+      # that dead token behind in git's http.extraheader, which takes
+      # precedence over credentials in the remote URL -- so the stale header
+      # has to be cleared or every push fails with "Invalid username or
+      # token" no matter which token we supply. Pushing as GITHUB_TOKEN is
+      # fine here: the model never pushes anything in agent mode, and the
       # "only data/conferences.yml" invariant is asserted above, before the
       # commit, rather than after the push.
       - name: Push the branch
         env:
+          GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ steps.branch.outputs.name }}
         run: |
           set -euo pipefail
-          git push origin "HEAD:refs/heads/$BRANCH"
+
+          git config --local --unset-all "http.https://github.com/.extraheader" || true
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "HEAD:refs/heads/$BRANCH"
 
       - name: Open draft PR for the new entry
         env:

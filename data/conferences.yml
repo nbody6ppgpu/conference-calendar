@@ -520,7 +520,6 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: hybrid participation available
-  # Conference Calendar
   - id: multiple-planet-systems-2026
     title: Multiple Planet Systems
     url: https://exo-mps.eu
@@ -551,6 +550,7 @@ conferences:
     registration_display: Registration is now closed
     abstract_display: Registration and abstract submission are now closed
     comments: ""
+  # Conference Calendar
   - id: ag-meeting-2026
     title: Annual Meeting of the Astronomische Gesellschaft 2026
     url: https://ag2026.astronomische-gesellschaft.de/

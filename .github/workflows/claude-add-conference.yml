@@ -98,4 +98,4 @@ jobs:
 
           gh issue comment "$ISSUE_NUMBER" \
             --repo "$GITHUB_REPOSITORY" \
-            --body "Automated attempt to add this conference failed. A maintainer needs to add it manually, or comment \`@claude\` again to retry."
+            --body "Automated attempt to add this conference failed. A maintainer needs to add it manually, or re-run the automation by posting a comment containing \`<!-- claude-automation: add-conference -->\`."

@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     if: >-
       github.event.issue.pull_request == null &&
-      contains(github.event.comment.body, '<!-- claude-automation: add-conference -->')
+      contains(github.event.comment.body, '<!-- claude-automation: add-conference -->') &&
+      !contains(github.event.comment.body, '<!-- claude-automation: add-conference-failure -->')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -177,6 +178,14 @@ jobs:
         run: |
           set -uo pipefail
 
+          # The add-conference-failure marker keeps this notification from
+          # re-triggering the workflow it reports on: the job's `if:`
+          # condition matches any comment containing the add-conference
+          # trigger substring, and this message's own instructions for how
+          # to manually retry necessarily quote that substring. Without an
+          # exclusion, each failure notification would satisfy the trigger
+          # condition and spawn another run, looping indefinitely.
           gh issue comment "$ISSUE_NUMBER" \
             --repo "$GITHUB_REPOSITORY" \
-            --body "Automated attempt to add this conference failed ([run log]($RUN_URL)). A maintainer needs to add it manually, or re-run the automation by posting a comment containing \`<!-- claude-automation: add-conference -->\`."
+            --body "<!-- claude-automation: add-conference-failure -->
+Automated attempt to add this conference failed ([run log]($RUN_URL)). A maintainer needs to add it manually, or re-run the automation by posting a comment containing \`<!-- claude-automation: add-conference -->\`."

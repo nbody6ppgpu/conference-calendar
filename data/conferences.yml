@@ -626,14 +626,18 @@ conferences:
     comments: talk submission; speakers selected in June 2026
   - id: chinese-astronomy-meeting-2026
     title: Chinese Astronomical Society 2026 Annual Academic Meeting
-    url: http://astronomy.pmo.cas.cn/xsjl/gnxsjl/202604/t20260416_830882.html
+    url: https://hybg.cast.org.cn/meetingInfo?id=58071
     location: Yiling Health City Kaixuanmen Hotel, Shijiazhuang, Hebei, China
     start_date: 2026-10-27
     end_date: 2026-10-31
-    registration_deadlines: []
-    abstract_deadlines: []
-    registration_display: To be announced in the second circular
-    abstract_display: To be announced in the second circular
+    registration_deadlines:
+      - label: Registration
+        date: 2026-09-23
+    abstract_deadlines:
+      - label: Abstract
+        date: 2026-09-23
+    registration_display: ""
+    abstract_display: ""
     comments: ""
   - id: stars-on-the-run-iii-2026
     title: Stars On the Run III

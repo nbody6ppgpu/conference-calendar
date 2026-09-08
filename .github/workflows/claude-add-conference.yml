@@ -22,20 +22,6 @@ jobs:
       contains(github.event.comment.body, '<!-- claude-automation: add-conference -->') &&
       !contains(github.event.comment.body, '<!-- claude-automation: add-conference-failure -->')
     steps:
-      # A dedicated GitHub App identity, not the maintainer's own PAT: any
-      # comment or PR this job posts under a maintainer's personal token is
-      # invisible to GitHub's notification system, because GitHub never
-      # notifies an account of its own activity -- self-authored issue
-      # comments and self-opened PRs generate no notification at all. Every
-      # human-visible step below uses this token instead so the results show
-      # up as "conference-calendar-bot[bot]" and actually reach a human inbox.
-      - name: Mint calendar-bot installation token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.CALENDAR_BOT_APP_ID }}
-          private-key: ${{ secrets.CALENDAR_BOT_APP_PRIVATE_KEY }}
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -114,6 +100,22 @@ jobs:
           python3 scripts/build_calendar.py \
             --markdown-output "$out/conference_calendar.md" \
             --site-dir "$out/site"
+
+      # Minted here, right before first use, rather than at job start: App
+      # installation tokens expire after an hour, and the Claude call above
+      # alone can run past 15-20 minutes. `if: always()` keeps this step
+      # (and therefore the notification and PR steps that depend on it)
+      # running even if an earlier step failed -- a dedicated GitHub App
+      # identity, not the maintainer's own PAT, because GitHub never
+      # notifies an account of its own activity, so anything posted under a
+      # maintainer's personal token would be invisible to them.
+      - name: Mint calendar-bot installation token
+        id: app-token
+        if: always()
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CALENDAR_BOT_APP_ID }}
+          private-key: ${{ secrets.CALENDAR_BOT_APP_PRIVATE_KEY }}
 
       # Not pushed as the Claude GitHub App: claude-code-action revokes its
       # app token inside its own step, so steps.claude.outputs.github_token is

@@ -321,10 +321,23 @@ jobs:
             "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
             "$CLEANUP_BRANCH"
 
+      # Re-minted here rather than reusing the job-start token from
+      # "Mint calendar-bot installation token": App installation tokens
+      # expire after an hour, and by this point the job has already run the
+      # deterministic archive step, a full Claude enrichment call, tests and
+      # a build, which together can take well over that.
+      - name: Mint calendar-bot installation token for the PR step
+        id: app-token-pr
+        if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CALENDAR_BOT_APP_ID }}
+          private-key: ${{ secrets.CALENDAR_BOT_APP_PRIVATE_KEY }}
+
       - name: Open the cleanup pull request
         if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.app-token-pr.outputs.token }}
           CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
           CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
           EXPECTED_IDS: ${{ steps.plan.outputs.expected_ids }}

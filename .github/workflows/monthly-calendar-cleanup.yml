@@ -24,11 +24,24 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
+      # A dedicated GitHub App identity, not a maintainer's own PAT: GitHub
+      # never notifies an account of its own activity, so every comment or PR
+      # this job posts under a maintainer's personal token would be invisible
+      # to that maintainer. Using this token everywhere instead makes the
+      # results show up as "conference-calendar-bot[bot]" and actually reach a
+      # human inbox.
+      - name: Mint calendar-bot installation token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CALENDAR_BOT_APP_ID }}
+          private-key: ${{ secrets.CALENDAR_BOT_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - uses: actions/setup-python@v5
         with:
@@ -79,7 +92,7 @@ jobs:
       - name: Reject duplicate cleanup branches or pull requests
         id: duplicate
         env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
         run: |
           set -euo pipefail
@@ -311,7 +324,7 @@ jobs:
       - name: Open the cleanup pull request
         if: steps.duplicate.outputs.skip != 'true' && steps.commits.outputs.count != '0'
         env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           CLEANUP_DATE: ${{ steps.plan.outputs.cleanup_date }}
           CLEANUP_BRANCH: ${{ steps.plan.outputs.branch }}
           EXPECTED_IDS: ${{ steps.plan.outputs.expected_ids }}
@@ -351,3 +364,9 @@ jobs:
             --draft \
             --title "Monthly calendar cleanup: $CLEANUP_DATE" \
             --body-file "$body_file"
+
+          # Requesting review is what actually pings a human: GitHub only
+          # suppresses notifications for activity from the recipient's own
+          # account, so this only works because the PR author above is the
+          # bot App identity now, not a maintainer's personal token.
+          gh pr edit "$CLEANUP_BRANCH" --repo "$GITHUB_REPOSITORY" --add-reviewer kaiwu-astro

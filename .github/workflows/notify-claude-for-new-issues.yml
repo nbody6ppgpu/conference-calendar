@@ -12,14 +12,25 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      # A dedicated GitHub App identity (not GITHUB_TOKEN, not a PAT tied to a
+      # maintainer's own account) posts this comment. GITHUB_TOKEN-authored
+      # comments still notify watchers fine, but every human-visible action in
+      # this automation posts under the same identity for consistency, and the
+      # App's installation token -- unlike GITHUB_TOKEN -- doesn't hit GitHub's
+      # anti-recursion restriction that silently skips workflows triggered by
+      # GITHUB_TOKEN-authored events (relevant for the PR-opening steps this
+      # identity is shared with; see claude-add-conference.yml).
+      - name: Mint calendar-bot installation token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CALENDAR_BOT_APP_ID }}
+          private-key: ${{ secrets.CALENDAR_BOT_APP_PRIVATE_KEY }}
+
       - name: Comment @claude on matching issues
-        # PERSONAL_ACCESS_TOKEN must be a fine-grained PAT stored as a repository
-        # secret with Issues: Read & Write permission on this repo. This uses a
-        # PAT (not GITHUB_TOKEN) so the comment can be disabled or replayed by
-        # rotating/holding the secret, independent of workflow permissions.
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const title = context.payload.issue.title || "";
             const shouldNotify = /\[(new|ai)\]/i.test(title);

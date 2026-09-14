@@ -718,6 +718,23 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: shanghai-symposium-relativistic-astrophysics-2026
+    title: Shanghai International Symposium on Relativistic Astrophysics
+    url: https://tdli.sjtu.edu.cn/event/5006/
+    location: Himalayas Hotel, Shanghai, China
+    start_date: 2026-12-07
+    end_date: 2026-12-11
+    registration_deadlines:
+      - label: Early registration
+        date: 2026-09-15
+      - label: Regular registration
+        date: 2026-11-01
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-10-10
+    registration_display: ""
+    abstract_display: ""
+    comments: ""
   - id: young-planets-urbs-vetus-2027
     title: "Young Planets in Urbs Vetus: Detection, Characterisation, and Evolution at the Dawn of Comparative Demographics"
     url: https://indico.ict.inaf.it/e/young-planets-2027

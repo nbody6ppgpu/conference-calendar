@@ -49,6 +49,15 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           show_full_output: false
+          # The trigger comment on this workflow's issue_comment event is
+          # posted by the conference-calendar-bot GitHub App identity (see
+          # 4b29841), not a maintainer's own account. claude-code-action
+          # refuses non-human actors unless explicitly allow-listed here, so
+          # without this the run fails immediately with "Workflow initiated
+          # by non-human actor". The action strips a trailing "[bot]" and
+          # lowercases before comparing, so this matches either form of the
+          # actor name.
+          allowed_bots: "conference-calendar-bot[bot]"
           claude_args: |
             --allowedTools Read,Edit,Bash,WebFetch
             --disallowedTools WebSearch

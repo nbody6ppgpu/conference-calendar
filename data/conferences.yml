@@ -787,3 +787,18 @@ conferences:
     registration_display: Registration opens before January 2027
     abstract_display: Abstract deadline before May 2027
     comments: ""
+  - id: iau-general-assembly-2027
+    title: 33rd IAU General Assembly 2027 (IAU GA 2027)
+    url: https://iaurome2027.org/
+    location: Auditorium Parco della Musica Ennio Morricone, Rome, Italy
+    start_date: 2027-08-10
+    end_date: 2027-08-19
+    registration_deadlines:
+      - label: Early-bird
+        date: 2027-03-05
+    abstract_deadlines:
+      - label: Abstract and grant applications
+        date: 2027-01-15
+    registration_display: ""
+    abstract_display: ""
+    comments: ""

@@ -14,6 +14,7 @@ import yaml
 
 
 REMINDER_OFFSETS = (30, 14, 7, 3, 1)
+GOATCOUNTER_CODE = "nbody-conference-calendar"
 SOURCE_NOTE = (
     "Check our new conference calendar at this link: https://nbody6ppgpu.github.io/conference-calendar/ <-- Bookmark it! "
     "\n"
@@ -298,12 +299,19 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <p>Interesting conferences for R. Sp. and collaborators. Topics cover stellar/planetary dynamics, star clusters, etc. </p>
       <p>Subscribe to the ICS feed for deadline reminders. The ICS feed follow the same info as calendar below.</p>
       <div class="links">
-        <a href="{escape(webcal_url)}">Subscribe to deadline reminders (auto update)</a>
-        <a href="./conference_calendar.ics">Download static .ics (no auto update)</a>
+        <a href="{escape(webcal_url)}" data-goatcounter-click="subscribe-webcal" data-goatcounter-title="Subscribe to deadline reminders">Subscribe to deadline reminders (auto update)</a>
+        <a href="./conference_calendar.ics" data-goatcounter-click="download-static-ics" data-goatcounter-title="Download static calendar ICS">Download static .ics (no auto update)</a>
         <a href="{escape(repo_url)}">Repository</a>
       </div>
-      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it, for example for Thunderbird (<a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars</a>), and leave the account / username / password empty. Calendar link with update is: <a href="{escape(webcal_url)}">{escape(webcal_url)}</a></p>
-      <p class="links-note">Found a new interesting conference? <a href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">Tell us here</a>.</p>
+      <p class="links-note">If the subscription button does not add to your calendar software, you may need to manually add it. For example, <button class="help-trigger" type="button" popovertarget="thunderbird-help">instruction for Thunderbird</button>.</p>
+      <div id="thunderbird-help" popover>
+        <h2>How to set up conference calendar for Thunderbird</h2>
+        <p>Follow the <a href="https://support.mozilla.org/en-US/kb/creating-new-calendars#w_on-the-network-connect-to-your-online-calendars">Thunderbird calendar instructions</a> and leave the account / username / password empty.</p>
+        <p>The calendar link with auto update is:</p>
+        <code>{escape(webcal_url)}</code>
+        <button class="help-close" type="button" popovertarget="thunderbird-help" popovertargetaction="hide">Close</button>
+      </div>
+      <p class="links-note">Found a new interesting conference? <a class="suggest-link" href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md">Tell us here</a>.</p>
     </section>
     <section class="panel">
       <h2>Upcoming events</h2>
@@ -313,6 +321,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <a href="./past-events.html">Click here to see past events</a>
       <span>{past_count} archived event{"s" if past_count != 1 else ""}</span>
     </section>""",
+        goatcounter_code=GOATCOUNTER_CODE,
     )
 
 
@@ -337,7 +346,12 @@ def build_past_events_html(conferences: Iterable[Conference], today: date) -> st
     )
 
 
-def _build_site_html(title: str, today: date, body: str) -> str:
+def _build_site_html(title: str, today: date, body: str, goatcounter_code: str = "") -> str:
+    goatcounter_script = (
+        f'<script data-goatcounter="https://{escape(goatcounter_code, quote=True)}.goatcounter.com/count" '
+        'async src="//gc.zgo.at/count.js"></script>'
+        if goatcounter_code else ""
+    )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -404,6 +418,40 @@ def _build_site_html(title: str, today: date, body: str) -> str:
       margin-top: 14px;
       font-size: 0.88rem;
     }}
+    .help-trigger {{
+      border: 0;
+      padding: 0;
+      background: none;
+      color: var(--accent);
+      font: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }}
+    #thunderbird-help {{
+      width: min(36rem, calc(100vw - 2rem));
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      color: var(--ink);
+    }}
+    #thunderbird-help::backdrop {{ background: rgba(28, 27, 24, 0.55); }}
+    #thunderbird-help code {{ overflow-wrap: anywhere; user-select: all; }}
+    .help-close, .suggest-link {{
+      display: inline-block;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: var(--accent);
+      color: white;
+      font: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }}
+    .help-close {{ display: block; margin-top: 20px; }}
+    .suggest-link {{ margin-left: 4px; }}
     .archive-link {{
       display: flex;
       align-items: center;
@@ -457,6 +505,7 @@ def _build_site_html(title: str, today: date, body: str) -> str:
       .hero, .panel {{ padding: 18px; }}
     }}
   </style>
+  {goatcounter_script}
 </head>
 <body>
   <main>

@@ -6,6 +6,8 @@ import sys
 import tempfile
 import unittest
 from dataclasses import replace
+from html.parser import HTMLParser
+from unittest.mock import patch
 from datetime import date
 from pathlib import Path
 
@@ -210,6 +212,29 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertNotIn("Future Event", past_html)
         self.assertNotIn("Get meeting schedule .ics", past_html)
         self.assertNotIn("Get .ics", past_html)
+
+    def test_index_click_tracking_and_thunderbird_popover(self) -> None:
+        repo_url = "https://github.com/nbody6ppgpu/conference-calendar"
+        with patch("calendar_core.GOATCOUNTER_CODE", ""):
+            index_html = build_index_html([], date(2026, 3, 30), repo_url)
+        with patch("calendar_core.GOATCOUNTER_CODE", "nbody-calendar"):
+            tracked_html = build_index_html([], date(2026, 3, 30), repo_url)
+            past_html = build_past_events_html([], date(2026, 3, 30))
+
+        self.assertNotIn("gc.zgo.at/count.js", index_html)
+        script = '<script data-goatcounter="https://nbody-calendar.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>'
+        self.assertEqual(tracked_html.count(script), 1)
+        self.assertNotIn("gc.zgo.at/count.js", past_html)
+        self.assertEqual(tracked_html.count('data-goatcounter-click="'), 2)
+        self.assertIn('data-goatcounter-click="subscribe-webcal" data-goatcounter-title="Subscribe to deadline reminders"', tracked_html)
+        self.assertIn('data-goatcounter-click="download-static-ics" data-goatcounter-title="Download static calendar ICS"', tracked_html)
+        self.assertIn('<button class="help-trigger" type="button" popovertarget="thunderbird-help">instruction for Thunderbird</button>', tracked_html)
+        self.assertIn('<div id="thunderbird-help" popover>', tracked_html)
+        self.assertIn('<h2>How to set up conference calendar for Thunderbird</h2>', tracked_html)
+        self.assertIn('popovertarget="thunderbird-help" popovertargetaction="hide"', tracked_html)
+        self.assertIn('<code>webcal://nbody6ppgpu.github.io/conference-calendar/conference_calendar.ics</code>', tracked_html)
+        self.assertIn('class="suggest-link" href="https://github.com/nbody6ppgpu/conference-calendar/issues/new?template=add-a-new-meeting.md"', tracked_html)
+        HTMLParser(convert_charrefs=True).feed(tracked_html)
 
     def test_auto_display_formats_multiple_deadlines(self) -> None:
         path = write_yaml(

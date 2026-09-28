@@ -562,7 +562,6 @@ conferences:
         label: Early-bird registration
         date: 2026-04-01
     comments: hybrid participation available
-  # Conference Calendar
   - id: multiple-planet-systems-2026
     title: Multiple Planet Systems
     url: https://exo-mps.eu
@@ -614,20 +613,6 @@ conferences:
         label: Early-bird registration
         date: 2026-07-15
     comments: star cluster splinter meeting by convenor Rainer, Stefanie Walch-Gassner, Ralf Klessen, Thorsten Naab
-  - id: cosmology-from-home-2026
-    title: Cosmology from Home 2026
-    url: https://cosmologyfromhome.com/registration/
-    location: Online
-    start_date: 2026-09-21
-    end_date: 2026-10-02
-    registration_deadlines: []
-    abstract_deadlines:
-      - label: Equal-consideration abstract submission
-        date: 2026-08-18
-    registration_display: Open; no fixed registration deadline listed
-    abstract_display: ""
-    other_deadlines: []
-    comments: ""
   - id: bwhpc-symposium-2026
     title: 12th bwHPC Symposium
     url: https://indico.kit.edu/event/5505/overview
@@ -644,6 +629,21 @@ conferences:
     abstract_display: ""
     other_deadlines: []
     comments: Free of charge; open to researchers from all scientific fields
+  # Conference Calendar
+  - id: cosmology-from-home-2026
+    title: Cosmology from Home 2026
+    url: https://cosmologyfromhome.com/registration/
+    location: Online
+    start_date: 2026-09-21
+    end_date: 2026-10-02
+    registration_deadlines: []
+    abstract_deadlines:
+      - label: Equal-consideration abstract submission
+        date: 2026-08-18
+    registration_display: Open; no fixed registration deadline listed
+    abstract_display: ""
+    other_deadlines: []
+    comments: ""
   - id: bh-nepal-2026
     title: "8th Nepal Conference: Many faces of stellar-mass black holes"
     url: https://sites.google.com/view/bh-nepal-2026/home
@@ -812,8 +812,8 @@ conferences:
     end_date: 2027-03-18
     registration_deadlines: []
     abstract_deadlines: []
-    registration_display: ""
-    abstract_display: ""
+    registration_display: "Early-bird/presenting-author registration: early January 2027 (TBC); final registration: end of February 2027"
+    abstract_display: "Abstract submission: mid or end of November (TBC)"
     other_deadlines: []
     comments: ""
   - id: eas-2027
@@ -871,6 +871,10 @@ conferences:
     registration_deadlines:
       - label: Authors registration
         date: 2027-03-05
+      - label: Regular registration
+        date: 2027-06-30
+      - label: Late registration
+        date: 2027-07-21
     abstract_deadlines:
       - label: Abstract submission
         date: 2027-01-15
@@ -880,6 +884,9 @@ conferences:
       - type: funding
         label: Grants application deadline
         date: 2027-01-15
+      - type: other
+        label: Early-bird registration
+        date: 2027-03-05
       - type: other
         label: Late posters submission deadline
         date: 2027-06-16

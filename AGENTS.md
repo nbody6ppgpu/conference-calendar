@@ -39,7 +39,9 @@
 - Never invent a date. If a deadline is only stated as text such as `TBA`,
   `open`, or `?` — or isn't stated at all — leave the structured date field
   empty and put the text (if any) in `registration_display` /
-  `abstract_display` instead. This calendar exists to be trustworthy; a
+  `abstract_display` instead, keeping the site's wording: never add, change,
+  or guess a year, month, or day the site does not state for that item (e.g.
+  "Mid or end of November (TBC)" stays yearless). This calendar exists to be trustworthy; a
   plausible-looking guessed date is worse than a blank one, because nothing
   downstream can tell it apart from a real one.
 - Represent regular/final registration and abstract deadlines as structured

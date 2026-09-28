@@ -45,6 +45,8 @@ Task:
 - If a fact still isn't available after EXPLORE, leave the field as it is.
   Only an officially announced `other_deadlines` item may have `date: ""`;
   never guess a date or write `TBA` as one. Recheck undated items next month.
+- When you fill `registration_display` / `abstract_display`, keep the site's
+  wording and never add a year, month, or day it does not state for that item.
 - Do not touch `comments`.
 - Modify only `data/conferences.yml`. Do not run the build script; the
   workflow verifies the build itself in a later step.

@@ -66,8 +66,8 @@ class Conference:
     title: str
     url: str
     location: str
-    start_date: date
-    end_date: date
+    start_date: date | None
+    end_date: date | None
     registration_deadlines: tuple[Deadline, ...]
     abstract_deadlines: tuple[Deadline, ...]
     registration_display: str
@@ -111,16 +111,18 @@ def load_conferences(path: str | Path) -> list[Conference]:
             raise ValidationError(f"duplicate conference id: {conf_id}")
         seen_ids.add(conf_id)
 
-        start = _parse_iso_date(raw["start_date"], f"{conf_id}.start_date")
-        end = _parse_iso_date(raw["end_date"], f"{conf_id}.end_date")
-        if end < start:
+        start = None if raw["start_date"] == "" else _parse_iso_date(raw["start_date"], f"{conf_id}.start_date")
+        end = None if raw["end_date"] == "" else _parse_iso_date(raw["end_date"], f"{conf_id}.end_date")
+        if (start is None) != (end is None):
+            raise ValidationError(f"{conf_id}.start_date and end_date must both be set or both be empty")
+        if start is not None and end < start:
             raise ValidationError(f"{conf_id}.end_date must not be earlier than start_date")
 
         conference = Conference(
             id=conf_id,
             title=_require_text(raw["title"], f"{conf_id}.title"),
             url=_require_optional_text(raw["url"], f"{conf_id}.url"),
-            location=_require_text(raw["location"], f"{conf_id}.location"),
+            location=_require_optional_text(raw["location"], f"{conf_id}.location"),
             start_date=start,
             end_date=end,
             registration_deadlines=_parse_deadlines(raw["registration_deadlines"], conf_id, "registration_deadlines"),
@@ -133,12 +135,21 @@ def load_conferences(path: str | Path) -> list[Conference]:
         )
         conferences.append(conference)
 
-    return sorted(conferences, key=lambda item: (item.start_date, item.end_date, item.title.lower(), item.id))
+    return sorted(
+        conferences,
+        key=lambda item: (
+            item.start_date is None,
+            item.start_date or date.max,
+            item.end_date or date.max,
+            item.id if item.start_date is None else item.title.lower(),
+            item.id,
+        ),
+    )
 
 
 def split_conferences(conferences: Iterable[Conference], today: date) -> tuple[list[Conference], list[Conference]]:
-    upcoming = [conference for conference in conferences if conference.end_date >= today]
-    past = [conference for conference in conferences if conference.end_date < today]
+    upcoming = [conference for conference in conferences if conference.end_date is None or conference.end_date >= today]
+    past = [conference for conference in conferences if conference.end_date is not None and conference.end_date < today]
     return upcoming, past
 
 
@@ -254,6 +265,8 @@ def build_ics(conferences: Iterable[Conference]) -> str:
 
 
 def build_meeting_ics(conference: Conference) -> str:
+    if conference.start_date is None or conference.end_date is None:
+        raise ValueError(f"{conference.id} has no meeting dates")
     dtstamp = stable_dtstamp(
         "meeting",
         conference.id,
@@ -677,8 +690,8 @@ def _html_rows(conferences: Iterable[Conference], include_meeting_ics: bool = Fa
         )
         meeting_ics_cell = (
             f'<td><a href="./meetings/{escape(conference.id)}.ics">Get .ics</a></td>'
-            if include_meeting_ics
-            else ""
+            if include_meeting_ics and conference.start_date is not None
+            else "<td></td>" if include_meeting_ics else ""
         )
         row_html.append(
             "<tr>"
@@ -723,8 +736,8 @@ def _html_table(rows: str, include_meeting_ics: bool = False) -> str:
 
 def _conference_payload(conference: Conference) -> dict[str, object]:
     payload = asdict(conference)
-    payload["start_date"] = conference.start_date.isoformat()
-    payload["end_date"] = conference.end_date.isoformat()
+    payload["start_date"] = conference.start_date.isoformat() if conference.start_date else None
+    payload["end_date"] = conference.end_date.isoformat() if conference.end_date else None
     payload["registration_deadlines"] = [
         {"label": deadline.label, "date": deadline.date.isoformat()} for deadline in conference.registration_deadlines
     ]
@@ -780,7 +793,9 @@ def format_single_date(value: date) -> str:
     return f"{MONTH_NAMES[value.month]} {value.day} {value.year}"
 
 
-def format_date_range(start: date, end: date) -> str:
+def format_date_range(start: date | None, end: date | None) -> str:
+    if start is None or end is None:
+        return "TBA"
     if start == end:
         return format_single_date(start)
     if start.year == end.year and start.month == end.month:

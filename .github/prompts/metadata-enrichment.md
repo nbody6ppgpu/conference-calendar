@@ -15,6 +15,16 @@ Task:
   `registration_deadlines`, or `abstract_deadlines` is empty or holds no real
   date, EXPLORE its `url` (as defined in `AGENTS.md`) and fill in what the
   source supports.
+- For an active placeholder (`start_date: ""`, `end_date: ""`), start at its
+  `url` and follow a direct link to that year's official meeting site or
+  official registration system, even if it uses a different domain. Use only
+  the official series entry and the linked official site, not search engines
+  or third-party aggregators. Confirm the meeting year matches the year in
+  the entry's `id` before editing it. Once confirmed, you may update `url` to
+  the meeting site and fill `location`, both `start_date` and `end_date` (only
+  when both are known), `registration_deadlines`, and `abstract_deadlines`
+  with verified facts. Keep `title` when it already has the correct year;
+  never change `id` or `comments`.
 - If a fact still isn't available after EXPLORE, leave the field as it is.
   Do not write `TBA` or any placeholder yourself — an unannounced date will
   simply be checked again next month.

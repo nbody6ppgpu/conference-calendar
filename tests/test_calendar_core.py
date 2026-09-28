@@ -23,6 +23,7 @@ from calendar_core import (  # noqa: E402
     build_ics,
     build_index_html,
     build_markdown,
+    build_json,
     build_meeting_ics,
     build_past_events_html,
     build_reminder_payload,
@@ -31,6 +32,7 @@ from calendar_core import (  # noqa: E402
     load_conferences,
     stable_uid,
 )
+from build_meeting_ics import write_meeting_ics_files  # noqa: E402
 
 
 def write_yaml(payload: dict) -> Path:
@@ -390,6 +392,74 @@ class CalendarCoreTests(unittest.TestCase):
         payload_two = build_reminder_payload(conferences, __import__("datetime").date(2026, 3, 31), "Europe/Berlin")
         self.assertEqual(payload_one["title"], "Deadline reminders for 2026-03-31")
         self.assertEqual(payload_one, payload_two)
+
+    def test_placeholder_dates_sort_display_and_keep_deadline_reminders(self) -> None:
+        entries = []
+        for conference_id, start, end in (
+            ("z-placeholder", "", ""),
+            ("future", "2027-06-01", "2027-06-02"),
+            ("a-placeholder", "", ""),
+            ("past", "2025-06-01", "2025-06-02"),
+        ):
+            entries.append({
+                "id": conference_id,
+                "title": conference_id,
+                "url": f"https://example.com/{conference_id}",
+                "location": "" if not start else "Somewhere",
+                "start_date": start,
+                "end_date": end,
+                "registration_deadlines": [{"label": "Early", "date": "2027-05-01"}] if conference_id == "a-placeholder" else [],
+                "abstract_deadlines": [],
+                "registration_display": "",
+                "abstract_display": "",
+                "comments": "",
+            })
+        conferences = load_conferences(write_yaml({"conferences": entries}))
+        self.assertEqual([item.id for item in conferences], ["past", "future", "a-placeholder", "z-placeholder"])
+        self.assertIsNone(conferences[-1].start_date)
+        today = date(2026, 9, 28)
+        markdown = build_markdown(conferences, today)
+        self.assertIn("| TBA |  | [a-placeholder]", markdown)
+        self.assertLess(markdown.index("future"), markdown.index("a-placeholder"))
+        self.assertNotIn("a-placeholder", markdown.split("## Past events", 1)[1])
+        html = build_index_html(conferences, today, "https://example.com")
+        self.assertIn('<td>TBA</td><td></td><td><a href="https://example.com/a-placeholder">a-placeholder</a>', html)
+        self.assertNotIn('meetings/a-placeholder.ics', html)
+        self.assertIn('<a href="./meetings/future.ics">Get .ics</a>', html)
+        payload = json.loads(build_json(conferences, today))
+        self.assertEqual([item["id"] for item in payload["upcoming"]], ["future", "a-placeholder", "z-placeholder"])
+        self.assertIsNone(payload["upcoming"][1]["start_date"])
+        self.assertIsNone(payload["upcoming"][1]["end_date"])
+        self.assertEqual([item["id"] for item in payload["past"]], ["past"])
+        ics = build_ics(conferences)
+        self.assertIn("SUMMARY:a-placeholder - Registration deadline (Early)", ics)
+        self.assertNotIn("SUMMARY:z-placeholder", ics)
+        self.assertEqual(ics.count("BEGIN:VEVENT"), 1)
+        reminders = find_reminders(conferences, date(2027, 4, 30))
+        self.assertEqual(reminders[0]["conference_id"], "a-placeholder")
+        self.assertTrue(build_reminder_payload(conferences, date(2027, 4, 30), "Europe/Berlin")["has_reminders"])
+        with tempfile.TemporaryDirectory() as temp_dir:
+            meetings_dir = Path(temp_dir) / "meetings"
+            meetings_dir.mkdir()
+            stale = meetings_dir / "a-placeholder.ics"
+            stale.write_text("stale", encoding="utf-8")
+            paths = write_meeting_ics_files(conferences, today, temp_dir)
+            self.assertEqual([path.name for path in paths], ["future.ics"])
+            self.assertFalse(stale.exists())
+        with self.assertRaisesRegex(ValueError, "has no meeting dates"):
+            build_meeting_ics(conferences[-1])
+
+    def test_placeholder_requires_both_dates_empty(self) -> None:
+        for start, end in (("", "2027-05-02"), ("2027-05-01", "")):
+            with self.subTest(start=start, end=end):
+                path = write_yaml({"conferences": [{
+                    "id": "partial", "title": "Partial", "url": "https://example.com",
+                    "location": "", "start_date": start, "end_date": end,
+                    "registration_deadlines": [], "abstract_deadlines": [],
+                    "registration_display": "", "abstract_display": "", "comments": "",
+                }]})
+                with self.assertRaisesRegex(ValidationError, "must both be set or both be empty"):
+                    load_conferences(path)
 
     def test_repository_data_builds_and_preserves_known_entries(self) -> None:
         conferences = load_conferences(REPO_ROOT / "data" / "conferences.yml")

@@ -30,7 +30,7 @@ PAST_SECTION = "Past events"
 @dataclass(frozen=True)
 class CalendarEntry:
     id: str
-    end_date: date
+    end_date: date | None
     lines: tuple[str, ...]
     start_line: int
     current_section: str
@@ -64,12 +64,12 @@ def plan_cleanup(data_path: str | Path, cleanup_date: date) -> CleanupPlan:
     overdue_ids = tuple(
         entry.id
         for entry in layout.entries
-        if entry.current_section == ACTIVE_SECTION and entry.end_date < cleanup_date
+        if entry.current_section == ACTIVE_SECTION and entry.end_date is not None and entry.end_date < cleanup_date
     )
     expected_ids = tuple(
         entry.id
         for entry in layout.entries
-        if (entry.current_section == PAST_SECTION) != (entry.end_date < cleanup_date)
+        if (entry.current_section == PAST_SECTION) != (entry.end_date is not None and entry.end_date < cleanup_date)
     )
     rendered_text = _render(layout, cleanup_date)
     return CleanupPlan(
@@ -188,8 +188,8 @@ def _load_conference_map(path: Path) -> dict[str, Conference]:
 
 
 def _render(layout: CalendarLayout, cleanup_date: date) -> str:
-    past_entries = [entry for entry in layout.entries if entry.end_date < cleanup_date]
-    active_entries = [entry for entry in layout.entries if entry.end_date >= cleanup_date]
+    past_entries = [entry for entry in layout.entries if entry.end_date is not None and entry.end_date < cleanup_date]
+    active_entries = [entry for entry in layout.entries if entry.end_date is None or entry.end_date >= cleanup_date]
     lines = list(layout.prefix)
     for entry in past_entries:
         lines.extend(entry.lines)

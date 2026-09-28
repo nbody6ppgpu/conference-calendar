@@ -16,7 +16,8 @@ from calendar_core import ValidationError  # noqa: E402
 
 
 def conference_block(conference_id: str, end_date: str) -> str:
-    start_date = end_date
+    start_date = end_date or '""'
+    end_date = end_date or '""'
     return f"""  - id: {conference_id}
     title: {conference_id}
     url: https://example.com/{conference_id}
@@ -81,6 +82,29 @@ class CleanupCalendarTests(unittest.TestCase):
 
             second_plan = apply_cleanup(path, date(2026, 8, 4))
             self.assertFalse(second_plan.changed)
+
+    def test_placeholder_stays_active_and_check_accepts_it(self) -> None:
+        source = calendar_text(
+            past=[conference_block("already-past", "2026-07-03")],
+            active=[conference_block("placeholder-2027", "")],
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "conferences.yml"
+            path.write_text(source, encoding="utf-8")
+            plan = plan_cleanup(path, date(2028, 1, 1))
+            self.assertEqual(plan.overdue_ids, ())
+            self.assertEqual(plan.expected_ids, ())
+            self.assertFalse(plan.changed)
+            verify_cleanup(path, date(2028, 1, 1), baseline_path=path)
+            self.assertEqual(path.read_text(encoding="utf-8"), source)
+
+            misplaced = calendar_text(past=[conference_block("placeholder-2027", "")], active=[])
+            path.write_text(misplaced, encoding="utf-8")
+            with self.assertRaisesRegex(ValidationError, "wrong section: placeholder-2027"):
+                verify_cleanup(path, date(2028, 1, 1))
+            apply_cleanup(path, date(2028, 1, 1))
+            result = path.read_text(encoding="utf-8")
+            self.assertGreater(result.index("placeholder-2027"), result.index("# Conference Calendar"))
 
     def test_missing_section_marker_is_rejected(self) -> None:
         source = calendar_text([], [conference_block("future", "2026-09-10")]).replace(

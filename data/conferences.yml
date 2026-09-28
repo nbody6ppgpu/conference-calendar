@@ -802,3 +802,25 @@ conferences:
     registration_display: ""
     abstract_display: ""
     comments: ""
+  - id: ag-meeting-2027
+    title: Annual Meeting of the Astronomische Gesellschaft 2027
+    url: https://www.astronomische-gesellschaft.de/en/activities/meetings
+    location: Heidelberg, Germany
+    start_date: 2027-09-20
+    end_date: 2027-09-24
+    registration_deadlines: []
+    abstract_deadlines: []
+    registration_display: ""
+    abstract_display: ""
+    comments: ""
+  - id: chinese-astronomy-meeting-2027
+    title: Chinese Astronomical Society 2027 Annual Academic Meeting
+    url: https://astronomy.pmo.cas.cn/xsjl/gnxsjl/
+    location: ""
+    start_date: ""
+    end_date: ""
+    registration_deadlines: []
+    abstract_deadlines: []
+    registration_display: ""
+    abstract_display: ""
+    comments: ""

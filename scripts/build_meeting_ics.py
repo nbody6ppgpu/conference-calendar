@@ -10,6 +10,7 @@ from calendar_core import Conference, build_meeting_ics, get_today, load_confere
 
 def write_meeting_ics_files(conferences: Iterable[Conference], today: date, site_dir: str | Path) -> list[Path]:
     upcoming, _past = split_conferences(conferences, today)
+    upcoming = [conference for conference in upcoming if conference.start_date is not None]
     meetings_dir = Path(site_dir) / "meetings"
     meetings_dir.mkdir(parents=True, exist_ok=True)
 

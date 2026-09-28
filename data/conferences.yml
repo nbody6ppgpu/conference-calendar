@@ -812,8 +812,8 @@ conferences:
     end_date: 2027-03-18
     registration_deadlines: []
     abstract_deadlines: []
-    registration_display: ""
-    abstract_display: ""
+    registration_display: "Early-bird/presenting-author registration: early January 2027 (TBC); final registration: end of February 2027"
+    abstract_display: "Abstract submission: mid-to-late November 2027 (TBC)"
     other_deadlines: []
     comments: ""
   - id: eas-2027
@@ -871,6 +871,10 @@ conferences:
     registration_deadlines:
       - label: Authors registration
         date: 2027-03-05
+      - label: Regular registration
+        date: 2027-06-30
+      - label: Late registration
+        date: 2027-07-21
     abstract_deadlines:
       - label: Abstract submission
         date: 2027-01-15
@@ -880,6 +884,9 @@ conferences:
       - type: funding
         label: Grants application deadline
         date: 2027-01-15
+      - type: other
+        label: Early-bird registration
+        date: 2027-03-05
       - type: other
         label: Late posters submission deadline
         date: 2027-06-16

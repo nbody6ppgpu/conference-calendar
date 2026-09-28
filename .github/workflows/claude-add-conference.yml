@@ -72,7 +72,11 @@ jobs:
             ${{ github.event.issue.body }}
 
             Add one entry to `data/conferences.yml` for the meeting linked in
-            this issue. Leave the edit uncommitted in the working tree: this
+            this issue. Include `other_deadlines: []` when the official site
+            announces no non-registration/non-abstract deadline; otherwise
+            use `type`, `label`, and `date` items as described in `AGENTS.md`,
+            leaving `date` empty for an announced but undated milestone. Leave
+            the edit uncommitted in the working tree: this
             workflow commits, pushes and opens the pull request itself.
 
       - name: Check Claude's run succeeded

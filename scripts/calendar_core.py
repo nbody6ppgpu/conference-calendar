@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 import yaml
 
 
-REMINDER_OFFSETS = (30, 14, 7, 3, 1)
+OTHER_DEADLINE_TYPES = frozenset({"funding", "proposal", "other"})
 GOATCOUNTER_CODE = "nbody-conference-calendar"
 SOURCE_NOTE = (
     "Check our new conference calendar at this link: https://nbody6ppgpu.github.io/conference-calendar/ <-- Bookmark it! "
@@ -61,6 +61,13 @@ class Deadline:
 
 
 @dataclass(frozen=True)
+class OtherDeadline:
+    type: str
+    label: str
+    date: date | None
+
+
+@dataclass(frozen=True)
 class Conference:
     id: str
     title: str
@@ -72,6 +79,7 @@ class Conference:
     abstract_deadlines: tuple[Deadline, ...]
     registration_display: str
     abstract_display: str
+    other_deadlines: tuple[OtherDeadline, ...]
     comments: str
 
 
@@ -99,6 +107,7 @@ def load_conferences(path: str | Path) -> list[Conference]:
                 "abstract_deadlines",
                 "registration_display",
                 "abstract_display",
+                "other_deadlines",
                 "comments",
             )
             if field not in raw
@@ -131,6 +140,7 @@ def load_conferences(path: str | Path) -> list[Conference]:
                 raw["registration_display"], f"{conf_id}.registration_display"
             ),
             abstract_display=_require_optional_text(raw["abstract_display"], f"{conf_id}.abstract_display"),
+            other_deadlines=_parse_other_deadlines(raw["other_deadlines"], conf_id),
             comments=_require_optional_text(raw["comments"], f"{conf_id}.comments"),
         )
         conferences.append(conference)
@@ -190,7 +200,7 @@ def build_markdown(conferences: Iterable[Conference], today: date) -> str:
             "|-|-|-|-|-|-|",
         ]
     )
-    lines.extend(_conference_rows(upcoming))
+    lines.extend(_conference_rows(upcoming, today))
     lines.extend(["", "## Past events", "", "| Date | Location | Meeting title and link | Registration Deadline | Abstract Deadline | Comments |", "|-|-|-|-|-|-|"])
     lines.extend(_conference_rows(past))
     lines.extend(["", "*Note: after edit please click* `Preview` *on the top left to see whether the table shows properly.*", ""])
@@ -241,11 +251,32 @@ def build_ics(conferences: Iterable[Conference]) -> str:
                         f"SUMMARY:{_ics_escape(summary)}",
                         f"DESCRIPTION:{_ics_escape('; '.join(description_parts))}",
                         f"URL:{_ics_escape(conference.url)}",
-                        "BEGIN:VALARM",
-                        "ACTION:DISPLAY",
-                        f"DESCRIPTION:{_ics_escape(summary)}",
-                        "TRIGGER:-P2D",
-                        "END:VALARM",
+                        *_deadline_alarms(summary),
+                        "END:VEVENT",
+                    ]
+                )
+            )
+        for deadline in conference.other_deadlines:
+            if deadline.date is None:
+                continue
+            summary = f"{deadline.label} deadline: {conference.title}"
+            description_parts = [f"{deadline.label} deadline: {deadline.date.isoformat()}"]
+            if conference.comments:
+                description_parts.append(f"Notes: {conference.comments}")
+            if conference.url:
+                description_parts.append(f"Link: {conference.url}")
+            events.append(
+                "\n".join(
+                    [
+                        "BEGIN:VEVENT",
+                        f"UID:{stable_uid('other', conference.id, deadline.type, deadline.label, deadline.date.isoformat())}",
+                        f"DTSTAMP:{stable_dtstamp('other', conference.id, conference.title, conference.location, conference.url, conference.comments, deadline.type, deadline.label, deadline.date.isoformat())}",
+                        f"DTSTART;VALUE=DATE:{deadline.date.strftime('%Y%m%d')}",
+                        f"DTEND;VALUE=DATE:{(deadline.date + timedelta(days=1)).strftime('%Y%m%d')}",
+                        f"SUMMARY:{_ics_escape(summary)}",
+                        f"DESCRIPTION:{_ics_escape('; '.join(description_parts))}",
+                        f"URL:{_ics_escape(conference.url)}",
+                        *_deadline_alarms(summary),
                         "END:VEVENT",
                     ]
                 )
@@ -262,6 +293,20 @@ def build_ics(conferences: Iterable[Conference]) -> str:
             "",
         ]
     )
+
+
+def _deadline_alarms(summary: str) -> list[str]:
+    return [
+        line
+        for offset in (7, 1)
+        for line in (
+            "BEGIN:VALARM",
+            "ACTION:DISPLAY",
+            f"DESCRIPTION:{_ics_escape(summary)}",
+            f"TRIGGER:-P{offset}D",
+            "END:VALARM",
+        )
+    ]
 
 
 def build_meeting_ics(conference: Conference) -> str:
@@ -300,7 +345,7 @@ def build_meeting_ics(conference: Conference) -> str:
 
 def build_index_html(conferences: Iterable[Conference], today: date, repo_url: str) -> str:
     upcoming, past = split_conferences(conferences, today)
-    upcoming_rows = _html_rows(upcoming, include_meeting_ics=True)
+    upcoming_rows = _html_rows(upcoming, today=today, include_meeting_ics=True)
     webcal_url = _build_webcal_url(repo_url)
     past_count = len(past)
     return _build_site_html(
@@ -487,6 +532,15 @@ def _build_site_html(title: str, today: date, body: str, goatcounter_code: str =
     .archive-link span {{
       color: var(--muted);
     }}
+    .other-deadlines {{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }}
+    .other-deadline {{
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 2px 7px;
+      color: var(--muted);
+      font: 0.75rem/1.4 "Avenir Next Condensed", "Gill Sans", sans-serif;
+    }}
     .panel {{
       background: rgba(255, 250, 242, 0.92);
       border: 1px solid var(--line);
@@ -547,86 +601,6 @@ def _build_webcal_url(repo_url: str) -> str:
     return "webcal://conference_calendar.ics"
 
 
-def build_reminder_payload(conferences: Iterable[Conference], today: date, timezone_name: str) -> dict[str, object]:
-    reminders = find_reminders(conferences, today)
-    title = f"Deadline reminders for {today.isoformat()}"
-    return {
-        "date": today.isoformat(),
-        "title": title,
-        "label": "deadline-reminder",
-        "has_reminders": bool(reminders),
-        "body": render_reminder_issue(reminders, today, timezone_name),
-    }
-
-
-def find_reminders(conferences: Iterable[Conference], today: date) -> list[dict[str, object]]:
-    reminders: list[dict[str, object]] = []
-    for conference in conferences:
-        for deadline_type, deadlines in (
-            ("Registration", conference.registration_deadlines),
-            ("Abstract", conference.abstract_deadlines),
-        ):
-            for deadline in deadlines:
-                delta_days = (deadline.date - today).days
-                if delta_days in REMINDER_OFFSETS:
-                    reminders.append(
-                        {
-                            "conference_id": conference.id,
-                            "conference_title": conference.title,
-                            "conference_url": conference.url,
-                            "deadline_type": deadline_type,
-                            "deadline_label": deadline.label,
-                            "deadline_date": deadline.date.isoformat(),
-                            "days_until": delta_days,
-                            "comments": conference.comments,
-                        }
-                    )
-    reminders.sort(
-        key=lambda item: (
-            item["days_until"],
-            item["deadline_date"],
-            str(item["conference_title"]).lower(),
-            str(item["deadline_type"]).lower(),
-        )
-    )
-    return reminders
-
-
-def render_reminder_issue(reminders: list[dict[str, object]], today: date, timezone_name: str) -> str:
-    lines = [
-        f"# Deadline reminders for {today.isoformat()}",
-        "",
-        f"Computed using `{timezone_name}` dates.",
-        "",
-    ]
-    if not reminders:
-        lines.append("No concrete registration or abstract deadlines hit the 30/14/7/3/1-day reminder windows today.")
-        lines.append("")
-        return "\n".join(lines)
-
-    current_conference = None
-    for reminder in reminders:
-        conference_title = str(reminder["conference_title"])
-        if conference_title != current_conference:
-            if current_conference is not None:
-                lines.append("")
-            url = str(reminder["conference_url"])
-            heading = f"## [{conference_title}]({url})" if url else f"## {conference_title}"
-            lines.append(heading)
-            current_conference = conference_title
-        label = str(reminder["deadline_label"])
-        label_suffix = f" ({label})" if label and label.lower() not in {"registration", "abstract"} else ""
-        lines.append(
-            f"- {reminder['deadline_type']} deadline{label_suffix}: {reminder['deadline_date']} "
-            f"({reminder['days_until']} days left)"
-        )
-        comments = str(reminder["comments"])
-        if comments:
-            lines.append(f"- Notes: {comments}")
-    lines.append("")
-    return "\n".join(lines)
-
-
 def stable_uid(*parts: str) -> str:
     digest = hashlib.sha1("::".join(parts).encode("utf-8")).hexdigest()
     return f"{digest}@conference-calendar"
@@ -658,7 +632,15 @@ def _group_deadlines_for_ics(conference: Conference) -> dict[date, list[dict[str
     return dict(sorted(grouped.items(), key=lambda item: item[0]))
 
 
-def _conference_rows(conferences: Iterable[Conference]) -> list[str]:
+def _visible_other_deadlines(conference: Conference, today: date) -> tuple[OtherDeadline, ...]:
+    return tuple(deadline for deadline in conference.other_deadlines if deadline.date is None or deadline.date >= today)
+
+
+def _other_deadline_display(deadline: OtherDeadline) -> str:
+    return f"{deadline.label}: {format_single_date(deadline.date) if deadline.date else 'TBA'}"
+
+
+def _conference_rows(conferences: Iterable[Conference], today: date | None = None) -> list[str]:
     rows: list[str] = []
     for conference in conferences:
         rows.append(
@@ -667,7 +649,14 @@ def _conference_rows(conferences: Iterable[Conference]) -> list[str]:
                 [
                     _escape_pipe(format_date_range(conference.start_date, conference.end_date)),
                     _escape_pipe(conference.location),
-                    _md_link(conference.title, conference.url),
+                    _md_link(conference.title, conference.url)
+                    + (
+                        "<br>" + "; ".join(
+                            _escape_pipe(_other_deadline_display(deadline))
+                            for deadline in _visible_other_deadlines(conference, today)
+                        )
+                        if today is not None and _visible_other_deadlines(conference, today) else ""
+                    ),
                     _escape_pipe(deadline_display(conference.registration_deadlines, conference.registration_display)),
                     _escape_pipe(deadline_display(conference.abstract_deadlines, conference.abstract_display)),
                     _escape_pipe(conference.comments),
@@ -680,13 +669,22 @@ def _conference_rows(conferences: Iterable[Conference]) -> list[str]:
     return rows
 
 
-def _html_rows(conferences: Iterable[Conference], include_meeting_ics: bool = False) -> str:
+def _html_rows(conferences: Iterable[Conference], today: date | None = None, include_meeting_ics: bool = False) -> str:
     row_html = []
     for conference in conferences:
         title = (
             f'<a href="{escape(conference.url)}">{escape(conference.title)}</a>'
             if conference.url
             else escape(conference.title)
+        )
+        tags = (
+            '<div class="other-deadlines">'
+            + "".join(
+                f'<span class="other-deadline">{escape(_other_deadline_display(deadline))}</span>'
+                for deadline in _visible_other_deadlines(conference, today)
+            )
+            + "</div>"
+            if today is not None and _visible_other_deadlines(conference, today) else ""
         )
         meeting_ics_cell = (
             f'<td><a href="./meetings/{escape(conference.id)}.ics">Get .ics</a></td>'
@@ -697,7 +695,7 @@ def _html_rows(conferences: Iterable[Conference], include_meeting_ics: bool = Fa
             "<tr>"
             f"<td>{escape(format_date_range(conference.start_date, conference.end_date))}</td>"
             f"<td>{escape(conference.location)}</td>"
-            f"<td>{title}</td>"
+            f"<td>{title}{tags}</td>"
             f"<td>{escape(deadline_display(conference.registration_deadlines, conference.registration_display))}</td>"
             f"<td>{escape(deadline_display(conference.abstract_deadlines, conference.abstract_display))}</td>"
             f"<td>{escape(conference.comments)}</td>"
@@ -744,6 +742,10 @@ def _conference_payload(conference: Conference) -> dict[str, object]:
     payload["abstract_deadlines"] = [
         {"label": deadline.label, "date": deadline.date.isoformat()} for deadline in conference.abstract_deadlines
     ]
+    payload["other_deadlines"] = [
+        {"type": deadline.type, "label": deadline.label, "date": deadline.date.isoformat() if deadline.date else None}
+        for deadline in conference.other_deadlines
+    ]
     payload["registration_display"] = deadline_display(conference.registration_deadlines, conference.registration_display)
     payload["abstract_display"] = deadline_display(conference.abstract_deadlines, conference.abstract_display)
     return payload
@@ -761,6 +763,25 @@ def _parse_deadlines(value: object, conf_id: str, field_name: str) -> tuple[Dead
             raise ValidationError(f"{conf_id}.{field_name}[{idx}] is missing required field: date")
         parsed.append(Deadline(label=label, date=_parse_iso_date(raw["date"], f"{conf_id}.{field_name}[{idx}].date")))
     return tuple(sorted(parsed, key=lambda deadline: (deadline.date, deadline.label.lower())))
+
+
+def _parse_other_deadlines(value: object, conf_id: str) -> tuple[OtherDeadline, ...]:
+    if not isinstance(value, list):
+        raise ValidationError(f"{conf_id}.other_deadlines must be a list")
+    parsed: list[OtherDeadline] = []
+    for idx, raw in enumerate(value, start=1):
+        field = f"{conf_id}.other_deadlines[{idx}]"
+        if not isinstance(raw, dict):
+            raise ValidationError(f"{field} must be a mapping")
+        if "type" not in raw or "label" not in raw or "date" not in raw:
+            raise ValidationError(f"{field} requires type, label, and date")
+        kind = _require_text(raw["type"], f"{field}.type")
+        if kind not in OTHER_DEADLINE_TYPES:
+            raise ValidationError(f"{field}.type must be one of: funding, proposal, other")
+        label = _require_text(raw["label"], f"{field}.label")
+        deadline_date = None if raw["date"] == "" else _parse_iso_date(raw["date"], f"{field}.date")
+        parsed.append(OtherDeadline(type=kind, label=label, date=deadline_date))
+    return tuple(sorted(parsed, key=lambda deadline: (deadline.date is None, deadline.date or date.max, deadline.label.lower(), deadline.type)))
 
 
 def _parse_iso_date(value: object, field_name: str) -> date:

@@ -26,9 +26,7 @@ from calendar_core import (  # noqa: E402
     build_json,
     build_meeting_ics,
     build_past_events_html,
-    build_reminder_payload,
     deadline_display,
-    find_reminders,
     load_conferences,
     stable_uid,
 )
@@ -67,6 +65,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                     {
@@ -80,6 +79,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                 ]
@@ -103,6 +103,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     }
                 ]
@@ -126,6 +127,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "TBA",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                     {
@@ -139,6 +141,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                     {
@@ -152,6 +155,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "?",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                 ]
@@ -180,6 +184,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "TBA",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                     {
@@ -193,6 +198,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     },
                 ]
@@ -256,6 +262,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [],
                         "registration_display": "",
                         "abstract_display": "open",
+                        "other_deadlines": [],
                         "comments": "",
                     }
                 ]
@@ -269,7 +276,7 @@ class CalendarCoreTests(unittest.TestCase):
         )
         self.assertEqual(deadline_display(conference.abstract_deadlines, conference.abstract_display), "open")
 
-    def test_ics_merges_same_day_deadlines_and_adds_two_day_alarm(self) -> None:
+    def test_ics_merges_same_day_deadlines_and_adds_two_alarms(self) -> None:
         path = write_yaml(
             {
                 "conferences": [
@@ -287,6 +294,7 @@ class CalendarCoreTests(unittest.TestCase):
                         ],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "",
                     }
                 ]
@@ -303,7 +311,9 @@ class CalendarCoreTests(unittest.TestCase):
         )
         self.assertIn(f"UID:{stable_uid('ics-test', '2026-03-28', 'abstract:Abstract')}", ics_one)
         self.assertIn("SUMMARY:ICS Test - Abstract deadline (Poster) / Registration deadline", ics_one)
-        self.assertIn("TRIGGER:-P2D", ics_one)
+        self.assertEqual(ics_one.count("TRIGGER:-P7D"), 2)
+        self.assertEqual(ics_one.count("TRIGGER:-P1D"), 2)
+        self.assertNotIn("TRIGGER:-P2D", ics_one)
 
         conference = conferences[0]
         changed_deadline = replace(conference.registration_deadlines[0], date=date(2026, 4, 2))
@@ -332,6 +342,7 @@ class CalendarCoreTests(unittest.TestCase):
                         "abstract_deadlines": [{"label": "Abstract", "date": "2026-04-01"}],
                         "registration_display": "",
                         "abstract_display": "",
+                        "other_deadlines": [],
                         "comments": "Do not include this note",
                     }
                 ]
@@ -362,38 +373,7 @@ class CalendarCoreTests(unittest.TestCase):
             with self.subTest(field=changed):
                 self.assertNotEqual(_dtstamp_lines(ics), _dtstamp_lines(build_meeting_ics(changed)))
 
-    def test_reminders_select_only_matching_offsets_and_payload_is_deterministic(self) -> None:
-        path = write_yaml(
-            {
-                "conferences": [
-                    {
-                        "id": "reminder-test",
-                        "title": "Reminder Test",
-                        "url": "https://example.com",
-                        "location": "Somewhere",
-                        "start_date": "2026-05-01",
-                        "end_date": "2026-05-02",
-                        "registration_deadlines": [
-                            {"label": "Registration", "date": "2026-04-29"},
-                            {"label": "Final", "date": "2026-04-30"},
-                        ],
-                        "abstract_deadlines": [{"label": "Abstract", "date": "2026-04-14"}],
-                        "registration_display": "",
-                        "abstract_display": "",
-                        "comments": "Bring a poster",
-                    }
-                ]
-            }
-        )
-        conferences = load_conferences(path)
-        reminders = find_reminders(conferences, today=__import__("datetime").date(2026, 3, 31))
-        self.assertEqual([item["days_until"] for item in reminders], [14, 30])
-        payload_one = build_reminder_payload(conferences, __import__("datetime").date(2026, 3, 31), "Europe/Berlin")
-        payload_two = build_reminder_payload(conferences, __import__("datetime").date(2026, 3, 31), "Europe/Berlin")
-        self.assertEqual(payload_one["title"], "Deadline reminders for 2026-03-31")
-        self.assertEqual(payload_one, payload_two)
-
-    def test_placeholder_dates_sort_display_and_keep_deadline_reminders(self) -> None:
+    def test_placeholder_dates_sort_display_and_keep_deadline_events(self) -> None:
         entries = []
         for conference_id, start, end in (
             ("z-placeholder", "", ""),
@@ -412,6 +392,7 @@ class CalendarCoreTests(unittest.TestCase):
                 "abstract_deadlines": [],
                 "registration_display": "",
                 "abstract_display": "",
+                "other_deadlines": [],
                 "comments": "",
             })
         conferences = load_conferences(write_yaml({"conferences": entries}))
@@ -435,9 +416,6 @@ class CalendarCoreTests(unittest.TestCase):
         self.assertIn("SUMMARY:a-placeholder - Registration deadline (Early)", ics)
         self.assertNotIn("SUMMARY:z-placeholder", ics)
         self.assertEqual(ics.count("BEGIN:VEVENT"), 1)
-        reminders = find_reminders(conferences, date(2027, 4, 30))
-        self.assertEqual(reminders[0]["conference_id"], "a-placeholder")
-        self.assertTrue(build_reminder_payload(conferences, date(2027, 4, 30), "Europe/Berlin")["has_reminders"])
         with tempfile.TemporaryDirectory() as temp_dir:
             meetings_dir = Path(temp_dir) / "meetings"
             meetings_dir.mkdir()
@@ -456,7 +434,7 @@ class CalendarCoreTests(unittest.TestCase):
                     "id": "partial", "title": "Partial", "url": "https://example.com",
                     "location": "", "start_date": start, "end_date": end,
                     "registration_deadlines": [], "abstract_deadlines": [],
-                    "registration_display": "", "abstract_display": "", "comments": "",
+                    "registration_display": "", "abstract_display": "", "other_deadlines": [], "comments": "",
                 }]})
                 with self.assertRaisesRegex(ValidationError, "must both be set or both be empty"):
                     load_conferences(path)
@@ -464,11 +442,90 @@ class CalendarCoreTests(unittest.TestCase):
     def test_repository_data_builds_and_preserves_known_entries(self) -> None:
         conferences = load_conferences(REPO_ROOT / "data" / "conferences.yml")
         markdown = build_markdown(conferences, today=__import__("datetime").date(2026, 3, 30))
-        payload = build_reminder_payload(conferences, __import__("datetime").date(2026, 3, 30), "Europe/Berlin")
-        self.assertIn("APRIM 2026", markdown)
-        self.assertIn("ACAMAR 11", markdown)
-        self.assertIn("MODEST26", payload["body"])
-        self.assertEqual(json.loads(json.dumps(payload))["label"], "deadline-reminder")
+        self.assertIn("MODEST26", markdown)
+        self.assertIsInstance(build_json(conferences, date(2026, 3, 30)), str)
+
+    def test_other_deadline_validation_and_sorting(self) -> None:
+        entry = {
+            "id": "other-test", "title": "Other Test", "url": "https://example.com",
+            "location": "", "start_date": "", "end_date": "",
+            "registration_deadlines": [], "abstract_deadlines": [],
+            "registration_display": "", "abstract_display": "", "comments": "",
+            "other_deadlines": [
+                {"type": "funding", "label": "Travel grant", "date": ""},
+                {"type": "proposal", "label": "Call for sessions", "date": "2027-01-15"},
+                {"type": "other", "label": "Workshop fee", "date": "2026-12-01"},
+            ],
+        }
+        self.assertEqual(
+            [item.label for item in load_conferences(write_yaml({"conferences": [entry]}))[0].other_deadlines],
+            ["Workshop fee", "Call for sessions", "Travel grant"],
+        )
+        for field, invalid, message in (
+            ("type", "unknown", "type must be one of"),
+            ("type", "", "type must not be empty"),
+            ("label", "", "label must not be empty"),
+            ("date", "TBA", "YYYY-MM-DD format"),
+        ):
+            with self.subTest(field=field, invalid=invalid):
+                bad = dict(entry, other_deadlines=[dict(entry["other_deadlines"][0], **{field: invalid})])
+                with self.assertRaisesRegex(ValidationError, message):
+                    load_conferences(write_yaml({"conferences": [bad]}))
+        for field in ("other_deadlines",):
+            bad = {key: value for key, value in entry.items() if key != field}
+            with self.assertRaisesRegex(ValidationError, "missing required fields: other_deadlines"):
+                load_conferences(write_yaml({"conferences": [bad]}))
+        for missing in ("type", "label", "date"):
+            with self.subTest(missing=missing):
+                item = {key: value for key, value in entry["other_deadlines"][0].items() if key != missing}
+                with self.assertRaisesRegex(ValidationError, "requires type, label, and date"):
+                    load_conferences(write_yaml({"conferences": [dict(entry, other_deadlines=[item])]}))
+
+    def test_other_deadlines_render_and_keep_existing_ics_uids(self) -> None:
+        entry = {
+            "id": "other-test", "title": "Other Test", "url": "https://example.com",
+            "location": "", "start_date": "", "end_date": "",
+            "registration_deadlines": [{"label": "Registration", "date": "2027-01-15"}],
+            "abstract_deadlines": [{"label": "Abstract", "date": "2027-01-15"}],
+            "registration_display": "", "abstract_display": "", "comments": "",
+            "other_deadlines": [],
+        }
+        baseline = load_conferences(write_yaml({"conferences": [entry]}))[0]
+        baseline_ics = build_ics([baseline])
+        entry["other_deadlines"] = [
+            {"type": "funding", "label": "Travel grant", "date": ""},
+            {"type": "proposal", "label": "Call for sessions", "date": "2027-01-15"},
+            {"type": "other", "label": "Old fee", "date": "2026-01-01"},
+        ]
+        conference = load_conferences(write_yaml({"conferences": [entry]}))[0]
+        today = date(2026, 9, 28)
+        html = build_index_html([conference], today, "https://example.com")
+        self.assertIn("Travel grant: TBA", html)
+        self.assertIn("Call for sessions: Jan. 15 2027", html)
+        self.assertNotIn("Old fee", html)
+        self.assertLess(html.index("Call for sessions: Jan. 15 2027"), html.index("Travel grant: TBA"))
+        self.assertNotIn("Travel grant", build_past_events_html([replace(conference, end_date=date(2026, 1, 2), start_date=date(2026, 1, 1))], today))
+        markdown = build_markdown([conference], today)
+        self.assertIn("[Other Test](https://example.com)<br>Call for sessions: Jan. 15 2027; Travel grant: TBA", markdown)
+        self.assertNotIn("Old fee", markdown)
+        payload = json.loads(build_json([conference], today))["upcoming"][0]
+        self.assertEqual(payload["other_deadlines"], [
+            {"type": "other", "label": "Old fee", "date": "2026-01-01"},
+            {"type": "proposal", "label": "Call for sessions", "date": "2027-01-15"},
+            {"type": "funding", "label": "Travel grant", "date": None},
+        ])
+        ics = build_ics([conference])
+        self.assertEqual(ics.count("BEGIN:VEVENT"), 3)
+        self.assertEqual(ics.count("BEGIN:VALARM"), 6)
+        self.assertEqual(ics.count("TRIGGER:-P7D"), 3)
+        self.assertEqual(ics.count("TRIGGER:-P1D"), 3)
+        old_uid = stable_uid("other-test", "2027-01-15", "abstract:Abstract", "registration:Registration")
+        self.assertIn(f"UID:{old_uid}", baseline_ics)
+        self.assertIn(f"UID:{old_uid}", ics)
+        self.assertIn(f"UID:{stable_uid('other', 'other-test', 'proposal', 'Call for sessions', '2027-01-15')}", ics)
+        self.assertIn("SUMMARY:Call for sessions deadline: Other Test", ics)
+        self.assertNotIn("Travel grant deadline", ics)
+        self.assertEqual(build_ics([conference]), ics)
 
     def test_build_script_writes_static_site_pages_and_nojekyll_marker(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -486,6 +543,7 @@ class CalendarCoreTests(unittest.TestCase):
                             "abstract_deadlines": [],
                             "registration_display": "",
                             "abstract_display": "",
+                            "other_deadlines": [],
                             "comments": "",
                         },
                         {
@@ -499,6 +557,7 @@ class CalendarCoreTests(unittest.TestCase):
                             "abstract_deadlines": [],
                             "registration_display": "",
                             "abstract_display": "",
+                            "other_deadlines": [],
                             "comments": "",
                         },
                     ]

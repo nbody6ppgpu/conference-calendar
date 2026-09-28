@@ -14,6 +14,7 @@ conferences:
         date: 2025-02-10
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: gas-accretion-in-planet-formation-2025
     title: Gas Accretion in Planet formation
@@ -29,6 +30,7 @@ conferences:
         date: 2025-01-05
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: ictpa-2025
     title: ICTPA 2025 Conference
@@ -40,6 +42,7 @@ conferences:
     abstract_deadlines: []
     registration_display: Open; DDL not mentioned
     abstract_display: Open; DDL not mentioned
+    other_deadlines: []
     comments: ""
   - id: moriond-2025-gravitation
     title: 59th Rencontres de Moriond 2025
@@ -55,6 +58,7 @@ conferences:
         date: 2025-01-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: iaus-398-modest-25
     title: "IAUS 398/Modest-25: Compact Objects and Binaries in Dense Stellar Systems"
@@ -72,6 +76,7 @@ conferences:
         date: 2025-04-15
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: silk-road-13
     title: "13th Silk Road Conference: Exploring the Frontiers of Dynamical Astronomy with High-Performance Computing, Artificial Intelligence, and Leading-Edge Observational Techniques"
@@ -83,6 +88,7 @@ conferences:
     abstract_deadlines: []
     registration_display: Not yet announced
     abstract_display: N/A
+    other_deadlines: []
     comments: ""
   - id: eas-2025
     title: "EAS 2025: European Astronomical Society Annual Meeting"
@@ -94,6 +100,7 @@ conferences:
     abstract_deadlines: []
     registration_display: "?"
     abstract_display: "?"
+    other_deadlines: []
     comments: "Selection of Symposia and Sessions: end-Jan 2025"
   - id: quo-vadis-galaxy-evolution-2025
     title: Quo Vadis Galaxy Evolution?
@@ -109,6 +116,7 @@ conferences:
         date: 2025-01-24
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: russian-chinese-high-energy-2025
     title: Russian-Chinese Meeting on High Energy Astrophysics
@@ -120,6 +128,7 @@ conferences:
     abstract_deadlines: []
     registration_display: "?"
     abstract_display: "?"
+    other_deadlines: []
     comments: ""
   - id: bridging-scales-2025
     title: "Bridging scales: star clusters and their host galaxies from the Local to the high-z Universe"
@@ -133,6 +142,7 @@ conferences:
         date: 2025-03-14
     registration_display: N/A
     abstract_display: ""
+    other_deadlines: []
     comments: emailed by Prof. Michela Mapelli
   - id: yagn25
     title: "YAGN25 : Young Astronomers on Galactic Nuclei"
@@ -146,6 +156,7 @@ conferences:
     abstract_deadlines: []
     registration_display: ""
     abstract_display: N/A
+    other_deadlines: []
     comments: Talks will be selected in May 2025
   - id: rass-4
     title: 4th Regional Astronomical Summer School Astronomy and Data Science (4RASS)
@@ -159,6 +170,7 @@ conferences:
     abstract_deadlines: []
     registration_display: ""
     abstract_display: "?"
+    other_deadlines: []
     comments: for students in astronomy
   - id: asbd-3
     title: International Symposium Astronomical Surveys and Big Data 3 (ASBD-3)
@@ -174,6 +186,7 @@ conferences:
         date: 2025-06-15
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: ag-meeting-2025
     title: Annual Meeting of German Astronomical Society
@@ -189,6 +202,7 @@ conferences:
         date: 2025-07-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: Early bird (-50EUR) = 2025-07-15
   - id: eanam-10
     title: "EANAM 10: 10th East Asia Numerical Astrophysics Meeting"
@@ -204,6 +218,7 @@ conferences:
         date: 2025-07-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: cas-annual-meeting-2025
     title: Chinese Astro. Society Annual Meeting 2025
@@ -219,6 +234,7 @@ conferences:
         date: 2025-09-15
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: et-annual-meeting-2025
     title: The 4th Einstein Telescope Annual Meeting
@@ -234,6 +250,7 @@ conferences:
         date: 2025-09-22
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: eama-11
     title: "EAMA 11: 11th East Asian Meeting on Astronomy"
@@ -253,6 +270,7 @@ conferences:
         date: 2025-06-12
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: epf-2025
     title: The International Conference "Exoplanets and Planet Formation" (EPF 2025)
@@ -270,6 +288,7 @@ conferences:
         date: 2025-10-10
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: Oral + poster; in-person only; no parallel sessions; max 200 participants; organized by Tsung-Dao Lee Institute (SJTU)
   - id: cosmic-collisions-2026
     title: Cosmic Collisions Conference
@@ -281,6 +300,7 @@ conferences:
     abstract_deadlines: []
     registration_display: "Open: July 1 2025; deadline TBA"
     abstract_display: "Opens July 1 2025; deadline TBA"
+    other_deadlines: []
     comments: ""
   - id: dualsphysics-8th-workshop
     title: 8th DualSPHysics
@@ -296,6 +316,7 @@ conferences:
         date: 2025-10-24
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: et-ecr-workshop-2026
     title: Einstein telescope science workshop for early career researchers
@@ -307,6 +328,7 @@ conferences:
     abstract_deadlines: []
     registration_display: Open until filled spots
     abstract_display: Open until filled spots
+    other_deadlines: []
     comments: ""
   - id: iocu-2026
     title: The 3rd International Online Conference on Universe
@@ -322,6 +344,7 @@ conferences:
         date: 2025-12-02
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: one session called "Galaxies, Clusters and Compact Objects"
   - id: acamar-11
     title: ACAMAR 11 - Australia-Chinese Astronomy Collaboration
@@ -337,6 +360,7 @@ conferences:
         date: 2026-01-30
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: includes all fields of astronomy
   - id: aprim-2026
     title: 2026 Asia-Pacific Regional IAU Meeting (APRIM 2026)
@@ -352,6 +376,7 @@ conferences:
         date: 2025-12-05
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: IAU travel grant application deadline 2025-12-05
   - id: silk-road-14
     title: 14th Silk Road / 2nd Silk Road AREA conference
@@ -367,6 +392,7 @@ conferences:
         date: 2026-03-18
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: abstract submitted with registration
   - id: iaus-405
     title: "IAUS405: Traversing the Galactic Center in Space and Time"
@@ -382,6 +408,7 @@ conferences:
         date: 2025-12-15
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: et-symposium-2026
     title: XVI ET Symposium 2026
@@ -397,6 +424,7 @@ conferences:
         date: 2026-04-12
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: lrd2026
     title: LRD2026 Workshop
@@ -410,6 +438,7 @@ conferences:
         date: 2026-05-24
     registration_display: Registration open; deadline not specified
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: hwo-uk-community-workshop-2026
     title: Habitable Worlds Observatory UK Community Workshop
@@ -425,6 +454,7 @@ conferences:
         date: 2026-05-11
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: fourth UK community workshop
   - id: eas-2026
     title: EAS2026
@@ -440,6 +470,7 @@ conferences:
         date: 2026-03-03
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: expanding-horizons-2026
     title: "EXPANDING HORIZONS: WHAT ARE THE ASTRONOMICAL CHALLENGES OF THE 2040S"
@@ -455,6 +486,7 @@ conferences:
         date: 2026-04-24
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: minggatu-forum-2026
     title: The First Minggatu Forum on Astronomy Frontier
@@ -470,6 +502,7 @@ conferences:
         date: 2026-05-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: modest26
     title: MODEST26
@@ -487,6 +520,7 @@ conferences:
         date: 2026-04-12
     registration_display: Late registration possible after early-bird deadline
     abstract_display: ""
+    other_deadlines: []
     comments: Registration opened
   - id: iaus-408
     title: "IAUS 408: Unraveling the joint lives of Stars and Exoplanets"
@@ -502,6 +536,7 @@ conferences:
         date: 2026-05-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: "travel support deadline: 2026-04-24"
   - id: cologne-bonn-symposium-2026
     title: Cologne-Bonn Symposium on the habitats of massive stars across cosmic time
@@ -519,6 +554,7 @@ conferences:
         date: 2026-04-15
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: hybrid participation available
   # Conference Calendar
   - id: multiple-planet-systems-2026
@@ -537,6 +573,7 @@ conferences:
         date: 2026-06-30
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: bridging-it-cost-meeting-2026
     title: "Bridging It: Connecting Observations and Models of (Exo)planets and their Formation"
@@ -550,6 +587,7 @@ conferences:
     abstract_deadlines: []
     registration_display: Registration is now closed
     abstract_display: Registration and abstract submission are now closed
+    other_deadlines: []
     comments: ""
   - id: ag-meeting-2026
     title: Annual Meeting of the Astronomische Gesellschaft 2026
@@ -567,6 +605,7 @@ conferences:
         date: 2026-06-30
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: star cluster splinter meeting by convenor Rainer, Stefanie Walch-Gassner, Ralf Klessen, Thorsten Naab
   - id: cosmology-from-home-2026
     title: Cosmology from Home 2026
@@ -580,6 +619,7 @@ conferences:
         date: 2026-08-18
     registration_display: Open; no fixed registration deadline listed
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: bwhpc-symposium-2026
     title: 12th bwHPC Symposium
@@ -595,6 +635,7 @@ conferences:
         date: 2026-08-03
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: Free of charge; open to researchers from all scientific fields
   - id: bh-nepal-2026
     title: "8th Nepal Conference: Many faces of stellar-mass black holes"
@@ -608,6 +649,7 @@ conferences:
     abstract_deadlines: []
     registration_display: Late registration (+50€) after 2026-06-28
     abstract_display: Abstract selection completed; late submissions considered posters
+    other_deadlines: []
     comments: "Registration + poster abstract still possible, but more expensive"
   - id: yagn-2026
     title: Young Astronomers on Active Galactic Nuclei (YAGN)
@@ -623,6 +665,7 @@ conferences:
         date: 2026-05-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: talk submission; speakers selected in June 2026
   - id: chinese-astronomy-meeting-2026
     title: Chinese Astronomical Society 2026 Annual Academic Meeting
@@ -638,6 +681,7 @@ conferences:
         date: 2026-09-23
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: stars-on-the-run-iii-2026
     title: Stars On the Run III
@@ -653,6 +697,7 @@ conferences:
         date: 2026-09-01
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: Hypervelocity stars, etc. Nov. 2-6, 2026, Beijing, China
   - id: nuclei-2026
     title: "Galaxy nuclei – Diversity, Dynamics, and Hidden Mass in Galactic Centers (NUCLEI 2026)"
@@ -670,6 +715,7 @@ conferences:
         date: 2026-06-20
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: chaica-7
     title: "Challenges and Innovations in Computational Astrophysics VII (ChaICA-7)"
@@ -683,6 +729,7 @@ conferences:
         date: 2026-10-01
     registration_display: Registration opens on 2026-08-15; no fixed registration deadline listed
     abstract_display: ""
+    other_deadlines: []
     comments: SOC includes Michiko Fujii, Steven Rieder, Christian M. Boily
   - id: iaus-411
     title: "IAUS 411: Star Clusters as Guides to Galaxies"
@@ -700,6 +747,7 @@ conferences:
         date: 2026-04-30
     registration_display: Late rate after 2026-08-01
     abstract_display: ""
+    other_deadlines: []
     comments: Abstract submission open 2026-04-01 to 2026-04-30
   - id: hwo-2026
     title: HWO2026
@@ -717,6 +765,7 @@ conferences:
         date: 2026-05-31
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: shanghai-symposium-relativistic-astrophysics-2026
     title: Shanghai International Symposium on Relativistic Astrophysics
@@ -734,6 +783,7 @@ conferences:
         date: 2026-10-10
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: young-planets-urbs-vetus-2027
     title: "Young Planets in Urbs Vetus: Detection, Characterisation, and Evolution at the Dawn of Comparative Demographics"
@@ -745,6 +795,7 @@ conferences:
     abstract_deadlines: []
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: eas-2027
     title: "EAS 2027: European Astronomical Society Annual Meeting"
@@ -753,11 +804,13 @@ conferences:
     start_date: 2027-06-21
     end_date: 2027-06-25
     registration_deadlines: []
-    abstract_deadlines:
-      - label: Call for Sessions
-        date: 2026-09-30
+    abstract_deadlines: []
     registration_display: ""
     abstract_display: ""
+    other_deadlines:
+      - type: proposal
+        label: Call for sessions
+        date: 2026-09-30
     comments: ""
   - id: modest27
     title: Modelling and Observing DEnse STellar systems 2027 (MODEST-27)
@@ -771,6 +824,7 @@ conferences:
     abstract_deadlines: []
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: asc-2027
     title: ASC 2027
@@ -786,6 +840,7 @@ conferences:
     abstract_deadlines: []
     registration_display: Registration opens before January 2027
     abstract_display: Abstract deadline before May 2027
+    other_deadlines: []
     comments: ""
   - id: iau-general-assembly-2027
     title: 33rd IAU General Assembly 2027 (IAU GA 2027)
@@ -801,6 +856,7 @@ conferences:
         date: 2027-01-15
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: ag-meeting-2027
     title: Annual Meeting of the Astronomische Gesellschaft 2027
@@ -812,6 +868,7 @@ conferences:
     abstract_deadlines: []
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""
   - id: chinese-astronomy-meeting-2027
     title: Chinese Astronomical Society 2027 Annual Academic Meeting
@@ -823,4 +880,5 @@ conferences:
     abstract_deadlines: []
     registration_display: ""
     abstract_display: ""
+    other_deadlines: []
     comments: ""

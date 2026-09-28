@@ -14,7 +14,13 @@ Task:
   `data/conferences.yml` whose `start_date`, `end_date`,
   `registration_deadlines`, or `abstract_deadlines` is empty or holds no real
   date, EXPLORE its `url` (as defined in `AGENTS.md`) and fill in what the
-  source supports.
+  source supports, including announced `other_deadlines` (`type`: `funding`,
+  `proposal`, or `other`; descriptive `label`; verified `date` or `""` only
+  when the official site explicitly announces the item without a date).
+- Also revisit every active meeting whose `start_date` is at least 90 days
+  after the supplied cleanup date, plus every placeholder with no meeting
+  dates, to find new `other_deadlines` and fill dates for existing undated
+  items. Keep existing items unless the official site clearly contradicts them.
 - For an active placeholder (`start_date: ""`, `end_date: ""`), start at its
   `url` and follow a direct link to that year's official meeting site or
   official registration system, even if it uses a different domain. Use only
@@ -22,12 +28,12 @@ Task:
   or third-party aggregators. Confirm the meeting year matches the year in
   the entry's `id` before editing it. Once confirmed, you may update `url` to
   the meeting site and fill `location`, both `start_date` and `end_date` (only
-  when both are known), `registration_deadlines`, and `abstract_deadlines`
-  with verified facts. Keep `title` when it already has the correct year;
-  never change `id` or `comments`.
+  when both are known), `registration_deadlines`, `abstract_deadlines`, and
+  `other_deadlines` with verified facts. Keep `title` when it already has the
+  correct year; never change `id` or `comments`.
 - If a fact still isn't available after EXPLORE, leave the field as it is.
-  Do not write `TBA` or any placeholder yourself — an unannounced date will
-  simply be checked again next month.
+  Only an officially announced `other_deadlines` item may have `date: ""`;
+  never guess a date or write `TBA` as one. Recheck undated items next month.
 - Do not touch `comments`.
 - Modify only `data/conferences.yml`. Do not run the build script; the
   workflow verifies the build itself in a later step.

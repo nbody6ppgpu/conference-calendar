@@ -28,6 +28,7 @@ def conference_block(conference_id: str, end_date: str) -> str:
     abstract_deadlines: []
     registration_display: \"\"
     abstract_display: \"\"
+    other_deadlines: []
     comments: \"\"
 """
 
@@ -105,6 +106,23 @@ class CleanupCalendarTests(unittest.TestCase):
             apply_cleanup(path, date(2028, 1, 1))
             result = path.read_text(encoding="utf-8")
             self.assertGreater(result.index("placeholder-2027"), result.index("# Conference Calendar"))
+
+    def test_cleanup_preserves_other_deadlines_and_baseline_check(self) -> None:
+        item = conference_block("expired-grant", "2026-07-03").replace(
+            "    other_deadlines: []\n",
+            "    other_deadlines:\n      - type: funding\n        label: Travel grant\n        date: \"\"\n",
+        )
+        source = calendar_text([], [item])
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "conferences.yml"
+            baseline = Path(temp_dir) / "baseline.yml"
+            path.write_text(source, encoding="utf-8")
+            baseline.write_text(source, encoding="utf-8")
+            apply_cleanup(path, date(2026, 8, 4))
+            result = path.read_text(encoding="utf-8")
+            self.assertIn(item, result)
+            self.assertLess(result.index("expired-grant"), result.index("# Conference Calendar"))
+            verify_cleanup(path, date(2026, 8, 4), baseline_path=baseline)
 
     def test_missing_section_marker_is_rejected(self) -> None:
         source = calendar_text([], [conference_block("future", "2026-09-10")]).replace(

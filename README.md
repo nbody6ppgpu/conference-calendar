@@ -2,7 +2,7 @@
 
 click https://nbody6ppgpu.github.io/conference-calendar/
 
-In this webpage, you can subscribe to all conferences in your calendar application. You will receive notifications for abstract submission deadlines and registration deadlines. Each event includes a default reminder set for “2 days before.”
+On this webpage, you can subscribe to conference deadlines in your calendar application. The ICS feed covers dated registration, abstract submission, and other labeled deadlines. Each deadline event includes two alarms, 7 days and 1 day before the deadline.
 
 # How to contribute / how to add new conference?
 
@@ -40,10 +40,10 @@ Currently, this repository offers one reminder method:
 
 **Notes:**
 
-- The ICS file only includes specific `registration deadline` and `abstract deadline` events; it does not contain conference start/end dates.
-- Each ICS event comes with a default reminder set for “2 days before the deadline.”
-- If both the registration and abstract deadlines for a conference fall on the same day, only one event will be created in the ICS, combining both types of deadlines.
-- Deadlines marked as `TBA`, `open`, or `?` (without a specific date) will not generate ICS events or automatic reminders.
+- The ICS feed includes dated registration, abstract, and `other_deadlines` events; it does not contain conference start/end dates.
+- Each dated deadline event includes two alarms: 7 days and 1 day before the deadline (`TRIGGER:-P7D` and `TRIGGER:-P1D`).
+- Registration and abstract deadlines for the same conference on the same day share one ICS event; each dated `other_deadlines` item gets its own event, even on that date.
+- Undated deadlines (including `other_deadlines` items with `date: ""`) do not generate ICS events or automatic reminders. Other deadline items use `type` (`funding`, `proposal`, or `other`), `label`, and `date`.
 
 ## Maintaince notes
 

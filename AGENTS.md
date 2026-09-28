@@ -5,8 +5,8 @@
 - `data/conferences.yml` is the single hand-written source of truth: a flat
   `conferences:` list of entries, each with `id`, `title`, `url`, `location`,
   `start_date`, `end_date`, `registration_deadlines`, `abstract_deadlines`,
-  `registration_display`, `abstract_display`, and `comments`. Use `""` or `[]`
-  for what you don't have — never omit a key.
+  `other_deadlines`, `registration_display`, `abstract_display`, and
+  `comments`. Use `""` or `[]` for what you don't have — never omit a key.
 - The list has exactly two comment markers: `  # Past events` (line 2, first)
   and `  # Conference Calendar`. Entries above the second marker are archived;
   entries below it are active. The markers are layout only —
@@ -42,8 +42,16 @@
   `abstract_display` instead. This calendar exists to be trustworthy; a
   plausible-looking guessed date is worse than a blank one, because nothing
   downstream can tell it apart from a real one.
-- If an entry has multiple registration or abstract deadlines, represent them
-  as structured list items with `label` and `date`.
+- Represent registration and abstract deadlines as structured list items with
+  `label` and `date`. Put other announced deadlines in `other_deadlines` as
+  items with `type` (`funding`, `proposal`, or `other`), descriptive `label`,
+  and `date` (`YYYY-MM-DD` when verified, `""` only when the official site
+  explicitly states the item exists but has not announced its date). An empty
+  structured date is allowed only in `other_deadlines`; never guess a date.
+  Use `funding` for travel grants, fee waivers, or financial support, `proposal`
+  for session, splinter-session, or workshop calls, and `other` otherwise.
+  Keep known but undated milestones for monthly rechecking; use
+  `other_deadlines: []` when none are announced.
 - Do not fill in or change `comments` unless the user (an issue body, a task
   instruction) explicitly supplied that text. It is authored by humans, not
   discovered by EXPLORE.
@@ -66,11 +74,12 @@
 
 EXPLORE(url) means: fetch that page and read the conference's own site to
 establish `title`, `url`, `location`, `start_date`, `end_date`,
-`registration_deadlines`, and `abstract_deadlines`.
+`registration_deadlines`, `abstract_deadlines`, and `other_deadlines`.
 
 If a fact is not on the landing page, follow links reachable from that same
 site — typically pages named dates, important dates, registration, abstract
-submission, program, venue, or FAQ. Stop after those; if a fact still isn't
+submission, financial support, travel grants, grants, call for sessions,
+splinter sessions, proposals, program, venue, or FAQ. Stop after those; if a fact still isn't
 stated on the conference's own site, leave the field as it is rather than
 guessing where else it might live.
 
@@ -116,12 +125,17 @@ before you start.
 - **Metadata enrichment** (your job): for each entry after the
   `# Conference Calendar` marker whose `start_date`, `end_date`,
   `registration_deadlines`, or `abstract_deadlines` is empty or holds no real
-  date, EXPLORE its `url` and fill in what the source supports. For a
+  date, EXPLORE its `url` and fill in what the source supports, including
+  `other_deadlines`. Also revisit every active meeting whose `start_date` is
+  at least 90 days after the given cleanup date, plus every undated placeholder,
+  to add newly announced `other_deadlines` and date previously undated ones.
+  Keep existing items unless the official site clearly contradicts them. For a
   placeholder, follow a direct link from its official series entry to that
   year's official meeting site or registration system (even across domains),
   and verify the year matches its `id` before filling dates, location, or
-  deadlines; update `url` to the meeting site when found. If you can't
-  find a fact, leave the field as it is — do not guess, and do not write
+  deadlines, including `other_deadlines`; update `url` to the meeting site
+  when found. If you can't find a fact, leave the field as it is — do not guess,
+  and do not write
   `TBA` yourself; a source that hasn't announced a date yet will simply be
   checked again next month.
 - Do not run the build yourself in this mode; the workflow verifies the

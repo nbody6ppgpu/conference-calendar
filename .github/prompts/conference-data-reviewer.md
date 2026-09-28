@@ -24,8 +24,11 @@ Verification rules:
 - Do not trust the current YAML values.
 - For each changed entry, EXPLORE its `url` as defined in `AGENTS.md`.
 - Verify `title`, `url`, `location`, `start_date`, `end_date`,
-  `registration_deadlines`, `abstract_deadlines`, `registration_display`,
-  and `abstract_display`.
+  `registration_deadlines`, `abstract_deadlines`, `other_deadlines`,
+  `registration_display`, and `abstract_display`. Check that each announced
+  non-registration/non-abstract milestone is in `other_deadlines` with a
+  supported `type` (`funding`, `proposal`, or `other`), accurate `label`, and
+  verified `date` (or `""` if its date has not been announced).
 - Never invent a date — see the shared rule in `AGENTS.md`.
 
 Repair behavior:

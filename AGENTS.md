@@ -42,14 +42,17 @@
   `abstract_display` instead. This calendar exists to be trustworthy; a
   plausible-looking guessed date is worse than a blank one, because nothing
   downstream can tell it apart from a real one.
-- Represent registration and abstract deadlines as structured list items with
-  `label` and `date`. Put other announced deadlines in `other_deadlines` as
-  items with `type` (`funding`, `proposal`, or `other`), descriptive `label`,
-  and `date` (`YYYY-MM-DD` when verified, `""` only when the official site
-  explicitly states the item exists but has not announced its date). An empty
-  structured date is allowed only in `other_deadlines`; never guess a date.
-  Use `funding` for travel grants, fee waivers, or financial support, `proposal`
-  for session, splinter-session, or workshop calls, and `other` otherwise.
+- Represent regular/final registration and abstract deadlines as structured
+  list items with `label` and `date`. Put early-bird, early, or reduced-rate
+  registration deadlines in `other_deadlines` with `type: other` and the
+  normalized label `Early-bird registration`, not in `registration_deadlines`.
+  Put other announced deadlines there as items with `type` (`funding`,
+  `proposal`, or `other`), descriptive `label`, and `date` (`YYYY-MM-DD` when
+  verified, `""` only when the official site explicitly states the item exists
+  but has not announced its date). An empty structured date is allowed only
+  in `other_deadlines`; never guess a date. Use `funding` for travel grants,
+  fee waivers, or financial support, `proposal` for session, splinter-session,
+  or workshop calls, and `other` for early-bird registration and other items.
   Keep known but undated milestones for monthly rechecking; use
   `other_deadlines: []` when none are announced.
 - Do not fill in or change `comments` unless the user (an issue body, a task
@@ -83,11 +86,12 @@ splinter sessions, proposals, program, venue, or FAQ. Stop after those; if a fac
 stated on the conference's own site, leave the field as it is rather than
 guessing where else it might live.
 
-Use only the conference site itself. Do not use a web search engine: a
-plausible-looking date from a third-party aggregator is exactly the kind of
-error this calendar exists to avoid, and it is not distinguishable from a
-real one after the fact. (This is also enforced in automation: the
-`WebSearch` tool is not made available to you there.)
+Use only the conference site itself. If WebFetch fails or returns a JS shell,
+use Bash `curl -sL` on the same official URL and inspect raw HTML, embedded
+JSON, or same-origin JS bundles for facts. `curl -k` is allowed only for
+`astronomy.pmo.cas.cn` (known self-signed certificate); verify facts against
+that official content. Do not use a web search engine: a plausible-looking
+third-party date is indistinguishable from a real one after the fact.
 
 Never EXPLORE for the `comments` field — see the shared rule above.
 

@@ -169,14 +169,24 @@ def get_today(timezone_name: str, today_override: str | None = None) -> date:
     return datetime.now(ZoneInfo(timezone_name)).date()
 
 
+def _deadline_text(deadline: Deadline) -> str:
+    label = f"{deadline.label}: " if deadline.label and deadline.label.lower() not in {"registration", "abstract"} else ""
+    return f"{label}{format_single_date(deadline.date)}"
+
+
 def deadline_display(deadlines: tuple[Deadline, ...], explicit_display: str) -> str:
     if explicit_display:
         return explicit_display
-    parts = []
-    for deadline in deadlines:
-        label = f"{deadline.label}: " if deadline.label and deadline.label.lower() not in {"registration", "abstract"} else ""
-        parts.append(f"{label}{format_single_date(deadline.date)}")
-    return "; ".join(parts)
+    return "; ".join(_deadline_text(deadline) for deadline in deadlines)
+
+
+def _html_deadlines(deadlines: tuple[Deadline, ...], explicit_display: str, mark_dates: bool) -> str:
+    if explicit_display or not mark_dates:
+        return escape(deadline_display(deadlines, explicit_display))
+    return "; ".join(
+        f'<span data-deadline="{deadline.date.isoformat()}">{escape(_deadline_text(deadline))}</span>'
+        for deadline in deadlines
+    )
 
 
 def build_markdown(conferences: Iterable[Conference], today: date) -> str:
@@ -345,7 +355,7 @@ def build_meeting_ics(conference: Conference) -> str:
 
 def build_index_html(conferences: Iterable[Conference], today: date, repo_url: str) -> str:
     upcoming, past = split_conferences(conferences, today)
-    upcoming_rows = _html_rows(upcoming, today=today, include_meeting_ics=True)
+    upcoming_rows = _html_rows(upcoming, today=today, include_meeting_ics=True, mark_dates=True)
     webcal_url = _build_webcal_url(repo_url)
     past_count = len(past)
     return _build_site_html(
@@ -380,6 +390,7 @@ def build_index_html(conferences: Iterable[Conference], today: date, repo_url: s
       <span>{past_count} archived event{"s" if past_count != 1 else ""}</span>
     </section>""",
         goatcounter_code=GOATCOUNTER_CODE,
+        mark_dates=True,
     )
 
 
@@ -404,12 +415,20 @@ def build_past_events_html(conferences: Iterable[Conference], today: date) -> st
     )
 
 
-def _build_site_html(title: str, today: date, body: str, goatcounter_code: str = "") -> str:
+def _build_site_html(title: str, today: date, body: str, goatcounter_code: str = "", mark_dates: bool = False) -> str:
     goatcounter_script = (
         f'<script data-goatcounter="https://{escape(goatcounter_code, quote=True)}.goatcounter.com/count" '
         'async src="//gc.zgo.at/count.js"></script>'
         if goatcounter_code else ""
     )
+    deadline_script = """<script>
+    const now = new Date();
+    const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+    document.querySelectorAll('[data-deadline]').forEach(element => {
+      if (element.dataset.deadline < today) element.classList.add('deadline-passed');
+    });
+  </script>""" if mark_dates else ""
+    deadline_style = ".deadline-passed { text-decoration: line-through; color: var(--muted); }" if mark_dates else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -532,6 +551,7 @@ def _build_site_html(title: str, today: date, body: str, goatcounter_code: str =
     .archive-link span {{
       color: var(--muted);
     }}
+    {deadline_style}
     .other-deadlines {{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }}
     .other-deadline {{
       display: inline-block;
@@ -581,6 +601,7 @@ def _build_site_html(title: str, today: date, body: str, goatcounter_code: str =
       <p>Generated for {escape(today.isoformat())} using Europe/Berlin date logic.</p>
     </footer>
   </main>
+  {deadline_script}
 </body>
 </html>
 """
@@ -669,7 +690,12 @@ def _conference_rows(conferences: Iterable[Conference], today: date | None = Non
     return rows
 
 
-def _html_rows(conferences: Iterable[Conference], today: date | None = None, include_meeting_ics: bool = False) -> str:
+def _html_other_deadline(deadline: OtherDeadline, mark_dates: bool) -> str:
+    date_attr = f' data-deadline="{deadline.date.isoformat()}"' if mark_dates and deadline.date else ""
+    return f'<span class="other-deadline"{date_attr}>{escape(_other_deadline_display(deadline))}</span>'
+
+
+def _html_rows(conferences: Iterable[Conference], today: date | None = None, include_meeting_ics: bool = False, mark_dates: bool = False) -> str:
     row_html = []
     for conference in conferences:
         title = (
@@ -680,7 +706,7 @@ def _html_rows(conferences: Iterable[Conference], today: date | None = None, inc
         tags = (
             '<div class="other-deadlines">'
             + "".join(
-                f'<span class="other-deadline">{escape(_other_deadline_display(deadline))}</span>'
+                _html_other_deadline(deadline, mark_dates)
                 for deadline in _visible_other_deadlines(conference, today)
             )
             + "</div>"
@@ -696,8 +722,8 @@ def _html_rows(conferences: Iterable[Conference], today: date | None = None, inc
             f"<td>{escape(format_date_range(conference.start_date, conference.end_date))}</td>"
             f"<td>{escape(conference.location)}</td>"
             f"<td>{title}{tags}</td>"
-            f"<td>{escape(deadline_display(conference.registration_deadlines, conference.registration_display))}</td>"
-            f"<td>{escape(deadline_display(conference.abstract_deadlines, conference.abstract_display))}</td>"
+            f"<td>{_html_deadlines(conference.registration_deadlines, conference.registration_display, mark_dates)}</td>"
+            f"<td>{_html_deadlines(conference.abstract_deadlines, conference.abstract_display, mark_dates)}</td>"
             f"<td>{escape(conference.comments)}</td>"
             f"{meeting_ics_cell}"
             "</tr>"

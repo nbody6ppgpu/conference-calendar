@@ -15,11 +15,11 @@ On this webpage, you can subscribe to conference deadlines in your calendar appl
 This repository now maintains the conference calendar using a “structured data + auto-generation” approach.
 
 - The single source of truth is `data/conferences.yml`.
-- `conference_calendar.md` and the entire `site/` directory are generated outputs. They are ignored by git and should not be included in pull requests.
+- `conference_calendar.md` and the entire `site/` directory are generated outputs tracked in git; do not hand-edit or include regenerated copies in data-change pull requests.
 - Monthly archive placement is deterministic: the scheduled workflow runs `scripts/cleanup_calendar.py` with one fixed `Europe/Berlin` cleanup date and creates a PR only when the source data needs a change.
 - New meetings and monthly metadata enrichment are handled by Claude Code (via `anthropics/claude-code-action@v1`), triggered from tagged issues and from the monthly cleanup workflow. The conference-data reviewer prompt still exists for fact-checking a changed PR, but is invoked by hand rather than automatically.
 - The monthly workflow, the new-issue notifier, and the add-conference workflow all authenticate as a dedicated GitHub App (`conference-calendar-bot`) rather than a maintainer's personal token, so that comments and PRs they post are visible to GitHub's own notification system (an account is never notified of its own activity). The `CALENDAR_BOT_APP_ID` and `CALENDAR_BOT_APP_PRIVATE_KEY` repository secrets hold its credentials; the App needs Contents: Read, Issues: Read and write, and Pull requests: Read and write permission on this repository.
-- Do not edit generated HTML directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html` or `build_past_events_html`, then run `python3 scripts/build_calendar.py`.
+- Do not edit generated HTML directly. For page template/static text (for example title or subscribe sentence), edit `scripts/calendar_core.py` in `build_index_html` or `build_past_events_html`, then build into a scratch directory (see below).
 - GitHub Pages builds the site from `data/conferences.yml` during deployment.
 
 ## What Reminders Can I Receive?
@@ -43,7 +43,7 @@ Currently, this repository offers one reminder method:
 - The ICS feed includes dated registration, abstract, and `other_deadlines` events; it does not contain conference start/end dates.
 - Each dated deadline event includes two alarms: 7 days and 1 day before the deadline (`TRIGGER:-P7D` and `TRIGGER:-P1D`).
 - Registration and abstract deadlines for the same conference on the same day share one ICS event; each dated `other_deadlines` item gets its own event, even on that date.
-- Undated deadlines (including `other_deadlines` items with `date: ""`) do not generate ICS events or automatic reminders. Other deadline items use `type` (`funding`, `proposal`, or `other`), `label`, and `date`.
+- Undated deadlines (including `other_deadlines` items with `date: ""`) do not generate ICS events or automatic reminders. Other deadline items use `type` (`funding`, `proposal`, or `other`), `label`, and `date`; early-bird/early/reduced-rate registration cutoffs use `type: other` and `label: Early-bird registration`, while `registration_deadlines` holds regular/final cutoffs.
 
 ## Maintaince notes
 
@@ -97,8 +97,9 @@ After making changes, run the following commands locally to preview and verify:
 
 ```bash
 python3 -m pip install -r requirements.txt
-python3 scripts/build_calendar.py
-python3 scripts/cleanup_calendar.py --today 2026-08-04 --dry-run
+out="$(mktemp -d)"
+python3 scripts/build_calendar.py --markdown-output "$out/conference_calendar.md" --site-dir "$out/site"
+python3 scripts/cleanup_calendar.py --today YYYY-MM-DD --dry-run
 python3 -m unittest discover -s tests -v
 ```
 

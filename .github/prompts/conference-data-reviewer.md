@@ -28,7 +28,10 @@ Verification rules:
   `registration_display`, and `abstract_display`. Check that each announced
   non-registration/non-abstract milestone is in `other_deadlines` with a
   supported `type` (`funding`, `proposal`, or `other`), accurate `label`, and
-  verified `date` (or `""` if its date has not been announced).
+  verified `date` (or `""` if its date has not been announced). Early-bird,
+  early, and reduced-rate registration cutoffs also belong in
+  `other_deadlines` with `type: other` and `label: Early-bird registration`;
+  keep only regular/final registration dates in `registration_deadlines`.
 - Never invent a date — see the shared rule in `AGENTS.md`.
 
 Repair behavior:

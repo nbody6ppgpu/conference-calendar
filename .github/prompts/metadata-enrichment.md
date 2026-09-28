@@ -17,6 +17,9 @@ Task:
   source supports, including announced `other_deadlines` (`type`: `funding`,
   `proposal`, or `other`; descriptive `label`; verified `date` or `""` only
   when the official site explicitly announces the item without a date).
+  Treat early-bird, early, and reduced-rate registration cutoffs as
+  `other_deadlines` (`type: other`, `label: Early-bird registration`), not as
+  regular/final `registration_deadlines`; see `AGENTS.md`.
 - Also revisit every active meeting whose `start_date` is at least 90 days
   after the supplied cleanup date, plus every placeholder with no meeting
   dates, to find new `other_deadlines` and fill dates for existing undated
@@ -31,6 +34,14 @@ Task:
   when both are known), `registration_deadlines`, `abstract_deadlines`, and
   `other_deadlines` with verified facts. Keep `title` when it already has the
   correct year; never change `id` or `comments`.
+- If WebFetch fails or returns an empty/JS-rendered shell, fetch that same
+  official URL with Bash `curl -sL` and inspect its raw HTML, embedded JSON,
+  and the site's own same-origin JS bundles for dates. On the official Chinese
+  Astronomical Society site `astronomy.pmo.cas.cn` alone, use `curl -k` for its
+  known self-signed certificate; never use `-k` on other sites. Follow only
+  official conference/series links (including directly linked official meeting
+  sites for placeholders), never search engines or aggregators. If the fallback
+  also fails, record the entry, URL, and error in the final report.
 - If a fact still isn't available after EXPLORE, leave the field as it is.
   Only an officially announced `other_deadlines` item may have `date: ""`;
   never guess a date or write `TBA` as one. Recheck undated items next month.
@@ -41,5 +52,9 @@ Task:
   message (e.g. `Enrich monthly calendar metadata`). If you made no changes,
   do not create an empty commit.
 
-Final message: list which entries you enriched and which fields you filled,
-or say explicitly that nothing needed enrichment.
+Final message: list each enriched entry and the fields filled (or explicitly
+state that nothing changed). Add separate sections listing **every active
+entry checked but unreadable** (entry ID, URL, and WebFetch/curl error) and
+**every entry checked with no new facts** (entry ID). Write `None` under a
+section if it is empty, so the reviewer can distinguish a checked source from
+an overlooked one. The workflow copies this message into the PR body.

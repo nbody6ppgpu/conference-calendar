@@ -75,7 +75,10 @@ jobs:
             this issue. Include `other_deadlines: []` when the official site
             announces no non-registration/non-abstract deadline; otherwise
             use `type`, `label`, and `date` items as described in `AGENTS.md`,
-            leaving `date` empty for an announced but undated milestone. Leave
+            leaving `date` empty for an announced but undated milestone. Put
+            early-bird/early/reduced-rate registration cutoffs in
+            `other_deadlines` as `type: other`, `label: Early-bird registration`;
+            reserve `registration_deadlines` for regular/final cutoffs. Leave
             the edit uncommitted in the working tree: this
             workflow commits, pushes and opens the pull request itself.
 

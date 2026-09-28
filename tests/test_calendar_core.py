@@ -276,6 +276,82 @@ class CalendarCoreTests(unittest.TestCase):
         )
         self.assertEqual(deadline_display(conference.abstract_deadlines, conference.abstract_display), "open")
 
+    def test_index_marks_structured_deadlines_without_changing_display_text(self) -> None:
+        entry = {
+            "id": "dated", "title": "Dated", "url": "https://example.com",
+            "location": "Here", "start_date": "2027-06-01", "end_date": "2027-06-02",
+            "registration_deadlines": [
+                {"label": "Registration", "date": "2027-05-01"},
+                {"label": "Final", "date": "2027-05-20"},
+            ],
+            "abstract_deadlines": [{"label": "Poster", "date": "2027-04-01"}],
+            "registration_display": "", "abstract_display": "", "comments": "",
+            "other_deadlines": [
+                {"type": "other", "label": "Early-bird registration", "date": "2027-05-01"},
+                {"type": "funding", "label": "Funding", "date": ""},
+                {"type": "other", "label": "Old fee", "date": "2026-01-01"},
+            ],
+        }
+        conference = load_conferences(write_yaml({"conferences": [entry]}))[0]
+        today = date(2027, 5, 1)
+        html = build_index_html([conference], today, "https://example.com")
+        self.assertIn('<span data-deadline="2027-05-01">May 1 2027</span>; '
+                      '<span data-deadline="2027-05-20">Final: May 20 2027</span>', html)
+        self.assertIn('<span data-deadline="2027-04-01">Poster: Apr. 1 2027</span>', html)
+        self.assertIn('<span class="other-deadline" data-deadline="2027-05-01">Early-bird registration: May 1 2027</span>', html)
+        self.assertIn('<span class="other-deadline">Funding: TBA</span>', html)
+        self.assertNotIn("Old fee", html)
+        self.assertEqual(html.count('data-deadline="'), 4)
+        self.assertIn("document.querySelectorAll('[data-deadline]')", html)
+        self.assertIn("element.dataset.deadline < today", html)
+        self.assertIn("now.getFullYear()", html)
+        self.assertIn("now.getMonth()", html)
+        self.assertIn("now.getDate()", html)
+        self.assertIn(".deadline-passed { text-decoration: line-through; color: var(--muted); }", html)
+
+        class VisibleText(HTMLParser):
+            def __init__(self) -> None:
+                super().__init__()
+                self.in_cell = False
+                self.cells: list[str] = []
+
+            def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+                if tag == "td":
+                    self.in_cell = True
+                    self.cells.append("")
+
+            def handle_endtag(self, tag: str) -> None:
+                if tag == "td":
+                    self.in_cell = False
+
+            def handle_data(self, data: str) -> None:
+                if self.in_cell:
+                    self.cells[-1] += data
+
+        text = VisibleText()
+        text.feed(html)
+        self.assertEqual(text.cells[3], "May 1 2027; Final: May 20 2027")
+        self.assertEqual(text.cells[4], "Poster: Apr. 1 2027")
+        self.assertIn("Early-bird registration: May 1 2027", text.cells[2])
+        self.assertEqual(deadline_display(conference.registration_deadlines, ""), text.cells[3])
+        self.assertNotIn("data-deadline", build_past_events_html(
+            [replace(conference, start_date=date(2026, 1, 1), end_date=date(2026, 1, 2))], today,
+        ))
+
+    def test_display_override_is_plain_text_even_with_structured_dates(self) -> None:
+        entry = {
+            "id": "override", "title": "Override", "url": "https://example.com",
+            "location": "", "start_date": "", "end_date": "",
+            "registration_deadlines": [{"label": "Registration", "date": "2027-01-01"}],
+            "abstract_deadlines": [{"label": "Abstract", "date": "2027-02-01"}],
+            "registration_display": "Late registration possible after early-bird deadline",
+            "abstract_display": "Abstract selection completed", "other_deadlines": [], "comments": "",
+        }
+        html = build_index_html(load_conferences(write_yaml({"conferences": [entry]})), date(2027, 1, 2), "https://example.com")
+        self.assertIn("<td>Late registration possible after early-bird deadline</td>", html)
+        self.assertIn("<td>Abstract selection completed</td>", html)
+        self.assertNotIn('data-deadline="', html)
+
     def test_ics_merges_same_day_deadlines_and_adds_two_alarms(self) -> None:
         path = write_yaml(
             {

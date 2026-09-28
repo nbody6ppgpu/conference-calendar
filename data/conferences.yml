@@ -694,7 +694,7 @@ conferences:
         date: 2026-09-30
     abstract_deadlines:
       - label: Abstract
-        date: 2026-09-01
+        date: 2026-09-04
     registration_display: ""
     abstract_display: ""
     other_deadlines: []
@@ -739,15 +739,18 @@ conferences:
     end_date: 2026-11-26
     registration_deadlines:
       - label: Early bird registration
-        date: 2026-06-01
+        date: 2026-06-30
       - label: Regular registration
-        date: 2026-08-01
+        date: 2026-09-01
     abstract_deadlines:
       - label: Abstract submission
         date: 2026-04-30
-    registration_display: Late rate after 2026-08-01
+    registration_display: Late rate after 2026-09-01
     abstract_display: ""
-    other_deadlines: []
+    other_deadlines:
+      - type: funding
+        label: IAU travel grant application
+        date: 2026-04-30
     comments: Abstract submission open 2026-04-01 to 2026-04-30
   - id: hwo-2026
     title: HWO2026
@@ -765,7 +768,13 @@ conferences:
         date: 2026-05-31
     registration_display: ""
     abstract_display: ""
-    other_deadlines: []
+    other_deadlines:
+      - type: funding
+        label: Grant submission deadline (fee waiver)
+        date: 2026-06-12
+      - type: other
+        label: Poster submission deadline
+        date: 2026-06-12
     comments: ""
   - id: shanghai-symposium-relativistic-astrophysics-2026
     title: Shanghai International Symposium on Relativistic Astrophysics
@@ -852,11 +861,17 @@ conferences:
       - label: Early-bird
         date: 2027-03-05
     abstract_deadlines:
-      - label: Abstract and grant applications
+      - label: Abstract submission
         date: 2027-01-15
     registration_display: ""
     abstract_display: ""
-    other_deadlines: []
+    other_deadlines:
+      - type: funding
+        label: Grants application deadline
+        date: 2027-01-15
+      - type: other
+        label: Late posters submission deadline
+        date: 2027-06-16
     comments: ""
   - id: ag-meeting-2027
     title: Annual Meeting of the Astronomische Gesellschaft 2027

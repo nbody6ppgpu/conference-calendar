@@ -806,7 +806,7 @@ conferences:
     comments: ""
   - id: young-planets-urbs-vetus-2027
     title: "Young Planets in Urbs Vetus: Detection, Characterisation, and Evolution at the Dawn of Comparative Demographics"
-    url: https://indico.ict.inaf.it/e/young-planets-2027
+    url: https://indico.ict.inaf.it/event/3626/
     location: Orvieto, Italy
     start_date: 2027-03-16
     end_date: 2027-03-18
@@ -815,7 +815,7 @@ conferences:
     registration_display: "Early-bird/presenting-author registration: early January 2027 (TBC); final registration: end of February 2027"
     abstract_display: "Abstract submission: mid or end of November (TBC)"
     other_deadlines: []
-    comments: ""
+    comments: '"Session 1: The First 100 Myr: Bridging Theory and Observations" is what we keep simulating in LPS(+)'
   - id: eas-2027
     title: "EAS 2027: European Astronomical Society Annual Meeting"
     url: https://eas.unige.ch/EAS_meeting/

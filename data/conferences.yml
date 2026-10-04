@@ -629,7 +629,6 @@ conferences:
     abstract_display: ""
     other_deadlines: []
     comments: Free of charge; open to researchers from all scientific fields
-  # Conference Calendar
   - id: cosmology-from-home-2026
     title: Cosmology from Home 2026
     url: https://cosmologyfromhome.com/registration/
@@ -644,6 +643,7 @@ conferences:
     abstract_display: ""
     other_deadlines: []
     comments: ""
+  # Conference Calendar
   - id: bh-nepal-2026
     title: "8th Nepal Conference: Many faces of stellar-mass black holes"
     url: https://sites.google.com/view/bh-nepal-2026/home

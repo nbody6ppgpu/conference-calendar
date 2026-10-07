@@ -915,3 +915,28 @@ conferences:
     abstract_display: ""
     other_deadlines: []
     comments: ""
+  - id: iau-symposium-414-2027
+    title: "IAU Symposium 414: High-z Galaxies and Black Holes: The JWST/ALMA/GRAVITY Frontier"
+    url: https://sites.google.com/view/iaus414patagonia/home
+    location: Puerto Natales, Chile
+    start_date: 2027-10-11
+    end_date: 2027-10-15
+    registration_deadlines:
+      - label: Registration and fee submission
+        date: 2027-04-30
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2027-01-05
+    registration_display: ""
+    abstract_display: ""
+    other_deadlines:
+      - type: funding
+        label: Travel grant applications
+        date: 2027-01-05
+      - type: other
+        label: End of preregistration
+        date: 2026-10-31
+      - type: other
+        label: Proceedings submission
+        date: 2027-11-15
+    comments: sent by Dominika

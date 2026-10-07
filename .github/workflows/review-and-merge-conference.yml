@@ -200,10 +200,12 @@ jobs:
       - name: Load the output schema
         run: echo "REVIEW_SCHEMA=$(jq -c . .github/prompts/conference-blind-review.schema.json)" >> "$GITHUB_ENV"
 
-      # Accepted risk: a prompt-injected page could make the model leak the
-      # Claude OAuth token (Bash(curl:*) can reach the network). The verdict is
-      # treated purely as data and every claim is re-verified deterministically,
-      # so injection cannot cause a merge; the token is revocable.
+      # Bash is not allowlisted: with --permission-mode auto, Claude Code's
+      # auto-mode classifier reviews every tool call that is not auto-approved,
+      # so curl of the official site passes while exfiltration attempts should
+      # be blocked. Auto mode is best-effort, not a guarantee. The verdict is
+      # still treated as data only: the no-model compare and merge jobs
+      # re-verify every claim, so injection cannot by itself cause a merge.
       - name: Blind re-extraction
         id: claude
         uses: anthropics/claude-code-action@v1
@@ -215,7 +217,8 @@ jobs:
           # App; claude-code-action refuses non-human actors unless allow-listed.
           allowed_bots: "conference-calendar-bot[bot]"
           claude_args: |
-            --allowedTools "Read,WebFetch,Bash(curl:*)"
+            --permission-mode auto
+            --allowedTools "Read,WebFetch"
             --disallowedTools WebSearch,Edit,Write
             --json-schema '${{ env.REVIEW_SCHEMA }}'
           prompt: |

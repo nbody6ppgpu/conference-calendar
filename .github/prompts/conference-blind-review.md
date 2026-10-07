@@ -14,7 +14,7 @@ Procedure:
 
 1. EXPLORE the given URL as defined in `AGENTS.md` (landing page, then the
    same site's important-dates, registration, abstract, funding, sessions,
-   program and venue pages; `curl -sL` if WebFetch returns a JS shell). Use
+   program and venue pages; `curl -sL` of the official site's raw HTML via Bash if WebFetch fails or returns a JS shell; if a tool call is blocked, skip it and continue). Use
    only the conference's own site. No web search.
 2. Extract the following fields. For each one give `value` and `evidence`.
    - `title`: the meeting's name.

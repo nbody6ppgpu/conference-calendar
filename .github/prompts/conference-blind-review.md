@@ -17,7 +17,10 @@ Procedure:
    program and venue pages; `curl -sL` of the official site's raw HTML via Bash if WebFetch fails or returns a JS shell; if a tool call is blocked, skip it and continue). Use
    only the conference's own site. No web search.
 2. Extract the following fields. For each one give `value` and `evidence`.
-   - `title`: the meeting's name.
+   - `title`: the meeting's name. Its evidence must quote the page's main
+     heading or title text, verbatim (not a date or location line); if the
+     title also includes a series name or number (for example "IAU Symposium
+     414"), add a separate verbatim quote of where the page states it.
    - `location`: city and country (or venue) as the site states it.
    - `start_date`, `end_date`: `YYYY-MM-DD`, or `""` if not stated.
    - `registration_deadlines`: regular/final registration cutoffs only, as
@@ -28,7 +31,12 @@ Procedure:
      date}` with `type` one of `funding`, `proposal`, `other`; early-bird
      registration is `type: other`, `label: Early-bird registration`. Use
      `date: ""` only if the site explicitly says the item exists but gives no
-     date.
+     date. Go through every dated line on the site's important-dates and
+     deadlines pages one by one and decide for each whether it is a deadline
+     (put it in the right field, including for example a proceedings or
+     manuscript deadline under `other`) or not (leave out announcements, the
+     meeting's own dates, and opening or start dates of submission or
+     registration).
    - `registration_display`, `abstract_display`: the site's own wording
      (for example "Mid or end of November (TBC)") when a deadline is stated
      only as text or has no concrete date; `""` otherwise. Never add, change
@@ -38,7 +46,8 @@ Procedure:
    third-party source.
 4. `evidence` is a list of `{url, quote}`. Every non-empty `value` needs at
    least one item. `url` is the exact page you read (same site as the given
-   URL). `quote` is a short verbatim snippet (at least 8 characters, ideally
+   URL). `quote` is a short verbatim snippet (at least 15 characters, or at
+   least 10 if it contains a full numeric date such as `30/04/2027`; ideally
    one line) copied from that page's visible text, or from its raw HTML or
    embedded JSON if that is where you found the fact. It must contain the
    day and month of every date it supports, ideally together with the label

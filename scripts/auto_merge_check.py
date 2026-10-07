@@ -640,7 +640,8 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
         return item["value"], item.get("evidence")
 
     def finish(name: str, pr_val: object, rev_val: object, equal: bool, relied: bool, evidence: object,
-               date_set: set[str] | None = None, text_for_share: str | None = None) -> None:
+               date_set: set[str] | None = None, text_for_share: str | None = None,
+               page_fallback: frozenset[str] | None = None) -> None:
         pr_s, rev_s = _fmt(pr_val), _fmt(rev_val)
         if not equal:
             rows.append(Row(name, pr_s, rev_s, False, "values differ"))
@@ -654,7 +655,11 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
         elif date_set is not None and not _dates_supported(date_set, res.quotes):
             rows.append(Row(name, pr_s, rev_s, False, "no verified quote carries each date's day, month and year"))
         elif text_for_share is not None and _share_in_quotes(text_for_share, res.quotes) < SHARE_THRESHOLD:
-            rows.append(Row(name, pr_s, rev_s, False, "verified quotes cover too little of the value"))
+            if page_fallback is not None and page_fallback <= verifier.page_tokens():
+                # The quotes verify but cite the wrong line; every word is on a fetched official page.
+                rows.append(Row(name, pr_s, rev_s, True, f"{len(res.quotes)} quote(s) verified; all words on official pages"))
+            else:
+                rows.append(Row(name, pr_s, rev_s, False, "verified quotes cover too little of the value"))
         else:
             rows.append(Row(name, pr_s, rev_s, True, f"{len(res.quotes)} quote(s) verified"))
 
@@ -677,7 +682,8 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
                 equal = page_wide = tp <= verifier.page_tokens()
         # Page-wide token coverage is stronger than the per-quote share, so it replaces it.
         finish(name, pr_val, rev_val, equal, bool(tokens(pr_val) or tokens(rev_val)), evidence,
-               text_for_share=None if page_wide else rev_val)
+               text_for_share=None if page_wide else rev_val,
+               page_fallback=(tokens(pr_val) | tokens(rev_val)) if name == "title" else None)
 
     for name, pr_val in (("start_date", conf.start_date), ("end_date", conf.end_date)):
         got = field_of(name)

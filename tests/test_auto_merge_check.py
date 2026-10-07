@@ -351,10 +351,23 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(self.title_case("Example Meeting Deluxe 2027"), ["title"])
         self.assertEqual(self.title_case("Example Meeting III 2027"), ["title"])
 
-    def test_title_evidence_must_cover_value(self):
-        verdict = self.make(title={"value": "Example Meeting 2027", "evidence": [
+    def test_title_off_target_quote_passes_when_all_words_on_pages(self):
+        # Same words, reordered; the quote verifies but cites the wrong line.
+        off = lambda value: self.make(title={"value": value, "evidence": [{"url": self.URL, "quote": "Heidelberg,   Germany"}]})
+        conf = self.conf(**{"title: Example Meeting 2027": "title: Meeting Example 2027"})
+        rows = self.run_compare(off("Example Meeting 2027"), conf)
+        self.assertEqual(self.failed(rows), [], amc.render_table(rows))
+        self.assertEqual(self.failed(self.run_compare(off("Example Meeting 2027"))), [])
+
+    def test_title_off_target_quote_fails_when_a_word_is_absent(self):
+        conf = self.conf(**{"title: Example Meeting 2027": "title: Example Meeting Deluxe 2027"})
+        verdict = self.make(title={"value": "Deluxe Example Meeting 2027", "evidence": [
             {"url": self.URL, "quote": "Heidelberg,   Germany"}]})
-        self.assertEqual(self.failed(self.run_compare(verdict)), ["title"])
+        self.assertEqual(self.failed(self.run_compare(verdict, conf)), ["title"])
+        # An unverifiable quote still fails even if every word is on the page.
+        bad = self.make(title={"value": "Example Meeting 2027", "evidence": [
+            {"url": self.URL, "quote": "this text is not on the page"}]})
+        self.assertEqual(self.failed(self.run_compare(bad)), ["title"])
 
     def test_unverified_or_foreign_evidence_fails(self):
         bad_quote = self.make(title={"value": "Example Meeting 2027", "evidence": [

@@ -340,6 +340,17 @@ class ComparisonTests(unittest.TestCase):
         self.assertFalse(q("deadline 16 November 2026", "2026-11-15"))  # wrong day
         self.assertFalse(q("deadline 16/11/2026", "2026-11-15"))
 
+    def title_case(self, pr_title):
+        conf = self.conf(**{"title: Example Meeting 2027": f"title: {pr_title}"})
+        return self.failed(self.run_compare(self.make(), conf))  # reviewer title: "Example Meeting 2027"
+
+    def test_reviewer_may_omit_title_words_found_on_the_page(self):
+        self.assertEqual(self.title_case("Example Heidelberg Meeting 2027"), [])  # "heidelberg" is on the page
+
+    def test_title_words_missing_from_every_page_fail(self):
+        self.assertEqual(self.title_case("Example Meeting Deluxe 2027"), ["title"])
+        self.assertEqual(self.title_case("Example Meeting III 2027"), ["title"])
+
     def test_title_evidence_must_cover_value(self):
         verdict = self.make(title={"value": "Example Meeting 2027", "evidence": [
             {"url": self.URL, "quote": "Heidelberg,   Germany"}]})
@@ -398,7 +409,22 @@ class ComparisonTests(unittest.TestCase):
         self.assertTrue(m("", ""))
 
 
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+
+
 class EvidenceTests(unittest.TestCase):
+    def test_google_sites_markup_with_short_dated_quotes(self):
+        # Trimmed real markup from a Google Sites "important dates" page: the date and its colon sit
+        # in one span, the label in another, and the same text also lives in a JS string with \t escapes.
+        page = (FIXTURES / "google_sites_important_dates.html").read_text(encoding="utf-8")
+        for quote in ("30/04/2027:", "15/11/2027:", "05/01/2027:", "30/04/2027: Deadline for registration and fee submission"):
+            with self.subTest(quote=quote):
+                self.assertTrue(amc.quote_in_page(quote, page))
+        self.assertFalse(amc.quote_in_page("2027", page))  # short and not a full date
+        self.assertFalse(amc.quote_in_page("30/05/2027:", page))
+        self.assertTrue(amc.quote_supports_date("30/04/2027:", "2027-04-30"))
+        self.assertFalse(amc.quote_supports_date("30/04/2027:", "2027-04-29"))
+
     def test_normalization(self):
         page = "<p>Early&nbsp;bird\n  deadline&mdash;<b>1 Feb</b></p><!-- c -->"
         self.assertTrue(amc.quote_in_page("EARLY BIRD deadline-1 feb", page))

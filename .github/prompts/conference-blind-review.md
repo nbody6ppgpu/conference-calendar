@@ -41,7 +41,9 @@ Procedure:
    URL). `quote` is a short verbatim snippet (at least 8 characters, ideally
    one line) copied from that page's visible text, or from its raw HTML or
    embedded JSON if that is where you found the fact. It must contain the
-   day and month of every date it supports. Do not paraphrase, translate,
+   day and month of every date it supports, ideally together with the label
+   text next to it (e.g. `30/04/2027: Deadline for registration`); a bare
+   date is accepted only if it is a full numeric date. Do not paraphrase, translate,
    reformat dates or join separate passages into one quote. A script
    re-fetches each URL and searches for your quote; any quote it cannot find
    makes the whole review fail. Empty values use `evidence: []`.

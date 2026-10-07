@@ -42,6 +42,10 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
+    # gh cannot infer the repo outside a git checkout root (steps run in the
+    # bare workspace here), so name it explicitly.
+    env:
+      GH_REPO: ${{ github.repository }}
     outputs:
       eligible: ${{ steps.result.outputs.eligible }}
       issue_number: ${{ steps.result.outputs.issue_number }}
@@ -177,8 +181,8 @@ jobs:
               || ! grep -q '^- ' "$RUNNER_TEMP/gate-comment.md"; then
             echo "Automatic review could not run to completion (gate job failed); see the [run log]($RUN_URL). A human reviewer is still requested." > "$RUNNER_TEMP/gate-comment.md"
           fi
-          gh pr comment "$PR_NUMBER" --body-file "$RUNNER_TEMP/gate-comment.md" || true
-          gh pr edit "$PR_NUMBER" --add-label needs-human || true
+          gh pr comment "$PR_NUMBER" --body-file "$RUNNER_TEMP/gate-comment.md"
+          gh pr edit "$PR_NUMBER" --add-label needs-human
 
   review:
     needs: gate
@@ -326,6 +330,7 @@ jobs:
     outputs:
       merged: ${{ steps.merge.outputs.merged }}
     env:
+      GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
       HEAD_REF: ${{ github.event.pull_request.head.ref }}
@@ -436,6 +441,7 @@ jobs:
       issues: write
       pull-requests: write
     env:
+      GH_REPO: ${{ github.repository }}
       GH_TOKEN: ${{ github.token }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
       REVIEW_RESULT: ${{ needs.review.result }}
@@ -459,7 +465,7 @@ jobs:
 
           if [[ "$MERGE_RESULT" == "success" && "$MERGED" == "true" ]]; then
             { echo "Blind review matched the PR entry field by field; **auto-merged**."; echo; cat "$table" 2>/dev/null; } > "$body"
-            gh pr comment "$PR_NUMBER" --body-file "$body" || true
+            gh pr comment "$PR_NUMBER" --body-file "$body"
             gh pr edit "$PR_NUMBER" --remove-label needs-human || true
             exit 0
           fi
@@ -484,6 +490,6 @@ jobs:
               if [[ -s "$table" ]]; then echo; cat "$table"; fi
               if [[ -s "$failure" ]]; then echo; echo "~~~~"; head -c 3000 "$failure"; echo; echo "~~~~"; fi
             } > "$body"
-            gh pr comment "$PR_NUMBER" --body-file "$body" || true
+            gh pr comment "$PR_NUMBER" --body-file "$body"
           fi
-          gh pr edit "$PR_NUMBER" --add-label needs-human || true
+          gh pr edit "$PR_NUMBER" --add-label needs-human

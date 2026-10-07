@@ -57,6 +57,7 @@ ENTRY_KEYS = frozenset(
 ID_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*-\d{4}")
 URL_SAFE_RE = re.compile(r"^https?://[A-Za-z0-9._~:/?#@!$&()*+,;=%\-]+$")
 MIN_QUOTE_LEN = 15
+MIN_DATE_QUOTE_LEN = 10  # a full numeric date such as 5/1/2027 or 2027-01-05
 
 URL_HEADER_RE = re.compile(r"URL link for the meeting\s*:", re.I)
 COMMENTS_HEADER_RE = re.compile(r"Comments to show on the calendar table\s*(?:\([^)\n]*\))?\s*:", re.I)
@@ -385,7 +386,8 @@ def html_to_text(raw_html: str) -> str:
 
 def quote_in_page(quote: str, raw_html: str) -> bool:
     q = normalize_text(quote)
-    if len(q) < MIN_QUOTE_LEN:
+    # A bare "30/04/2027:" is a legitimate, specific quote; anything else short is too weak.
+    if len(q) < MIN_QUOTE_LEN and not (len(q) >= MIN_DATE_QUOTE_LEN and has_numeric_date(q)):
         return False
     # Whitespace-insensitive: inline tags such as <b> may or may not add a space.
     squash = lambda value: re.sub(r"\s+", "", value)
@@ -451,6 +453,24 @@ class EvidenceVerifier:
         if isinstance(cached, CheckError):
             raise cached
         return cached
+
+    def prefetch(self, verdict: dict) -> None:
+        """Fetch every page the verdict cites, so page-wide checks see all of them."""
+        for item in verdict.values():
+            for ev in (item.get("evidence") if isinstance(item, dict) else None) or []:
+                if isinstance(ev, dict) and isinstance(ev.get("url"), str) and self._allowed(ev["url"]):
+                    try:
+                        self._page(ev["url"])
+                    except CheckError:
+                        pass
+
+    def page_tokens(self) -> frozenset[str]:
+        """Word tokens of the visible text of every official page fetched so far."""
+        out: set[str] = set()
+        for page in self.cache.values():
+            if isinstance(page, str):
+                out |= tokens(html_to_text(page))
+        return frozenset(out)
 
     def verify(self, evidence: object) -> EvidenceResult:
         problems: list[str] = []
@@ -565,6 +585,10 @@ _NUMERIC_DATES = (
 )
 
 
+def has_numeric_date(text: str) -> bool:
+    return any(pattern.search(text) for pattern, _ in _NUMERIC_DATES)
+
+
 def quote_supports_date(quote: str, iso: str) -> bool:
     """The quote must carry the day and month (name or numeric) and no conflicting year."""
     y, mo, d = (int(x) for x in iso.split("-"))
@@ -606,6 +630,7 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
     rows: list[Row] = []
     if not isinstance(verdict, dict):
         return [Row("verdict", "", "", False, "reviewer output is not a JSON object")]
+    verifier.prefetch(verdict)
 
     def field_of(name: str) -> tuple[object, object] | None:
         item = verdict.get(name)
@@ -641,8 +666,18 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
         if not isinstance(rev_val, str):
             rows.append(Row(name, pr_val, str(rev_val), False, "value is not a string"))
             continue
-        finish(name, pr_val, rev_val, matcher(pr_val, rev_val), bool(tokens(pr_val) or tokens(rev_val)), evidence,
-               text_for_share=rev_val)
+        equal = matcher(pr_val, rev_val)
+        page_wide = False
+        if not equal and name == "title":
+            # The reviewer may legitimately omit a prefix (e.g. "IAU Symposium 414: "), provided the
+            # reviewer's words are all in the PR title and every PR title word is on a fetched official page.
+            tr, tp = tokens(rev_val), tokens(pr_val)
+            if tr and tr <= tp:
+                verifier.verify(evidence)  # make sure the cited pages are fetched
+                equal = page_wide = tp <= verifier.page_tokens()
+        # Page-wide token coverage is stronger than the per-quote share, so it replaces it.
+        finish(name, pr_val, rev_val, equal, bool(tokens(pr_val) or tokens(rev_val)), evidence,
+               text_for_share=None if page_wide else rev_val)
 
     for name, pr_val in (("start_date", conf.start_date), ("end_date", conf.end_date)):
         got = field_of(name)

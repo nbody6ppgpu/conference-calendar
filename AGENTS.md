@@ -57,6 +57,17 @@
   or workshop calls, and `other` for early-bird registration and other items.
   Keep known but undated milestones for monthly rechecking; use
   `other_deadlines: []` when none are announced.
+- Classify deadlines one by one: walk every dated line on the site's
+  important-dates / deadlines pages and decide for each. A deadline is the
+  end or closing date of something a participant must do: (pre)registration,
+  abstract submission, grant or financial-support applications, session or
+  workshop proposals, proceedings or manuscript submission, and similar. Put
+  each in the matching field above; preregistration or expression-of-interest
+  closing and proceedings or manuscript deadlines go in `other_deadlines` with
+  `type: other` (regular/final registration stays in `registration_deadlines`,
+  early-bird as specified above). Leave out announcements and notifications
+  (acceptance, program release), the meeting's own dates, and opening or start
+  dates of submission or registration.
 - Do not fill in or change `comments` unless the user (an issue body, a task
   instruction) explicitly supplied that text. It is authored by humans, not
   discovered by EXPLORE.

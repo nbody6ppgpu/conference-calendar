@@ -31,12 +31,8 @@ Procedure:
      date}` with `type` one of `funding`, `proposal`, `other`; early-bird
      registration is `type: other`, `label: Early-bird registration`. Use
      `date: ""` only if the site explicitly says the item exists but gives no
-     date. Go through every dated line on the site's important-dates and
-     deadlines pages one by one and decide for each whether it is a deadline
-     (put it in the right field, including for example a proceedings or
-     manuscript deadline under `other`) or not (leave out announcements, the
-     meeting's own dates, and opening or start dates of submission or
-     registration).
+     date. Decide which lines are deadlines with AGENTS.md's rule "Classify
+     deadlines one by one" (the same rule the extractor follows).
    - `registration_display`, `abstract_display`: the site's own wording
      (for example "Mid or end of November (TBC)") when a deadline is stated
      only as text or has no concrete date; `""` otherwise. Never add, change

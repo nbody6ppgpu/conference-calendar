@@ -482,14 +482,10 @@ jobs:
 
           gh label create needs-human --force --color D93F0B \
             --description "Automatic review did not merge this PR; a human must look" || true
-          already=false
-          gh pr view "$PR_NUMBER" --json labels --jq '.labels[].name' | grep -qx needs-human && already=true
-          if [[ "$already" == "false" ]]; then
-            {
-              echo "Automatic review did **not** merge this PR: $why A human reviewer is still requested. ([run log]($RUN_URL))"
-              if [[ -s "$table" ]]; then echo; cat "$table"; fi
-              if [[ -s "$failure" ]]; then echo; echo "~~~~"; head -c 3000 "$failure"; echo; echo "~~~~"; fi
-            } > "$body"
-            gh pr comment "$PR_NUMBER" --body-file "$body"
-          fi
+          {
+            echo "Automatic review did **not** merge this PR: $why A human reviewer is still requested. ([run log]($RUN_URL))"
+            if [[ -s "$table" ]]; then echo; cat "$table"; fi
+            if [[ -s "$failure" ]]; then echo; echo "~~~~"; head -c 3000 "$failure"; echo; echo "~~~~"; fi
+          } > "$body"
+          gh pr comment "$PR_NUMBER" --body-file "$body"
           gh pr edit "$PR_NUMBER" --add-label needs-human

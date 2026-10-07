@@ -159,6 +159,7 @@ jobs:
           name: gate-json
           path: ${{ runner.temp }}/gate/gate.json
           if-no-files-found: error
+          overwrite: true
 
       # Also covers a crashed gate job (any earlier step failing), not just a
       # clean "not eligible" verdict: a claude/issue- PR never ends silently.
@@ -194,22 +195,58 @@ jobs:
     permissions:
       contents: read
     steps:
-      # Base ref only: the checkout contains neither the PR's entry nor the
-      # issue text, which keeps the extraction blind.
+      # Base ref, sparse: only the instructions the reviewer needs (AGENTS.md,
+      # its CLAUDE.md symlink, the prompt files). The checkout contains neither
+      # data/conferences.yml, the PR's entry nor the issue text, which keeps
+      # the extraction blind and leaves nothing else for a prompt-injected page
+      # to read. It is still a normal git repository, as the action requires.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
+          sparse-checkout: |
+            /AGENTS.md
+            /CLAUDE.md
+            /.github/prompts/
+          sparse-checkout-cone-mode: false
 
       - name: Load the output schema
         run: echo "REVIEW_SCHEMA=$(jq -c . .github/prompts/conference-blind-review.schema.json)" >> "$GITHUB_ENV"
 
-      # Bash is not allowlisted: with --permission-mode auto, Claude Code's
-      # auto-mode classifier reviews every tool call that is not auto-approved,
-      # so curl of the official site passes while exfiltration attempts should
-      # be blocked. Auto mode is best-effort, not a guarantee. The verdict is
-      # still treated as data only: the no-model compare and merge jobs
-      # re-verify every claim, so injection cannot by itself cause a merge.
+      # The meeting URL comes from the gate (untrusted text from the PR/issue).
+      # Reduce it to a strictly validated hostname for the WebFetch rule below.
+      - name: Derive the meeting host
+        id: host
+        env:
+          MEETING_URL: ${{ needs.gate.outputs.meeting_url }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import os, re, sys
+          from urllib.parse import urlsplit
+          u = urlsplit(os.environ["MEETING_URL"].strip())
+          host = (u.hostname or "").lower().rstrip(".")
+          if host.rsplit(".", 1)[-1].isdigit():  # IP literal, not a DNS name
+              sys.exit("::error::meeting URL host is an IP address")
+          if u.scheme not in ("http", "https") or not re.fullmatch(
+              r"[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+", host
+          ):
+              sys.exit("::error::meeting URL host is missing or not a plain DNS name")
+          print(f"host={host}")
+          PY
+
+      # Permission scoping (docs: code.claude.com/docs/en/permissions):
+      #   Read      only AGENTS.md and .github/prompts/** are pre-approved.
+      #   WebFetch  only the meeting URL's own host is pre-approved.
+      # Anything else (other files, other hosts, curl or any Bash call) is not
+      # auto-approved, so with --permission-mode auto it goes to Claude Code's
+      # auto-mode classifier, which should block exfiltration attempts. Auto
+      # mode is best-effort, not a guarantee; the narrow allow rules keep the
+      # classifier-free path from reading local files or posting them to an
+      # arbitrary URL. Bash is deliberately in neither list. Search and write
+      # tools are denied outright. The verdict is still treated as data only:
+      # the no-model compare and merge jobs re-verify every claim, so injection
+      # cannot by itself cause a merge.
       - name: Blind re-extraction
         id: claude
         uses: anthropics/claude-code-action@v1
@@ -222,8 +259,8 @@ jobs:
           allowed_bots: "conference-calendar-bot[bot]"
           claude_args: |
             --permission-mode auto
-            --allowedTools "Read,WebFetch"
-            --disallowedTools WebSearch,Edit,Write
+            --allowedTools "Read(./AGENTS.md),Read(./.github/prompts/**),WebFetch(domain:${{ steps.host.outputs.host }})"
+            --disallowedTools WebSearch,Edit,Write,NotebookEdit
             --json-schema '${{ env.REVIEW_SCHEMA }}'
           prompt: |
             Read `.github/prompts/conference-blind-review.md` and follow it
@@ -252,6 +289,7 @@ jobs:
           name: verdict-json
           path: ${{ runner.temp }}/verdict.json
           if-no-files-found: error
+          overwrite: true
 
   # Deterministic comparison of the blind verdict with the PR entry. Not part
   # of the repo-wide merge lane: it only reads.
@@ -316,8 +354,12 @@ jobs:
           name: table-md
           path: ${{ runner.temp }}/table.md
           if-no-files-found: ignore
+          overwrite: true
 
   # Everything that touches main. Repo-wide lane: merges never race each other.
+  # Note: the workflow-level cancel-in-progress can cancel this job after
+  # `gh pr ready` but before a comment is posted, leaving the PR ready with no
+  # report. The next run for the PR re-decides from scratch (fail-closed).
   merge:
     needs: [gate, compare]
     if: needs.compare.result == 'success' && needs.compare.outputs.passed == 'true'
@@ -376,8 +418,9 @@ jobs:
           [[ "$changed" == "data/conferences.yml" ]] \
             || fail "Merged result changes files other than data/conferences.yml: $changed"
 
+          git rev-parse origin/main > "$RUNNER_TEMP/verified-main-sha"
           git show origin/main:data/conferences.yml > "$RUNNER_TEMP/main.yml"
-          python3 "$GITHUB_WORKSPACE/scripts/auto_merge_check.py" diff-check \
+          python3 "$m/scripts/auto_merge_check.py" diff-check \
             --gate-json "$RUNNER_TEMP/artifacts/gate-json/gate.json" \
             --base-data "$RUNNER_TEMP/main.yml" --head-data "$m/data/conferences.yml" \
             > "$RUNNER_TEMP/diff-check.log" 2>&1 \
@@ -415,6 +458,11 @@ jobs:
           [[ "$(jq -r .state <<<"$info")" == "OPEN" && "$(jq -r .baseRefName <<<"$info")" == "main" \
              && "$(jq -r .headRefOid <<<"$info")" == "$HEAD_SHA" ]] \
             || { echo "PR is not open, not targeting main, or its head changed: $info" > "$err"; exit 1; }
+          # Fail closed if main moved since it was verified.
+          verified="$(cat "$RUNNER_TEMP/verified-main-sha")"
+          now="$(git ls-remote origin refs/heads/main | cut -f1)"
+          [[ -n "$now" && "$now" == "$verified" ]] \
+            || { echo "main moved after verification (verified $verified, now ${now:-unknown})." > "$err"; exit 1; }
           if [[ "$(jq -r .isDraft <<<"$info")" == "true" ]]; then
             gh pr ready "$PR_NUMBER" > "$err" 2>&1 || exit 1
           fi
@@ -428,6 +476,7 @@ jobs:
           name: merge-failure
           path: ${{ runner.temp }}/failure.txt
           if-no-files-found: ignore
+          overwrite: true
 
   # Fail-closed reporting: success is claimed only when the merge job
   # succeeded AND its `merged` output says the merge happened. Failed,

@@ -513,6 +513,16 @@ class ComparisonTests(unittest.TestCase):
         self.assertTrue(amc.label_supported("Deadline", ["anything"]))  # only generic words
         self.assertFalse(amc.label_supported("Travel grant applications", ["Registration deadline: 15 January 2027"]))
         self.assertFalse(amc.label_supported("Keynote speaker nominations", ["Registration deadline: 15 January 2027"]))
+
+    def test_early_bird_normalized_label(self):
+        eb = "Early-bird registration"
+        self.assertTrue(amc.label_supported(eb, ["Reduced fee until 15 March 2027"], "other"))
+        self.assertTrue(amc.label_supported("early-bird registration", ["Early-bird: 15 March 2027"], "other"))
+        self.assertTrue(amc.label_supported(eb, ["Earlybird deadline 15 March 2027"], "other"))
+        self.assertTrue(amc.label_supported(eb, ["Discounted rate until 15 March 2027"], "other"))
+        self.assertFalse(amc.label_supported(eb, ["Hotel booking until 15 March 2027"], "other"))
+        # The exemption applies only to type other.
+        self.assertFalse(amc.label_supported(eb, ["Hotel booking until 15 March 2027"], "funding"))
         conf = self.conf(**{"label: Registration": "label: Gala dinner booking"})
         rows = self.run_compare(self.make(), conf)
         self.assertEqual(self.failed(rows), ["registration_deadlines"])

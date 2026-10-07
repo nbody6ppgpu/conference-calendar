@@ -406,20 +406,31 @@ jobs:
           [[ "$(git rev-parse refs/remotes/origin/pr-head)" == "$HEAD_SHA" ]] \
             || fail "The PR head moved after review."
           git fetch origin main
+          main_sha="$(git rev-parse refs/remotes/origin/main)"
+          echo "$main_sha" > "$RUNNER_TEMP/verified-main-sha"
           git config user.name "claude[bot]"
           git config user.email "41898282+claude[bot]@users.noreply.github.com"
           m="$RUNNER_TEMP/merged"
-          git worktree add --detach "$m" origin/main
+          # $m = a worktree of the verified main commit with the PR head merged
+          # in (staged, uncommitted). It therefore contains PR-head content,
+          # including any scripts/tests the PR changed. Nothing inside it may
+          # be executed until the pure-git scope check below has passed.
+          git worktree add --detach "$m" "$main_sha"
           cd "$m"
           git merge --no-ff --no-commit "$HEAD_SHA" > "$RUNNER_TEMP/merge.log" 2>&1 \
             || fail "The PR does not merge cleanly into current main: $(tail -n 5 "$RUNNER_TEMP/merge.log")"
 
-          changed="$(git diff --cached --name-only origin/main)"
+          # Pure git, no code from $m runs before this passes.
+          changed="$(git diff --cached --name-only "$main_sha")"
           [[ "$changed" == "data/conferences.yml" ]] \
             || fail "Merged result changes files other than data/conferences.yml: $changed"
+          # The data file must stay a regular file (not a symlink or mode change).
+          [[ "$(git ls-files -s -- data/conferences.yml | cut -d' ' -f1)" == "$(git ls-tree "$main_sha" -- data/conferences.yml | cut -d' ' -f1)" ]] \
+            || fail "data/conferences.yml changed file mode in the merged result."
 
-          git rev-parse origin/main > "$RUNNER_TEMP/verified-main-sha"
-          git show origin/main:data/conferences.yml > "$RUNNER_TEMP/main.yml"
+          git show "$main_sha:data/conferences.yml" > "$RUNNER_TEMP/main.yml"
+          # Only now does code from the merged tree run (it is proven to equal
+          # main's code, differing only in the data file).
           python3 "$m/scripts/auto_merge_check.py" diff-check \
             --gate-json "$RUNNER_TEMP/artifacts/gate-json/gate.json" \
             --base-data "$RUNNER_TEMP/main.yml" --head-data "$m/data/conferences.yml" \

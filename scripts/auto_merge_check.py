@@ -727,8 +727,22 @@ def _stem(token: str) -> str:
     return re.sub(r"(?:ions|ion|s)$", "", token) if len(token) > 4 else token
 
 
-def label_supported(label: str, quotes: list[str]) -> bool:
-    """At least half of the label's content words (suffix-normalised) occur in the field's verified quotes."""
+_EARLY_BIRD_LABEL = "early-bird registration"
+_EARLY_BIRD_WORDS = frozenset("early earlybird early-bird reduced discount discounted".split())
+
+
+def label_supported(label: str, quotes: list[str], type_: str = "") -> bool:
+    """At least half of the label's content words (suffix-normalised) occur in the field's verified quotes.
+
+    The normalised label "Early-bird registration" (type other) is mandated by
+    AGENTS.md and is not copied from the site, so it instead needs one of the
+    early/reduced-rate words in the quotes.
+    """
+    if type_ == "other" and label.strip().casefold() == _EARLY_BIRD_LABEL:
+        text = " ".join(normalize_text(q) for q in quotes)
+        words = set(re.findall(r"[a-z]+(?:-[a-z]+)*", text.casefold()))
+        words |= {w for word in list(words) for w in word.split("-")}
+        return bool(words & _EARLY_BIRD_WORDS)
     wanted = {_stem(t) for t in content_tokens(label) if t not in _GENERIC_LABEL_WORDS}
     if not wanted:
         return True
@@ -766,7 +780,7 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
 
     def finish(name: str, pr_val: object, rev_val: object, equal: bool, relied: bool, evidence: object,
                date_set: set[str] | None = None, text_for_share: str | None = None,
-               page_fallback: frozenset[str] | None = None, labels: list[str] | None = None,
+               page_fallback: frozenset[str] | None = None, labels: list[tuple[str, str]] | None = None,
                extra_tokens: frozenset[str] | None = None) -> None:
         pr_s, rev_s = _fmt(pr_val), _fmt(rev_val)
         if not equal:
@@ -780,7 +794,7 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
             rows.append(Row(name, pr_s, rev_s, False, "evidence not verified: " + "; ".join(res.problems)))
         elif date_set is not None and not _dates_supported(date_set, res.quotes, res.orders):
             rows.append(Row(name, pr_s, rev_s, False, "no verified quote carries each date's day, month and year"))
-        elif (bad_label := next((l for l in labels or [] if not label_supported(l, res.quotes)), None)) is not None:
+        elif (bad_label := next((l for l, t in labels or [] if not label_supported(l, res.quotes, t)), None)) is not None:
             rows.append(Row(name, pr_s, rev_s, False, f"label not supported by evidence: {bad_label!r}"))
         elif extra_tokens and not extra_tokens <= (
                 tokens(" ".join(normalize_text(q) for q in res.quotes)) | verifier.page_tokens()):
@@ -846,7 +860,7 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
             continue
         pr_dates = {d.date.isoformat() for d in pr_list}
         finish(name, pr_dates, rev_dates, pr_dates == rev_dates, bool(pr_dates or rev_dates), evidence, pr_dates | rev_dates,
-               labels=[d.label for d in pr_list])
+               labels=[(d.label, "") for d in pr_list])
 
     got = field_of("other_deadlines")
     if got is not None:
@@ -862,7 +876,7 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
             pr_set = Counter((d.type, d.date.isoformat() if d.date else "") for d in conf.other_deadlines)
             fmt = lambda s: [f"{t}:{d or 'undated'}" for t, d in s.elements()]
             finish("other_deadlines", fmt(pr_set), fmt(rev_set), pr_set == rev_set, bool(pr_set or rev_set), evidence,
-                   {d for _, d in (pr_set + rev_set)}, labels=[d.label for d in conf.other_deadlines])
+                   {d for _, d in (pr_set + rev_set)}, labels=[(d.label, d.type) for d in conf.other_deadlines])
 
     for name, pr_text in (("registration_display", conf.registration_display), ("abstract_display", conf.abstract_display)):
         got = field_of(name)

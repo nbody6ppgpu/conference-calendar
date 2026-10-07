@@ -340,6 +340,31 @@ class ComparisonTests(unittest.TestCase):
         self.assertFalse(q("deadline 16 November 2026", "2026-11-15"))  # wrong day
         self.assertFalse(q("deadline 16/11/2026", "2026-11-15"))
 
+    def test_numeric_day_range_supports_endpoints_only(self):
+        q = amc.quote_supports_date
+        quote = "11-15/10/2027: IAU symposium 414 in Puerto Natales"
+        self.assertTrue(q(quote, "2027-10-11"))
+        self.assertTrue(q(quote, "2027-10-15"))
+        self.assertFalse(q(quote, "2027-10-12"))  # inside the range, not an endpoint
+        self.assertFalse(q(quote, "2027-11-11"))
+        self.assertFalse(q(quote, "2026-10-11"))
+        self.assertFalse(q("11-15/10/2027", "2027-10-10"))
+        for variant in ("11\u201315/10/2027", "11 - 15/10/2027", "11-15.10.2027", "11\u201315.10.2027"):
+            with self.subTest(variant=variant):
+                self.assertTrue(q(variant, "2027-10-11"))
+                self.assertTrue(q(variant, "2027-10-15"))
+                self.assertFalse(q(variant, "2027-10-12"))
+                self.assertTrue(amc.has_numeric_date(amc.normalize_text(variant)))
+        # Day-first only: no M/D reading for a range.
+        self.assertFalse(q("11-15/10/2027", "2027-11-10"))
+        # Not inside ISO dates or longer digit runs; a bare day with a numeric month elsewhere is no support.
+        self.assertFalse(q("2027-10-11", "2027-10-12"))
+        self.assertTrue(q("2027-10-11", "2027-10-11"))
+        self.assertFalse(amc.has_numeric_date("on 11-15 november"))
+        self.assertFalse(q("2026-11-15/10/2027", "2026-11-11"))
+        self.assertFalse(q("311-15/10/2027", "2027-10-11"))
+        self.assertFalse(q("on the 11 (10/2027)", "2027-10-11"))
+
     def title_case(self, pr_title):
         conf = self.conf(**{"title: Example Meeting 2027": f"title: {pr_title}"})
         return self.failed(self.run_compare(self.make(), conf))  # reviewer title: "Example Meeting 2027"

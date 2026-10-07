@@ -582,6 +582,13 @@ _NUMERIC_DATES = (
     (re.compile(r"(?<!\d)(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)"), lambda m: [(m[1], m[2], m[3])]),
     (re.compile(r"(?<!\d)(\d{1,2})\.(\d{1,2})\.(\d{4})(?!\d)"), lambda m: [(m[3], m[2], m[1])]),
     (re.compile(r"(?<!\d)(\d{1,2})/(\d{1,2})/(\d{4})(?!\d)"), lambda m: [(m[3], m[2], m[1]), (m[3], m[1], m[2])]),
+    # Same-month day range "D1-D2/M/YYYY" or "D1-D2.M.YYYY": supports exactly its two endpoints. Only the
+    # day-first reading applies (the range sits on the first component, so M/D cannot be meant); middle
+    # days are not supported. Lookbehind on digits and "-" keeps it out of ISO dates and longer digit runs.
+    (
+        re.compile(r"(?<![\d-])(\d{1,2}) ?- ?(\d{1,2})([/.])(\d{1,2})\3(\d{4})(?!\d)"),
+        lambda m: [(m[5], m[4], m[1]), (m[5], m[4], m[2])],
+    ),
 )
 
 

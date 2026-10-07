@@ -154,10 +154,19 @@ The full task instructions for whichever commit you're producing are in
 only) or `.github/prompts/metadata-enrichment.md` (enrichment step, this is
 the one you actually run as an agent).
 
-## Mode 3 — Reviewer (invoked by hand)
+## Mode 3 — Reviewer
 
-A factual verification and repair pass over only the conference entries
-changed in the current PR or working tree — not a full-table cleanup. It is
-no longer triggered automatically; a human invokes it with
-`.github/prompts/conference-data-reviewer.md`, which holds the full
-instructions. Follow that file; the shared rules above still apply.
+Two forms exist; both check only the conference entries changed in a PR, not
+the full table.
+
+- **Automatic (add-conference PRs):** `.github/workflows/review-and-merge-conference.yml`
+  runs on PRs that `claude-add-conference.yml` opens. A deterministic gate
+  (`scripts/auto_merge_check.py`) checks provenance and the diff; a blind
+  reviewer (`.github/prompts/conference-blind-review.md`) re-extracts the facts
+  from the meeting URL alone, with verbatim evidence quotes; the script
+  re-fetches the quotes, compares them with the entry, and merges only on a
+  full match. Anything else gets a comment and the `needs-human` label. Set the
+  repo variable `AUTO_MERGE_CONFERENCE` to `off` to disable it.
+- **By hand:** a human invokes `.github/prompts/conference-data-reviewer.md`
+  to fact-check and repair changed entries. Follow that file; the shared rules
+  above still apply.

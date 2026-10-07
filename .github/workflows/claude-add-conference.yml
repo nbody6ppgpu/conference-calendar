@@ -198,10 +198,6 @@ jobs:
           set -euo pipefail
           gh pr edit "$BRANCH" --repo "$GITHUB_REPOSITORY" --add-reviewer kaiwu-astro
 
-      # Deletes with GITHUB_TOKEN, not the PAT: the PAT is scoped for issues
-      # and pull requests, so a PAT-authenticated delete fails, gets swallowed
-      # by the `||` below (which exists for the "branch was never pushed" case)
-      # and leaves the orphan branch behind while reporting success.
       - name: Clean up orphan branch on failure
         if: failure() && steps.branch.outputs.name != ''
         env:

@@ -1,0 +1,340 @@
+{
+ "type": "object",
+ "properties": {
+  "title": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "location": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "start_date": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "end_date": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "registration_deadlines": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "label": {
+        "type": "string"
+       },
+       "date": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "label",
+       "date"
+      ]
+     }
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "abstract_deadlines": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "label": {
+        "type": "string"
+       },
+       "date": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "label",
+       "date"
+      ]
+     }
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "other_deadlines": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "enum": [
+         "funding",
+         "proposal",
+         "other"
+        ]
+       },
+       "label": {
+        "type": "string"
+       },
+       "date": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "type",
+       "label",
+       "date"
+      ]
+     }
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "registration_display": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  },
+  "abstract_display": {
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string"
+    },
+    "evidence": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string"
+       },
+       "quote": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "url",
+       "quote"
+      ]
+     }
+    }
+   },
+   "required": [
+    "value",
+    "evidence"
+   ]
+  }
+ },
+ "required": [
+  "title",
+  "location",
+  "start_date",
+  "end_date",
+  "registration_deadlines",
+  "abstract_deadlines",
+  "other_deadlines",
+  "registration_display",
+  "abstract_display"
+ ]
+}

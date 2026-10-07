@@ -1,0 +1,486 @@
+name: "Claude: review and merge added conference"
+
+# Automatic second pass for PRs opened by claude-add-conference.yml.
+#
+#   gate             deterministic eligibility checks (no model)
+#   review           Claude re-extracts the facts from the meeting URL alone
+#                    ("blind": it never sees the issue body or the PR values)
+#   decide-and-merge deterministic comparison + evidence re-verification, then
+#                    merge. Anything unexpected -> comment + `needs-human`.
+#
+# Kill switch: set the repository variable AUTO_MERGE_CONFERENCE to `off`.
+# Issue authors must have author_association OWNER, MEMBER or COLLABORATOR.
+# Optional: AUTO_MERGE_TRUSTED_ISSUE_AUTHORS (comma-separated logins) adds more.
+#
+# All judging code is checked out from the base ref; the PR head is checked
+# out into a separate path and only its data file is read.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Per PR: a newer event for the same PR supersedes the older run (so no run is
+# ever silently dropped by an unrelated PR). The only repo-wide lane is the
+# `merge` job below, which must not race other merges.
+concurrency:
+  group: auto-merge-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    # Unrelated PRs (and forks, which have no write token) are left untouched.
+    if: >-
+      vars.AUTO_MERGE_CONFERENCE != 'off' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'claude/issue-')
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    outputs:
+      eligible: ${{ steps.result.outputs.eligible }}
+      issue_number: ${{ steps.result.outputs.issue_number }}
+      meeting_url: ${{ steps.result.outputs.meeting_url }}
+      head_sha: ${{ steps.result.outputs.head_sha }}
+      entry_id: ${{ steps.result.outputs.entry_id }}
+    steps:
+      - name: Check out the base ref (trusted code)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+          persist-credentials: false
+
+      - name: Check out the PR head (data only)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: head
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install -r base/requirements.txt
+
+      - name: Evaluate eligibility
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TRUSTED_LOGINS: ${{ vars.AUTO_MERGE_TRUSTED_ISSUE_AUTHORS }}
+        run: |
+          set -uo pipefail
+          w="$RUNNER_TEMP/gate"
+          mkdir -p "$w"
+
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" > "$w/pr.json" || echo '{}' > "$w/pr.json"
+          n="$(sed -nE 's#^claude/issue-([0-9]+)-[0-9]+$#\1#p' <<<"$HEAD_REF")"
+          echo '{}' > "$w/issue.json"
+          if [[ -n "$n" ]]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/$n" > "$w/issue.json" || echo '{}' > "$w/issue.json"
+          fi
+
+          # Raw git author fields: GitHub resolves this identity's email to the
+          # github-actions[bot] account, so the API login is not usable here.
+          git -C head log --format='%an%x1f%ae' "$BASE_SHA..$HEAD_SHA" > "$w/commits.txt"
+          mb="$(git -C head merge-base "$BASE_SHA" "$HEAD_SHA")"
+          git -C head diff --name-only "$mb" "$HEAD_SHA" > "$w/changed.txt"
+          git -C head show "$mb:data/conferences.yml" > "$w/base-data.yml"
+          git -C head show "$HEAD_SHA:data/conferences.yml" > "$w/head-data.yml"
+
+          python3 base/scripts/auto_merge_check.py gate \
+            --pr "$w/pr.json" --issue "$w/issue.json" \
+            --commits "$w/commits.txt" --changed-files "$w/changed.txt" \
+            --base-data "$w/base-data.yml" --head-data "$w/head-data.yml" \
+            --trusted-logins "$TRUSTED_LOGINS" \
+            --output "$w/gate.json"
+          if [[ ! -s "$w/gate.json" ]]; then
+            echo '{"eligible": false, "reasons": ["gate produced no result"], "issue_number": "", "meeting_url": "", "head_sha": "", "entry_id": "", "issue_comments": ""}' > "$w/gate.json"
+          fi
+          # A non-zero exit just means "not eligible"; the result file decides.
+          exit 0
+
+      # Judge the PR's data with the base ref's code and tests.
+      - name: Unit tests and scratch build on the PR head data
+        id: verify
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          cp -r base "$RUNNER_TEMP/verify"
+          cp "$RUNNER_TEMP/gate/head-data.yml" "$RUNNER_TEMP/verify/data/conferences.yml"
+          cd "$RUNNER_TEMP/verify"
+          python3 -m unittest discover -s tests
+          out="$(mktemp -d "$RUNNER_TEMP/build.XXXXXX")"
+          python3 scripts/build_calendar.py \
+            --markdown-output "$out/conference_calendar.md" \
+            --site-dir "$out/site"
+
+      - name: Publish the gate result
+        id: result
+        run: |
+          set -euo pipefail
+          g="$RUNNER_TEMP/gate/gate.json"
+          if [[ "${{ steps.verify.outcome }}" != "success" ]]; then
+            jq '.eligible = false | .reasons += ["unit tests or the scratch build failed on the PR head data"]' "$g" > "$g.tmp"
+            mv "$g.tmp" "$g"
+          fi
+          {
+            echo "eligible=$(jq -r '.eligible' "$g")"
+            echo "issue_number=$(jq -r '.issue_number' "$g")"
+            echo "meeting_url=$(jq -r '.meeting_url' "$g")"
+            echo "head_sha=$(jq -r '.head_sha' "$g")"
+            echo "entry_id=$(jq -r '.entry_id' "$g")"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "### Auto-merge gate"
+            echo
+            jq -r 'if .eligible then "Eligible for automatic review." else "Not eligible:\n" + (.reasons | map("- " + .) | join("\n")) end' "$g"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the gate result
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-json
+          path: ${{ runner.temp }}/gate/gate.json
+          if-no-files-found: error
+
+      # Also covers a crashed gate job (any earlier step failing), not just a
+      # clean "not eligible" verdict: a claude/issue- PR never ends silently.
+      - name: Comment and label when not eligible or failed
+        if: always() && (failure() || steps.result.outputs.eligible != 'true')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -uo pipefail
+          gh label create needs-human --force --color D93F0B \
+            --description "Automatic review did not merge this PR; a human must look" || true
+          if gh pr view "$PR_NUMBER" --json labels --jq '.labels[].name' | grep -qx needs-human; then
+            echo "needs-human already set; not commenting again."
+            exit 0
+          fi
+          if ! python3 base/scripts/auto_merge_check.py gate-comment \
+              --gate-json "$RUNNER_TEMP/gate/gate.json" > "$RUNNER_TEMP/gate-comment.md" 2>/dev/null \
+              || ! grep -q '^- ' "$RUNNER_TEMP/gate-comment.md"; then
+            echo "Automatic review could not run to completion (gate job failed); see the [run log]($RUN_URL). A human reviewer is still requested." > "$RUNNER_TEMP/gate-comment.md"
+          fi
+          gh pr comment "$PR_NUMBER" --body-file "$RUNNER_TEMP/gate-comment.md" || true
+          gh pr edit "$PR_NUMBER" --add-label needs-human || true
+
+  review:
+    needs: gate
+    if: needs.gate.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    # Read-only: the action is given github.token explicitly (github_token
+    # below), so it skips the OIDC exchange for the Claude-app write token and
+    # no id-token permission is needed.
+    permissions:
+      contents: read
+    steps:
+      # Base ref only: the checkout contains neither the PR's entry nor the
+      # issue text, which keeps the extraction blind.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Load the output schema
+        run: echo "REVIEW_SCHEMA=$(jq -c . .github/prompts/conference-blind-review.schema.json)" >> "$GITHUB_ENV"
+
+      # Accepted risk: a prompt-injected page could make the model leak the
+      # Claude OAuth token (Bash(curl:*) can reach the network). The verdict is
+      # treated purely as data and every claim is re-verified deterministically,
+      # so injection cannot cause a merge; the token is revocable.
+      - name: Blind re-extraction
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          show_full_output: false
+          # This run is triggered by a PR opened by the conference-calendar-bot
+          # App; claude-code-action refuses non-human actors unless allow-listed.
+          allowed_bots: "conference-calendar-bot[bot]"
+          claude_args: |
+            --allowedTools "Read,WebFetch,Bash(curl:*)"
+            --disallowedTools WebSearch,Edit,Write
+            --json-schema '${{ env.REVIEW_SCHEMA }}'
+          prompt: |
+            Read `.github/prompts/conference-blind-review.md` and follow it
+            exactly. The meeting's official URL is:
+
+            ${{ needs.gate.outputs.meeting_url }}
+
+      # claude-code-action v1 exposes the schema-validated result as the
+      # `structured_output` step output (a JSON string).
+      - name: Write the verdict
+        env:
+          VERDICT: ${{ steps.claude.outputs.structured_output }}
+          CONCLUSION: ${{ steps.claude.outputs.conclusion }}
+        run: |
+          set -euo pipefail
+          if [[ "$CONCLUSION" != "success" || -z "$VERDICT" ]]; then
+            echo "::error::Claude produced no structured verdict (conclusion=$CONCLUSION)."
+            exit 1
+          fi
+          printf '%s' "$VERDICT" > "$RUNNER_TEMP/verdict.json"
+          python3 -m json.tool "$RUNNER_TEMP/verdict.json" > /dev/null
+
+      - name: Upload the verdict
+        uses: actions/upload-artifact@v4
+        with:
+          name: verdict-json
+          path: ${{ runner.temp }}/verdict.json
+          if-no-files-found: error
+
+  # Deterministic comparison of the blind verdict with the PR entry. Not part
+  # of the repo-wide merge lane: it only reads.
+  compare:
+    needs: [gate, review]
+    if: needs.gate.result == 'success' && needs.gate.outputs.eligible == 'true' && needs.review.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      passed: ${{ steps.compare.outputs.passed }}
+    env:
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      HEAD_SHA: ${{ needs.gate.outputs.head_sha }}
+    steps:
+      # Current main: the judging code always comes from the base branch.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Download the gate result and the verdict
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/artifacts
+
+      - name: Fetch the PR head and check it is the reviewed commit
+        run: |
+          set -euo pipefail
+          git fetch origin "+refs/heads/$HEAD_REF:refs/remotes/origin/pr-head"
+          actual="$(git rev-parse refs/remotes/origin/pr-head)"
+          if [[ "$actual" != "$HEAD_SHA" ]]; then
+            echo "The PR head moved after review ($actual, reviewed $HEAD_SHA)." > "$RUNNER_TEMP/table.md"
+            exit 1
+          fi
+          git show "$HEAD_SHA:data/conferences.yml" > "$RUNNER_TEMP/head.yml"
+
+      - name: Compare the reviewer's verdict with the PR entry
+        id: compare
+        run: |
+          set -uo pipefail
+          python3 scripts/auto_merge_check.py compare \
+            --gate-json "$RUNNER_TEMP/artifacts/gate-json/gate.json" \
+            --head-data "$RUNNER_TEMP/head.yml" \
+            --verdict "$RUNNER_TEMP/artifacts/verdict-json/verdict.json" \
+            --table-output "$RUNNER_TEMP/table.md" | tee -a "$GITHUB_STEP_SUMMARY"
+          rc="${PIPESTATUS[0]}"
+          if [[ "$rc" == "0" ]]; then echo "passed=true" >> "$GITHUB_OUTPUT"; fi
+          exit "$rc"
+
+      - name: Upload the comparison table
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: table-md
+          path: ${{ runner.temp }}/table.md
+          if-no-files-found: ignore
+
+  # Everything that touches main. Repo-wide lane: merges never race each other.
+  merge:
+    needs: [gate, compare]
+    if: needs.compare.result == 'success' && needs.compare.outputs.passed == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: auto-merge-main
+      cancel-in-progress: false
+    permissions:
+      contents: read
+    outputs:
+      merged: ${{ steps.merge.outputs.merged }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      HEAD_SHA: ${{ needs.gate.outputs.head_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Download the gate result
+        uses: actions/download-artifact@v4
+        with:
+          name: gate-json
+          path: ${{ runner.temp }}/artifacts/gate-json
+
+      # Re-verify against *current* main: it may have moved since the gate ran.
+      - name: Re-verify the PR merged into current main
+        run: |
+          set -euo pipefail
+          fail() { echo "$*" | tee "$RUNNER_TEMP/failure.txt"; exit 1; }
+
+          git fetch origin "+refs/heads/$HEAD_REF:refs/remotes/origin/pr-head"
+          [[ "$(git rev-parse refs/remotes/origin/pr-head)" == "$HEAD_SHA" ]] \
+            || fail "The PR head moved after review."
+          git fetch origin main
+          git config user.name "claude[bot]"
+          git config user.email "41898282+claude[bot]@users.noreply.github.com"
+          m="$RUNNER_TEMP/merged"
+          git worktree add --detach "$m" origin/main
+          cd "$m"
+          git merge --no-ff --no-commit "$HEAD_SHA" > "$RUNNER_TEMP/merge.log" 2>&1 \
+            || fail "The PR does not merge cleanly into current main: $(tail -n 5 "$RUNNER_TEMP/merge.log")"
+
+          changed="$(git diff --cached --name-only origin/main)"
+          [[ "$changed" == "data/conferences.yml" ]] \
+            || fail "Merged result changes files other than data/conferences.yml: $changed"
+
+          git show origin/main:data/conferences.yml > "$RUNNER_TEMP/main.yml"
+          python3 "$GITHUB_WORKSPACE/scripts/auto_merge_check.py" diff-check \
+            --gate-json "$RUNNER_TEMP/artifacts/gate-json/gate.json" \
+            --base-data "$RUNNER_TEMP/main.yml" --head-data "$m/data/conferences.yml" \
+            > "$RUNNER_TEMP/diff-check.log" 2>&1 \
+            || fail "Scope/uniqueness checks failed on the merged tree: $(cat "$RUNNER_TEMP/diff-check.log")"
+
+          python3 -m unittest discover -s tests > "$RUNNER_TEMP/tests.log" 2>&1 \
+            || fail "Unit tests fail on the merged tree: $(tail -n 15 "$RUNNER_TEMP/tests.log")"
+          out="$(mktemp -d "$RUNNER_TEMP/build.XXXXXX")"
+          python3 scripts/build_calendar.py \
+            --markdown-output "$out/conference_calendar.md" --site-dir "$out/site" \
+            > "$RUNNER_TEMP/build.log" 2>&1 \
+            || fail "Scratch build fails on the merged tree: $(tail -n 15 "$RUNNER_TEMP/build.log")"
+
+      # Minted right before use (tokens last an hour; the review can be slow).
+      # The merge is done as the App, not GITHUB_TOKEN, so that the resulting
+      # push to main triggers deploy-pages (GITHUB_TOKEN pushes do not).
+      - name: Mint calendar-bot installation token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CALENDAR_BOT_APP_ID }}
+          private-key: ${{ secrets.CALENDAR_BOT_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Mark ready and merge
+        id: merge
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -uo pipefail
+          err="$RUNNER_TEMP/failure.txt"
+          info="$(gh pr view "$PR_NUMBER" --json state,isDraft,baseRefName,headRefOid 2>&1)" \
+            || { echo "gh pr view failed: $info" > "$err"; exit 1; }
+          [[ "$(jq -r .state <<<"$info")" == "OPEN" && "$(jq -r .baseRefName <<<"$info")" == "main" \
+             && "$(jq -r .headRefOid <<<"$info")" == "$HEAD_SHA" ]] \
+            || { echo "PR is not open, not targeting main, or its head changed: $info" > "$err"; exit 1; }
+          if [[ "$(jq -r .isDraft <<<"$info")" == "true" ]]; then
+            gh pr ready "$PR_NUMBER" > "$err" 2>&1 || exit 1
+          fi
+          gh pr merge "$PR_NUMBER" --merge --match-head-commit "$HEAD_SHA" > "$err" 2>&1 || exit 1
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload failure detail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: merge-failure
+          path: ${{ runner.temp }}/failure.txt
+          if-no-files-found: ignore
+
+  # Fail-closed reporting: success is claimed only when the merge job
+  # succeeded AND its `merged` output says the merge happened. Failed,
+  # cancelled or skipped stages all end in a comment and `needs-human`.
+  report:
+    needs: [gate, review, compare, merge]
+    if: always() && needs.gate.result == 'success' && needs.gate.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      REVIEW_RESULT: ${{ needs.review.result }}
+      COMPARE_RESULT: ${{ needs.compare.result }}
+      MERGE_RESULT: ${{ needs.merge.result }}
+      MERGED: ${{ needs.merge.outputs.merged }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Download the table and failure detail
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/artifacts
+
+      - name: Comment and label
+        run: |
+          set -uo pipefail
+          body="$RUNNER_TEMP/report.md"
+          table="$RUNNER_TEMP/artifacts/table-md/table.md"
+          failure="$RUNNER_TEMP/artifacts/merge-failure/failure.txt"
+
+          if [[ "$MERGE_RESULT" == "success" && "$MERGED" == "true" ]]; then
+            { echo "Blind review matched the PR entry field by field; **auto-merged**."; echo; cat "$table" 2>/dev/null; } > "$body"
+            gh pr comment "$PR_NUMBER" --body-file "$body" || true
+            gh pr edit "$PR_NUMBER" --remove-label needs-human || true
+            exit 0
+          fi
+
+          if [[ "$REVIEW_RESULT" != "success" ]]; then
+            why="the blind review stage ended as '$REVIEW_RESULT' (no usable verdict)."
+          elif [[ "$COMPARE_RESULT" != "success" ]]; then
+            why="the comparison stage ended as '$COMPARE_RESULT': the reviewer's extraction does not match the PR entry, its evidence could not be verified, or the stage did not finish."
+          elif [[ "$MERGE_RESULT" != "success" ]]; then
+            why="the merge stage ended as '$MERGE_RESULT': re-verification against current main failed, or merging was refused or cancelled."
+          else
+            why="the merge stage finished without confirming a merge."
+          fi
+
+          gh label create needs-human --force --color D93F0B \
+            --description "Automatic review did not merge this PR; a human must look" || true
+          already=false
+          gh pr view "$PR_NUMBER" --json labels --jq '.labels[].name' | grep -qx needs-human && already=true
+          if [[ "$already" == "false" ]]; then
+            {
+              echo "Automatic review did **not** merge this PR: $why A human reviewer is still requested. ([run log]($RUN_URL))"
+              if [[ -s "$table" ]]; then echo; cat "$table"; fi
+              if [[ -s "$failure" ]]; then echo; echo "~~~~"; head -c 3000 "$failure"; echo; echo "~~~~"; fi
+            } > "$body"
+            gh pr comment "$PR_NUMBER" --body-file "$body" || true
+          fi
+          gh pr edit "$PR_NUMBER" --add-label needs-human || true

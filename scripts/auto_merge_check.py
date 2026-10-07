@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import ipaddress
 import json
 import re
 import ssl
@@ -27,7 +28,8 @@ import sys
 import unicodedata
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Callable
@@ -101,6 +103,8 @@ def parse_issue_body(body: str) -> IssueFields:
     parts = urlsplit(url)
     if not parts.hostname or "@" in parts.netloc:
         raise CheckError("the URL has no usable host or contains credentials")
+    if not is_public_hostname(parts.hostname):
+        raise CheckError("the URL host is an IP address, localhost or not a public domain name")
 
     comments = text[comment_header.end():].strip()
     return IssueFields(url=url, comments=comments)
@@ -124,6 +128,9 @@ MULTI_SUFFIXES = frozenset(
     "co.jp ac.jp or.jp co.kr ac.kr com.br co.in ac.in edu.tw com.tw org.tw com.hk edu.hk "
     "co.za ac.za".split()
 )
+# Generic rule: under a 2-letter ccTLD these second-level labels are part of the public suffix
+# (a.ac.nz and b.ac.nz are different sites), even when MULTI_SUFFIXES does not list the pair.
+CC_SECOND_LEVEL = frozenset("ac co com edu gov net org or ne go gob nic mil sch res".split())
 # Platforms where unrelated projects share a registrable domain: require the
 # exact host there.
 SHARED_PLATFORMS = frozenset(
@@ -131,6 +138,22 @@ SHARED_PLATFORMS = frozenset(
     "blogspot.com notion.site netlify.app pages.dev vercel.app herokuapp.com weebly.com "
     "squarespace.com gitlab.io readthedocs.io".split()
 )
+# Shared hosts where the tenant is the leading path (not the subdomain): the first N path segments
+# (e.g. /view/<site-id>) must match too.
+PATH_TENANTED = {"sites.google.com": 2, "raw.githubusercontent.com": 2}
+
+
+def is_public_hostname(host: str | None) -> bool:
+    """Reject IP literals (any notation), localhost and single-label names."""
+    host = (host or "").lower().rstrip(".")
+    if not host or "." not in host or host == "localhost" or host.endswith(".localhost"):
+        return False
+    try:
+        ipaddress.ip_address(host)
+        return False
+    except ValueError:
+        pass
+    return not host.rsplit(".", 1)[1].isdigit()  # 127.1, 2130706433 and similar
 
 
 def host_of(url: str) -> str:
@@ -140,7 +163,10 @@ def host_of(url: str) -> str:
 
 def registrable_domain(host: str) -> str:
     labels = host.split(".")
-    if len(labels) >= 3 and ".".join(labels[-2:]) in MULTI_SUFFIXES:
+    if len(labels) >= 3 and (
+        ".".join(labels[-2:]) in MULTI_SUFFIXES
+        or (len(labels[-1]) == 2 and labels[-1].isalpha() and labels[-2] in CC_SECOND_LEVEL)
+    ):
         return ".".join(labels[-3:])
     return ".".join(labels[-2:])
 
@@ -152,6 +178,17 @@ def same_site(host_a: str, host_b: str) -> bool:
     if reg != registrable_domain(host_b):
         return False
     return host_a == host_b if reg in SHARED_PLATFORMS else True
+
+
+def tenant_prefix(url: str) -> tuple[str, ...]:
+    """Leading path segments that identify the tenant on path-tenanted hosts (else empty)."""
+    n = PATH_TENANTED.get(host_of(url), 0)
+    return tuple(seg.casefold() for seg in urlsplit(url).path.split("/") if seg)[:n] if n else ()
+
+
+def same_site_url(url_a: str, url_b: str) -> bool:
+    """same_site on the hosts, plus equal tenant path prefix on path-tenanted hosts."""
+    return same_site(host_of(url_a), host_of(url_b)) and tenant_prefix(url_a) == tenant_prefix(url_b)
 
 
 # --------------------------------------------------------------------------
@@ -260,6 +297,8 @@ def check_diff(
         errors.append("entry comments differ from the issue's comments field")
     if not conf.url or not host_of(conf.url) or host_of(conf.url) != host_of(issue_url):
         errors.append("entry url host differs from the issue URL host")
+    elif tenant_prefix(conf.url) != tenant_prefix(issue_url):
+        errors.append("entry url is a different site on the same shared host as the issue URL")
     if conf.start_date is not None and conf.end_date is not None and conf.start_date > conf.end_date:
         errors.append("start_date is after end_date")
     if conf.end_date is not None and conf.end_date < today:
@@ -402,6 +441,8 @@ def http_fetch(url: str, timeout: int = 30, max_bytes: int = 8_000_000) -> tuple
     parts = urlsplit(url)
     if parts.scheme not in ("http", "https"):
         raise CheckError("only http(s) URLs can be fetched")
+    if not is_public_hostname(parts.hostname):
+        raise CheckError("refusing to fetch an IP address, localhost or non-public host")
     ctx = None
     if (parts.hostname or "") == "astronomy.pmo.cas.cn":  # known self-signed certificate (AGENTS.md)
         ctx = ssl.create_default_context()
@@ -419,7 +460,10 @@ def http_fetch(url: str, timeout: int = 30, max_bytes: int = 8_000_000) -> tuple
         raise CheckError(f"could not fetch {url}: {exc}") from exc
     if len(data) > max_bytes:
         raise CheckError(f"{url} is larger than {max_bytes} bytes")
-    return final_url, data.decode(charset, errors="replace")
+    try:
+        return final_url, data.decode(charset, errors="replace")
+    except LookupError:  # unknown charset name in the response headers
+        return final_url, data.decode("utf-8", errors="replace")
 
 
 @dataclass
@@ -427,18 +471,20 @@ class EvidenceResult:
     ok: bool
     quotes: list[str]
     problems: list[str]
+    orders: list[str | None] = field(default_factory=list)  # slash-date convention of each quote's page
 
 
 class EvidenceVerifier:
     def __init__(self, allowed_urls: list[str], fetch: Fetcher = http_fetch):
-        self.allowed_hosts = [h for h in (host_of(u) for u in allowed_urls) if h]
+        self.allowed_urls = [u for u in allowed_urls if is_public_hostname(urlsplit(u).hostname)]
         self.fetch = fetch
         self.cache: dict[str, str | CheckError] = {}
         self.verified_quotes: list[str] = []
 
     def _allowed(self, url: str) -> bool:
         parts = urlsplit(url)
-        return parts.scheme in ("http", "https") and any(same_site(host_of(url), h) for h in self.allowed_hosts)
+        return (parts.scheme in ("http", "https") and is_public_hostname(parts.hostname)
+                and any(same_site_url(url, a) for a in self.allowed_urls))
 
     def _page(self, url: str) -> str:
         if url not in self.cache:
@@ -472,11 +518,17 @@ class EvidenceVerifier:
                 out |= tokens(html_to_text(page))
         return frozenset(out)
 
+    def slash_order(self, url: str) -> str | None:
+        """Slash-date convention of a fetched page ("dmy", "mdy" or None when it does not say)."""
+        page = self.cache.get(url)
+        return slash_convention(page) if isinstance(page, str) else None
+
     def verify(self, evidence: object) -> EvidenceResult:
         problems: list[str] = []
         quotes: list[str] = []
+        orders: list[str | None] = []
         if not isinstance(evidence, list) or not evidence:
-            return EvidenceResult(False, [], ["no evidence given"])
+            return EvidenceResult(False, [], ["no evidence given"], [])
         for item in evidence:
             if not isinstance(item, dict) or not isinstance(item.get("url"), str) or not isinstance(item.get("quote"), str):
                 problems.append("malformed evidence item")
@@ -492,10 +544,11 @@ class EvidenceVerifier:
                 continue
             if quote_in_page(quote, page):
                 quotes.append(quote)
+                orders.append(self.slash_order(url))
                 self.verified_quotes.append(quote)
             else:
                 problems.append(f"quote not found at {url}: {quote[:60]!r}")
-        return EvidenceResult(not problems, quotes, problems)
+        return EvidenceResult(not problems, quotes, problems, orders)
 
 
 # --------------------------------------------------------------------------
@@ -549,10 +602,6 @@ def location_match(pr: str, reviewer: str) -> bool:
     return tr <= tp
 
 
-def text_fields_match(a: str, b: str) -> bool:
-    return title_match(a, b)
-
-
 def digit_runs(value: str) -> set[str]:
     return {str(int(run)) for run in re.findall(r"\d+", value)}
 
@@ -578,44 +627,113 @@ def _iso(value: object) -> str | None:
         return None
 
 
+def _slash_readings(m: re.Match, slash_order: str | None) -> list[tuple[str, str, str]]:
+    """Readings (y, m, d) of a/b/YYYY. Ambiguous (both <= 12, different) only with a known page convention."""
+    a, b = int(m[1]), int(m[2])
+    if a == b or a > 12 or slash_order == "dmy":
+        return [(m[3], m[2], m[1])]
+    if b > 12 or slash_order == "mdy":
+        return [(m[3], m[1], m[2])]
+    return []
+
+
 _NUMERIC_DATES = (
-    (re.compile(r"(?<!\d)(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)"), lambda m: [(m[1], m[2], m[3])]),
-    (re.compile(r"(?<!\d)(\d{1,2})\.(\d{1,2})\.(\d{4})(?!\d)"), lambda m: [(m[3], m[2], m[1])]),
-    (re.compile(r"(?<!\d)(\d{1,2})/(\d{1,2})/(\d{4})(?!\d)"), lambda m: [(m[3], m[2], m[1]), (m[3], m[1], m[2])]),
+    (re.compile(r"(?<!\d)(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)"), lambda m, so: [(m[1], m[2], m[3])]),
+    (re.compile(r"(?<!\d)(\d{1,2})\.(\d{1,2})\.(\d{4})(?!\d)"), lambda m, so: [(m[3], m[2], m[1])]),
+    (re.compile(r"(?<!\d)(\d{1,2})/(\d{1,2})/(\d{4})(?!\d)"), _slash_readings),
     # Same-month day range "D1-D2/M/YYYY" or "D1-D2.M.YYYY": supports exactly its two endpoints. Only the
-    # day-first reading applies (the range sits on the first component, so M/D cannot be meant); middle
-    # days are not supported. Lookbehind on digits and "-" keeps it out of ISO dates and longer digit runs.
+    # day-first reading applies (the range sits on the first component, so M/D cannot be meant), and a
+    # slash range is refused on a page whose slash dates are month-first; middle days are not supported.
+    # Lookbehind on digits and "-" keeps it out of ISO dates and longer digit runs.
     (
         re.compile(r"(?<![\d-])(\d{1,2}) ?- ?(\d{1,2})([/.])(\d{1,2})\3(\d{4})(?!\d)"),
-        lambda m: [(m[5], m[4], m[1]), (m[5], m[4], m[2])],
+        lambda m, so: [] if (m[3] == "/" and so == "mdy") else [(m[5], m[4], m[1]), (m[5], m[4], m[2])],
     ),
 )
+_SLASH_DATE_RE = re.compile(r"(?<!\d)(\d{1,2})/(\d{1,2})/(?:19|20)\d{2}(?!\d)")
 
 
 def has_numeric_date(text: str) -> bool:
     return any(pattern.search(text) for pattern, _ in _NUMERIC_DATES)
 
 
-def quote_supports_date(quote: str, iso: str) -> bool:
-    """The quote must carry the day and month (name or numeric) and no conflicting year."""
+def slash_convention(page: str) -> str | None:
+    """"dmy" / "mdy" when the page's own a/b/YYYY dates prove the order, else None (ambiguous)."""
+    first_big = second_big = False
+    for m in _SLASH_DATE_RE.finditer(html_to_text(page) + " " + normalize_text(page)):
+        a, b = int(m[1]), int(m[2])
+        if a > 31 or b > 31 or (a > 12 and b > 12):
+            continue
+        first_big |= a > 12
+        second_big |= b > 12
+    if first_big and not second_big:
+        return "dmy"
+    if second_big and not first_big:
+        return "mdy"
+    return None
+
+
+_ORD = r"(?:st|nd|rd|th)?"
+_NUM = r"(?<!\d)\d{1,2}" + _ORD
+
+
+def _month_name_patterns(d: int, names: tuple[str, ...]) -> list[str]:
+    """Day and month name adjacent ("15 March", "15th of March", "March 15", "11-15 October", "October 11-15")."""
+    mon = r"(?<![a-z])(?:%s)\.?(?![a-z])" % "|".join(names)
+    day = r"(?<!\d)%d%s(?!\d)" % (d, _ORD)
+    rng = r"\s*-\s*"
+    return [
+        rf"{day}(?:{rng}{_NUM}(?!\d))?\s*(?:of\s+)?{mon}",
+        rf"{_NUM}(?!\d){rng}{day}\s*(?:of\s+)?{mon}",
+        rf"{mon}\s*{day}(?:{rng}{_NUM}(?!\d))?",
+        rf"{mon}\s*{_NUM}(?!\d){rng}{day}",
+    ]
+
+
+def _chinese_patterns(mo: int, d: int) -> list[str]:
+    day = r"(?<!\d)%d(?!\d)" % d
+    other = r"\d{1,2}(?!\d)"
+    rng = r"\s*-\s*"
+    return [rf"(?<!\d){mo}\s*月\s*{day}(?:{rng}{other})?", rf"(?<!\d){mo}\s*月\s*{other}{rng}{day}"]
+
+
+def quote_supports_date(quote: str, iso: str, slash_order: str | None = None) -> bool:
+    """The quote must carry the full date: day, month (adjacent to the day) and the year.
+
+    slash_order is the page's slash-date convention ("dmy"/"mdy"); None means unknown, in which
+    case an ambiguous a/b/YYYY (both parts <= 12, different) supports nothing.
+    """
     y, mo, d = (int(x) for x in iso.split("-"))
     q = normalize_text(quote)
-    years = {int(x) for x in re.findall(r"(?<!\d)((?:19|20)\d{2})(?!\d)", q)}
-    if years and y not in years:
-        return False
     for pattern, expand in _NUMERIC_DATES:
         for m in pattern.finditer(q):
-            if any(int(a) == y and int(b) == mo and int(c) == d for a, b, c in expand(m)):
+            if any(int(a) == y and int(b) == mo and int(c) == d for a, b, c in expand(m, slash_order)):
                 return True
-    if str(d) not in digit_runs(q):
+    if y not in {int(x) for x in re.findall(r"(?<!\d)((?:19|20)\d{2})(?!\d)", q)}:
         return False
-    if re.search(r"(?<!\d)%d\s*月" % mo, q):
+    patterns = _month_name_patterns(d, MONTHS[mo]) + _chinese_patterns(mo, d)
+    return any(re.search(p, q) for p in patterns)
+
+
+def _dates_supported(dates: set[str], quotes: list[str], orders: list[str | None] | None = None) -> bool:
+    orders = orders if orders is not None and len(orders) == len(quotes) else [None] * len(quotes)
+    return all(not d or any(quote_supports_date(q, d, o) for q, o in zip(quotes, orders)) for d in dates)
+
+
+_GENERIC_LABEL_WORDS = frozenset("deadline deadlines date dates the".split())
+
+
+def _stem(token: str) -> str:
+    return re.sub(r"(?:ions|ion|s)$", "", token) if len(token) > 4 else token
+
+
+def label_supported(label: str, quotes: list[str]) -> bool:
+    """At least half of the label's content words (suffix-normalised) occur in the field's verified quotes."""
+    wanted = {_stem(t) for t in content_tokens(label) if t not in _GENERIC_LABEL_WORDS}
+    if not wanted:
         return True
-    return any(re.search(r"(?<![a-z])%s(?![a-z])" % name, q) for name in MONTHS[mo])
-
-
-def _dates_supported(dates: set[str], quotes: list[str]) -> bool:
-    return all(not d or any(quote_supports_date(q, d) for q in quotes) for d in dates)
+    have = {_stem(t) for t in content_tokens(" ".join(normalize_text(q) for q in quotes))}
+    return len(wanted & have) / len(wanted) >= 0.5
 
 
 @dataclass
@@ -648,7 +766,8 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
 
     def finish(name: str, pr_val: object, rev_val: object, equal: bool, relied: bool, evidence: object,
                date_set: set[str] | None = None, text_for_share: str | None = None,
-               page_fallback: frozenset[str] | None = None) -> None:
+               page_fallback: frozenset[str] | None = None, labels: list[str] | None = None,
+               extra_tokens: frozenset[str] | None = None) -> None:
         pr_s, rev_s = _fmt(pr_val), _fmt(rev_val)
         if not equal:
             rows.append(Row(name, pr_s, rev_s, False, "values differ"))
@@ -659,8 +778,14 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
         res = verifier.verify(evidence)
         if not res.ok:
             rows.append(Row(name, pr_s, rev_s, False, "evidence not verified: " + "; ".join(res.problems)))
-        elif date_set is not None and not _dates_supported(date_set, res.quotes):
+        elif date_set is not None and not _dates_supported(date_set, res.quotes, res.orders):
             rows.append(Row(name, pr_s, rev_s, False, "no verified quote carries each date's day, month and year"))
+        elif (bad_label := next((l for l in labels or [] if not label_supported(l, res.quotes)), None)) is not None:
+            rows.append(Row(name, pr_s, rev_s, False, f"label not supported by evidence: {bad_label!r}"))
+        elif extra_tokens and not extra_tokens <= (
+                tokens(" ".join(normalize_text(q) for q in res.quotes)) | verifier.page_tokens()):
+            rows.append(Row(name, pr_s, rev_s, False,
+                            "PR words without evidence: " + ", ".join(sorted(extra_tokens - verifier.page_tokens()))))
         elif text_for_share is not None and _share_in_quotes(text_for_share, res.quotes) < SHARE_THRESHOLD:
             if page_fallback is not None and page_fallback <= verifier.page_tokens():
                 # The quotes verify but cite the wrong line; every word is on a fetched official page.
@@ -690,7 +815,8 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
         # Page-wide token coverage is stronger than the per-quote share, so it replaces it.
         finish(name, pr_val, rev_val, equal, bool(tokens(pr_val) or tokens(rev_val)), evidence,
                text_for_share=None if page_wide else rev_val,
-               page_fallback=(tokens(pr_val) | tokens(rev_val)) if name == "title" else None)
+               page_fallback=(tokens(pr_val) | tokens(rev_val)) if name == "title" else None,
+               extra_tokens=(content_tokens(pr_val) - content_tokens(rev_val)) if name == "location" else None)
 
     for name, pr_val in (("start_date", conf.start_date), ("end_date", conf.end_date)):
         got = field_of(name)
@@ -719,23 +845,24 @@ def compare_verdict(conf: Conference, verdict: object, verifier: EvidenceVerifie
             rows.append(Row(name, "", str(rev_val)[:100], False, "malformed reviewer deadlines"))
             continue
         pr_dates = {d.date.isoformat() for d in pr_list}
-        finish(name, pr_dates, rev_dates, pr_dates == rev_dates, bool(pr_dates or rev_dates), evidence, pr_dates | rev_dates)
+        finish(name, pr_dates, rev_dates, pr_dates == rev_dates, bool(pr_dates or rev_dates), evidence, pr_dates | rev_dates,
+               labels=[d.label for d in pr_list])
 
     got = field_of("other_deadlines")
     if got is not None:
         rev_val, evidence = got
         try:
-            rev_set = {(d["type"], _iso(d["date"])) for d in rev_val}
+            rev_set = Counter((d["type"], _iso(d["date"])) for d in rev_val)
             valid = isinstance(rev_val, list) and all(d[1] is not None for d in rev_set)
         except (TypeError, KeyError):
             valid = False
         if not valid:
             rows.append(Row("other_deadlines", "", str(rev_val)[:100], False, "malformed reviewer deadlines"))
         else:
-            pr_set = {(d.type, d.date.isoformat() if d.date else "") for d in conf.other_deadlines}
-            fmt = lambda s: {f"{t}:{d or 'undated'}" for t, d in s}
+            pr_set = Counter((d.type, d.date.isoformat() if d.date else "") for d in conf.other_deadlines)
+            fmt = lambda s: [f"{t}:{d or 'undated'}" for t, d in s.elements()]
             finish("other_deadlines", fmt(pr_set), fmt(rev_set), pr_set == rev_set, bool(pr_set or rev_set), evidence,
-                   {d for _, d in pr_set | rev_set})
+                   {d for _, d in (pr_set + rev_set)}, labels=[d.label for d in conf.other_deadlines])
 
     for name, pr_text in (("registration_display", conf.registration_display), ("abstract_display", conf.abstract_display)):
         got = field_of(name)
@@ -822,9 +949,9 @@ def cmd_diff_check(args: argparse.Namespace) -> int:
 
 
 def cmd_compare(args: argparse.Namespace) -> int:
-    gate = _load_json(args.gate_json)
     rows: list[Row]
     try:
+        gate = _load_json(args.gate_json)
         conf = next((c for c in load_conferences(args.head_data) if c.id == gate["entry_id"]), None)
         if conf is None:
             raise CheckError("reviewed entry not found in the PR data")
@@ -833,6 +960,8 @@ def cmd_compare(args: argparse.Namespace) -> int:
         rows = compare_verdict(conf, verdict, verifier)
     except (CheckError, ValidationError, OSError, ValueError) as exc:
         rows = [Row("review", "", "", False, f"comparison could not run: {exc}")]
+    except Exception as exc:  # fail closed, but still leave a result table behind
+        rows = [Row("review", "", "", False, f"comparison crashed: {type(exc).__name__}")]
     table = render_table(rows)
     Path(args.table_output).write_text(table, encoding="utf-8")
     print(table)

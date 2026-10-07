@@ -175,8 +175,10 @@ the full table.
   (`scripts/auto_merge_check.py`) checks provenance and the diff; a blind
   reviewer (`.github/prompts/conference-blind-review.md`) re-extracts the facts
   from the meeting URL alone, with verbatim evidence quotes; the script
-  re-fetches the quotes, compares them with the entry, and merges only on a
-  full match. Anything else gets a comment and the `needs-human` label. Set the
+  re-fetches the quotes, compares them with the entry, and merges only if every
+  field's value is equal (or within the documented tolerance) and every date is
+  backed by a re-fetched verbatim quote carrying its day, month and year.
+  Anything else gets a comment and the `needs-human` label. Set the
   repo variable `AUTO_MERGE_CONFERENCE` to `off` to disable it.
 - **By hand:** a human invokes `.github/prompts/conference-data-reviewer.md`
   to fact-check and repair changed entries. Follow that file; the shared rules

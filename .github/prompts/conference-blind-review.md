@@ -46,9 +46,15 @@ Procedure:
    least 10 if it contains a full numeric date such as `30/04/2027`; ideally
    one line) copied from that page's visible text, or from its raw HTML or
    embedded JSON if that is where you found the fact. It must contain the
-   day and month of every date it supports, ideally together with the label
-   text next to it (e.g. `30/04/2027: Deadline for registration`); a bare
-   date is accepted only if it is a full numeric date. Do not paraphrase, translate,
+   day, month and year of every date it supports, exactly as the page writes
+   them (the day next to the month name, e.g. `15 March 2027` or
+   `March 15, 2027`), ideally together with the label text next to it (e.g.
+   `30/04/2027: Deadline for registration`); a bare date is accepted only if
+   it is a full numeric date. If the page states a date without a year next
+   to it, quote enough of the line or heading that the year is in the quote;
+   if that is impossible, still report the value (the script will route the
+   PR to a human). Slash dates such as `04/05/2027` are only accepted when the
+   page itself shows the day/month order elsewhere. Do not paraphrase, translate,
    reformat dates or join separate passages into one quote. A script
    re-fetches each URL and searches for your quote; any quote it cannot find
    makes the whole review fail. Empty values use `evidence: []`.

@@ -334,11 +334,79 @@ class ComparisonTests(unittest.TestCase):
         self.assertTrue(q("deadline 15.11.2026", "2026-11-15"))
         self.assertTrue(q("deadline 15/11/2026", "2026-11-15"))
         self.assertTrue(q("deadline 11/15/2026", "2026-11-15"))
-        self.assertTrue(q("March 15 (final deadline)", "2026-03-15"))
+        self.assertTrue(q("March 15, 2026 (final deadline)", "2026-03-15"))
+        self.assertFalse(q("March 15 (final deadline)", "2026-03-15"))  # no year in the quote
+        self.assertFalse(q("15 March (final deadline)", "2026-03-15"))
         self.assertFalse(q("deadline 15 November 2025", "2026-11-15"))  # conflicting year
         self.assertFalse(q("deadline 15 December 2026", "2026-11-15"))  # wrong month
         self.assertFalse(q("deadline 16 November 2026", "2026-11-15"))  # wrong day
         self.assertFalse(q("deadline 16/11/2026", "2026-11-15"))
+
+    def test_month_name_and_day_must_be_adjacent(self):
+        q = amc.quote_supports_date
+        mixed = "Early registration 10 March 2027; abstracts 25 April 2027"
+        self.assertTrue(q(mixed, "2027-03-10"))
+        self.assertTrue(q(mixed, "2027-04-25"))
+        self.assertFalse(q(mixed, "2027-04-10"))
+        self.assertFalse(q(mixed, "2027-03-25"))
+        self.assertFalse(q("Abstracts may be submitted until 15 April 2027", "2027-05-15"))
+        self.assertTrue(q("Abstracts may be submitted until 15 April 2027", "2027-04-15"))
+        self.assertTrue(q("deadline: may 15, 2027", "2027-05-15"))
+        self.assertTrue(q("15th of March 2027", "2027-03-15"))
+        self.assertTrue(q("March 15th, 2027", "2027-03-15"))
+        self.assertFalse(q("March 150 2027", "2027-03-15"))
+        self.assertFalse(q("March 2027, room 15", "2027-03-15"))
+        for text in ("11-15 October 2027", "October 11-15, 2027", "11 - 15 oct 2027"):
+            with self.subTest(text=text):
+                self.assertTrue(q(text, "2027-10-11"))
+                self.assertTrue(q(text, "2027-10-15"))
+                self.assertFalse(q(text, "2027-10-13"))
+        self.assertTrue(q("2027年10月11日", "2027-10-11"))
+        self.assertFalse(q("2027年10月 开会，11日报到", "2027-10-11"))
+        self.assertFalse(q("10月11日", "2027-10-11"))  # no year
+
+    def test_slash_date_convention(self):
+        q = amc.quote_supports_date
+        self.assertFalse(q("04/05/2027", "2027-05-04"))
+        self.assertFalse(q("04/05/2027", "2027-04-05"))
+        self.assertTrue(q("04/05/2027", "2027-05-04", "dmy"))
+        self.assertFalse(q("04/05/2027", "2027-04-05", "dmy"))
+        self.assertTrue(q("04/05/2027", "2027-04-05", "mdy"))
+        self.assertFalse(q("04/05/2027", "2027-05-04", "mdy"))
+        self.assertTrue(q("05/05/2027", "2027-05-05"))  # a == b is unambiguous
+        self.assertTrue(q("13/05/2027", "2027-05-13"))
+        self.assertTrue(q("05/13/2027", "2027-05-13"))
+        self.assertTrue(q("11-15/10/2027", "2027-10-11"))
+        self.assertTrue(q("11-15/10/2027", "2027-10-11", "dmy"))
+        self.assertFalse(q("11-15/10/2027", "2027-10-11", "mdy"))
+        self.assertTrue(q("11-15.10.2027", "2027-10-11", "mdy"))  # dotted dates are day-first by convention
+
+    def test_slash_convention_from_page(self):
+        day_first = (FIXTURES / "slash_dates_day_first.html").read_text(encoding="utf-8")
+        ambiguous = (FIXTURES / "slash_dates_ambiguous.html").read_text(encoding="utf-8")
+        self.assertEqual(amc.slash_convention(day_first), "dmy")
+        self.assertIsNone(amc.slash_convention(ambiguous))
+        self.assertEqual(amc.slash_convention("<p>12/31/2026 and 01/05/2027</p>"), "mdy")
+        self.assertIsNone(amc.slash_convention("<p>31/10/2026 and 12/31/2026</p>"))  # conflicting evidence
+
+    def verifier_for(self, page):
+        return amc.EvidenceVerifier([self.URL], fetch=lambda u: (u, page))
+
+    def test_ambiguous_slash_quote_goes_through_page_convention(self):
+        for fixture, passes in (("slash_dates_day_first.html", True), ("slash_dates_ambiguous.html", False)):
+            with self.subTest(fixture=fixture):
+                page = (FIXTURES / fixture).read_text(encoding="utf-8")
+                v = self.verifier_for(page)
+                quote = "05/01/2027: Deadline for abstract submission" if passes else "04/05/2027: Deadline for abstract submission"
+                res = v.verify([{"url": self.URL, "quote": quote}])
+                self.assertTrue(res.ok)
+                want = "2027-01-05" if passes else "2027-05-04"
+                self.assertEqual(amc._dates_supported({want}, res.quotes, res.orders), passes)
+        # Same ambiguous quote, but the page establishes day-first elsewhere.
+        page = "<p>04/05/2027: Deadline for abstract submission</p><p>31/10/2026: End of preregistration</p>"
+        res = self.verifier_for(page).verify([{"url": self.URL, "quote": "04/05/2027: Deadline for abstract submission"}])
+        self.assertTrue(amc._dates_supported({"2027-05-04"}, res.quotes, res.orders))
+        self.assertFalse(amc._dates_supported({"2027-04-05"}, res.quotes, res.orders))
 
     def test_numeric_day_range_supports_endpoints_only(self):
         q = amc.quote_supports_date
@@ -427,7 +495,7 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(self.failed(self.run_compare(verdict)), ["other_deadlines"])
 
     def test_title_token_rule(self):
-        m = amc.text_fields_match
+        m = amc.title_match
         self.assertTrue(m("IAU GA 2027", "iau  ga 2027!"))
         self.assertFalse(m("Cosmic Collisions 2026 Workshop", "Cosmic Collisions 2026"))
         self.assertFalse(m("Stars", "Stars on the Run III"))
@@ -438,6 +506,34 @@ class ComparisonTests(unittest.TestCase):
         self.assertTrue(m("Meeting", "Meeting 2027"))
         self.assertFalse(m("", "Heidelberg"))
         self.assertTrue(m("", ""))
+
+    def test_labels_must_be_backed_by_quotes(self):
+        self.assertTrue(amc.label_supported("Registration", ["Registration deadline: 15 January 2027"]))
+        self.assertTrue(amc.label_supported("Proceedings submission", ["15/11/2027: Deadline to submit proceedings for the symposium"]))
+        self.assertTrue(amc.label_supported("Deadline", ["anything"]))  # only generic words
+        self.assertFalse(amc.label_supported("Travel grant applications", ["Registration deadline: 15 January 2027"]))
+        self.assertFalse(amc.label_supported("Keynote speaker nominations", ["Registration deadline: 15 January 2027"]))
+        conf = self.conf(**{"label: Registration": "label: Gala dinner booking"})
+        rows = self.run_compare(self.make(), conf)
+        self.assertEqual(self.failed(rows), ["registration_deadlines"])
+        self.assertIn("label not supported", amc.render_table(rows))
+
+    def test_other_deadlines_are_a_multiset(self):
+        item = {"type": "other", "label": "Registration", "date": ""}
+        ev = [{"url": self.URL, "quote": "Registration deadline: 15 January 2027"}]
+        one = "other_deadlines:\n      - type: other\n        label: Registration\n        date: \"\"\n"
+        two = one + "      - type: other\n        label: Registration\n        date: \"\"\n"
+        conf = self.conf(**{"other_deadlines: []": two.rstrip("\n")})
+        self.assertEqual(self.failed(self.run_compare(self.make(other_deadlines={"value": [item], "evidence": ev}), conf)),
+                         ["other_deadlines"])
+        self.assertEqual(self.failed(self.run_compare(self.make(other_deadlines={"value": [item, item], "evidence": ev}), conf)), [])
+
+    def test_location_extra_words_need_evidence(self):
+        conf = self.conf(**{"Heidelberg, Germany": "Heidelberg, Germany, Europe"})
+        self.assertEqual(self.failed(self.run_compare(self.make(), conf)), ["location"])  # "europe" is nowhere
+        conf = self.conf(**{"Heidelberg, Germany": "Heidelberg, Germany, Registration"})
+        # "registration" is on the fetched page, so a word the reviewer omitted is accepted.
+        self.assertEqual(self.failed(self.run_compare(self.make(), conf)), [])
 
     def test_location_rule(self):
         m = amc.location_match
@@ -480,6 +576,68 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(amc.same_site("sites.google.com", "evil.google.com"))
         self.assertTrue(amc.same_site("sites.google.com", "sites.google.com"))
         self.assertFalse(amc.same_site("example.org", "example.org.evil.net"))
+        self.assertFalse(amc.same_site("a.ac.nz", "b.ac.nz"))
+        self.assertTrue(amc.same_site("www.a.ac.nz", "a.ac.nz"))
+        self.assertFalse(amc.same_site("x.co.il", "y.co.il"))
+        self.assertTrue(amc.same_site("indico.example.co.il", "example.co.il"))
+        self.assertTrue(amc.same_site("indico.cern.ch", "www.cern.ch"))
+
+    def test_path_tenanted_hosts(self):
+        a = "https://sites.google.com/view/iaus414patagonia/home"
+        self.assertTrue(amc.same_site_url(a, "https://sites.google.com/view/iaus414patagonia/important-dates"))
+        self.assertFalse(amc.same_site_url(a, "https://sites.google.com/view/other-meeting/home"))
+        self.assertFalse(amc.same_site_url(a, "https://sites.google.com/site/iaus414patagonia/home"))
+        self.assertTrue(amc.same_site_url("https://x.github.io/a", "https://x.github.io/b"))
+        self.assertFalse(amc.same_site_url("https://x.github.io/a", "https://y.github.io/a"))
+        v = amc.EvidenceVerifier([a], fetch=lambda u: (u, "some page text that is long enough"))
+        self.assertTrue(v.verify([{"url": a, "quote": "some page text that is long"}]).ok)
+        other = "https://sites.google.com/view/other-meeting/home"
+        self.assertFalse(v.verify([{"url": other, "quote": "some page text that is long"}]).ok)
+        # A redirect to another tenant on the same host is refused as well.
+        v2 = amc.EvidenceVerifier([a], fetch=lambda u: (other, "some page text that is long enough"))
+        self.assertFalse(v2.verify([{"url": a, "quote": "some page text that is long"}]).ok)
+
+    def test_ip_and_localhost_rejected(self):
+        for host in ("127.0.0.1", "localhost", "[::1]", "10.0.0.5", "2130706433", "intranet", "a.localhost"):
+            with self.subTest(host=host):
+                url = f"http://{host}/meeting/"
+                self.assertFalse(amc.is_public_hostname(amc.urlsplit(url).hostname))
+                with self.assertRaises(amc.CheckError):
+                    amc.parse_issue_body(body(url=f"\n{url}"))
+                v = amc.EvidenceVerifier([url], fetch=lambda u: (u, "some page text that is long enough"))
+                self.assertFalse(v.verify([{"url": url, "quote": "some page text that is long"}]).ok)
+        self.assertTrue(amc.is_public_hostname("indico.cern.ch"))
+
+    def test_entry_url_tenant_must_match_issue(self):
+        base = BASE
+        new = base + entry("x-2027", url="https://sites.google.com/view/other/home")
+        with tempfile.TemporaryDirectory() as d:
+            errors, _ = amc.check_diff(write(d, "b.yml", base), write(d, "h.yml", new),
+                                       "https://sites.google.com/view/mine/home", "", TODAY)
+        self.assertTrue(any("different site" in e for e in errors), errors)
+
+    def test_compare_cli_crash_still_writes_failure_table(self):
+        import argparse
+        import contextlib
+        import io
+        import json
+        with tempfile.TemporaryDirectory() as d:
+            gate = write(d, "g.json", json.dumps({"entry_id": "nope", "meeting_url": "https://example.org/"}))
+            data = write(d, "c.yml", "conferences:\n  # Past events\n  # Conference Calendar\n" + entry("example-meeting-2027"))
+            verdict = write(d, "v.json", "{}")
+            out = str(Path(d) / "t.md")
+            ns = argparse.Namespace(gate_json=gate, head_data=data, verdict=verdict, table_output=out)
+            original = amc.compare_verdict
+            amc.compare_verdict = lambda *a, **k: (_ for _ in ()).throw(LookupError("unknown encoding: x"))
+            try:
+                gate_ok = write(d, "g2.json", json.dumps({"entry_id": "example-meeting-2027", "meeting_url": "https://example.org/meeting/2027/"}))
+                ns.gate_json = gate_ok
+                with contextlib.redirect_stdout(io.StringIO()):
+                    rc = amc.cmd_compare(ns)
+            finally:
+                amc.compare_verdict = original
+            self.assertEqual(rc, 1)
+            self.assertIn("LookupError", Path(out).read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

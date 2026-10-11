@@ -940,3 +940,15 @@ conferences:
         label: Proceedings submission
         date: 2027-11-15
     comments: sent by Dominika
+  - id: shanghai-international-symposium-on-relativistic-astrophysics-2026
+    title: Shanghai International Symposium on Relativistic Astrophysics
+    url: https://tdli.sjtu.edu.cn/event/5006/
+    location: Shanghai, China
+    start_date: 2026-12-07
+    end_date: 2026-12-11
+    registration_deadlines: []
+    abstract_deadlines: []
+    registration_display: 1 November
+    abstract_display: 10 October
+    other_deadlines: []
+    comments: ""

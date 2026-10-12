@@ -940,3 +940,23 @@ conferences:
         label: Proceedings submission
         date: 2027-11-15
     comments: sent by Dominika
+  - id: first-stars-and-first-galaxies-workshop-2026
+    title: First Stars and First Galaxies Workshop 2026
+    url: https://fsfg-jp.github.io/FSFG_2026/
+    location: Fukuoka, Japan
+    start_date: 2026-12-08
+    end_date: 2026-12-10
+    registration_deadlines:
+      - label: Registration (attendance only)
+        date: 2026-11-24
+    abstract_deadlines: []
+    registration_display: ""
+    abstract_display: ""
+    other_deadlines:
+      - type: other
+        label: Registration for contributed talk or conference dinner
+        date: 2026-11-10
+      - type: funding
+        label: Travel support applications
+        date: 2026-11-10
+    comments: ""

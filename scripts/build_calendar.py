@@ -18,8 +18,8 @@ from build_meeting_ics import write_meeting_ics_files
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build markdown, JSON, HTML, and ICS conference calendar outputs.")
     parser.add_argument("--data", default="data/conferences.yml", help="Path to the source YAML file.")
-    parser.add_argument("--markdown-output", default="conference_calendar.md", help="Generated markdown output path.")
-    parser.add_argument("--site-dir", default="site", help="Directory for generated site assets.")
+    parser.add_argument("--markdown-output", required=True, help="Generated markdown output path. For local verification, write to a temporary directory; for deployment pass conference_calendar.md.")
+    parser.add_argument("--site-dir", required=True, help="Directory for generated site assets. For local verification, write to a temporary directory; for deployment pass site.")
     parser.add_argument("--repo-url", default="https://github.com/nbody6ppgpu/conference-calendar", help="Repository URL shown on the generated site.")
     parser.add_argument("--timezone", default="Europe/Berlin", help="Timezone used to determine 'today'.")
     parser.add_argument("--today", default=None, help="Override today's date in YYYY-MM-DD format.")

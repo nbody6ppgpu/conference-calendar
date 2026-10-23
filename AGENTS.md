@@ -82,9 +82,8 @@
   ```
 
   A non-zero exit means the YAML is malformed — fix it before finishing.
-  Never run the bare `python3 scripts/build_calendar.py` outside of a scratch
-  directory: its defaults write `conference_calendar.md` and `site/` straight
-  into the repository working tree.
+  `--markdown-output` and `--site-dir` are required, so always output to a
+  scratch directory when verifying.
 
 ## EXPLORE(url)
 

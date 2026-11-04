@@ -643,7 +643,6 @@ conferences:
     abstract_display: ""
     other_deadlines: []
     comments: ""
-  # Conference Calendar
   - id: bh-nepal-2026
     title: "8th Nepal Conference: Many faces of stellar-mass black holes"
     url: https://sites.google.com/view/bh-nepal-2026/home
@@ -690,6 +689,7 @@ conferences:
     abstract_display: ""
     other_deadlines: []
     comments: ""
+  # Conference Calendar
   - id: stars-on-the-run-iii-2026
     title: Stars On the Run III
     url: https://conf.koushare.com/conf/StarsOntheRun/

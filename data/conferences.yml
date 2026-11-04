@@ -811,10 +811,15 @@ conferences:
     start_date: 2027-03-16
     end_date: 2027-03-18
     registration_deadlines: []
-    abstract_deadlines: []
-    registration_display: "Early-bird/presenting-author registration: early January 2027 (TBC); final registration: end of February 2027"
-    abstract_display: "Abstract submission: mid or end of November (TBC)"
-    other_deadlines: []
+    abstract_deadlines:
+      - label: Abstract submission
+        date: 2026-11-29
+    registration_display: "Registration opens on 15 December 2026; a late-registration surcharge applies after the early-bird deadline"
+    abstract_display: ""
+    other_deadlines:
+      - type: other
+        label: Early-bird registration
+        date: 2027-01-31
     comments: '"Session 1: The First 100 Myr: Bridging Theory and Observations" is what we keep simulating in LPS(+)'
   - id: eas-2027
     title: "EAS 2027: European Astronomical Society Annual Meeting"

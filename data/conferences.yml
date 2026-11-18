@@ -965,3 +965,19 @@ conferences:
         label: Travel support applications
         date: 2026-11-10
     comments: ""
+  - id: exolife-2027
+    title: "ExoLife 2027: Advances and Frontiers in the Search for Life on Exoplanets"
+    url: https://www.exolife.science/exolife2027.html
+    location: Lanzarote, Canary Islands, Spain
+    start_date: 2027-09-06
+    end_date: 2027-09-10
+    registration_deadlines:
+      - label: Registration closes
+        date: 2027-04-15
+    abstract_deadlines:
+      - label: Abstract submission closes
+        date: 2027-02-15
+    registration_display: ""
+    abstract_display: ""
+    other_deadlines: []
+    comments: ""

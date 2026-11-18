@@ -104,12 +104,14 @@ jobs:
           git -C head show "$mb:data/conferences.yml" > "$w/base-data.yml"
           git -C head show "$HEAD_SHA:data/conferences.yml" > "$w/head-data.yml"
 
+          # The step's default shell is `bash -e`, so the `|| true` is what
+          # keeps a "not eligible" exit from failing the step.
           python3 base/scripts/auto_merge_check.py gate \
             --pr "$w/pr.json" --issue "$w/issue.json" \
             --commits "$w/commits.txt" --changed-files "$w/changed.txt" \
             --base-data "$w/base-data.yml" --head-data "$w/head-data.yml" \
             --trusted-logins "$TRUSTED_LOGINS" \
-            --output "$w/gate.json"
+            --output "$w/gate.json" || true
           if [[ ! -s "$w/gate.json" ]]; then
             echo '{"eligible": false, "reasons": ["gate produced no result"], "issue_number": "", "meeting_url": "", "head_sha": "", "entry_id": "", "issue_comments": ""}' > "$w/gate.json"
           fi

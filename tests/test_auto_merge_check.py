@@ -73,11 +73,18 @@ class IssueBodyTests(unittest.TestCase):
         self.assertEqual(fields.url, "https://example.org/meeting/2027/")
         self.assertIn("https://other.example/page.htm", fields.comments)
 
+    def test_bare_www_url_read_as_https(self):
+        fields = amc.parse_issue_body(body("\nwww.exolife.science\n"))
+        self.assertEqual(fields.url, "https://www.exolife.science")
+
     def test_ambiguous_bodies_rejected(self):
         bad = [
             body("\nhttps://a.example/x https://b.example/y\n"),  # two URLs
             body("\nsee https://a.example/x\n"),  # extra text
             body("\n\n"),  # no URL
+            body("\nexolife.science\n"),  # bare host without www.
+            body("\nwww.a.example www.b.example\n"),  # two bare URLs
+            body("\nsee www.a.example\n"),  # extra text
             "no template at all",
             body("\nftp://a.example/x\n"),
             body("\nhttps://user:pw@a.example/x\n"),

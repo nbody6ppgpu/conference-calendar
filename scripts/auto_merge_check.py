@@ -92,9 +92,15 @@ def parse_issue_body(body: str) -> IssueFields:
 
     url_section = text[url_header.end():comment_header.start()]
     urls = re.findall(r"https?://\S+", url_section)
+    prefix = ""
+    if not urls:
+        # Submitters often paste a bare "www.example.org"; accept that one
+        # form (and only it) and read it as https.
+        urls = re.findall(r"(?<!\S)www\.\S+", url_section)
+        prefix = "https://"
     if len(urls) != 1:
         raise CheckError(f"expected exactly one URL in the URL field, found {len(urls)}")
-    url = urls[0].rstrip(".,;")
+    url = prefix + urls[0].rstrip(".,;")
     leftover = url_section.replace(urls[0], "", 1).strip()
     if leftover:
         raise CheckError("the URL field contains text besides a single URL")

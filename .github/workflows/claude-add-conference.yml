@@ -43,6 +43,40 @@ jobs:
           git switch -c "$BRANCH"
           echo "name=$BRANCH" >> "$GITHUB_OUTPUT"
 
+      # Some meeting sites omit their intermediate certificate: browsers cope,
+      # but WebFetch, curl and Python reject them, and the entry ends up empty.
+      # Complete such a chain (verified against the system roots) before
+      # Claude fetches anything; see scripts/complete_tls_chain.sh.
+      - name: Complete the meeting site's TLS chain if needed
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          # Importing auto_merge_check must not leave scripts/__pycache__ for
+          # the scope check after Claude's run to find.
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -uo pipefail
+          python3 -m pip install -q -r requirements.txt || true
+          host="$(python3 - <<'PY' || true
+          import os, sys
+          from urllib.parse import urlsplit
+          sys.path.insert(0, "scripts")
+          import auto_merge_check as amc
+          try:
+              print(urlsplit(amc.parse_issue_body(os.environ["ISSUE_BODY"]).url).hostname or "")
+          except amc.CheckError:
+              pass
+          PY
+          )"
+          tls="$RUNNER_TEMP/tls"
+          if [[ -n "$host" ]]; then bash scripts/complete_tls_chain.sh "$host" "$tls" || true; fi
+          if [[ -s "$tls/extra-ca.pem" ]]; then
+            {
+              echo "NODE_EXTRA_CA_CERTS=$tls/extra-ca.pem"
+              echo "CURL_CA_BUNDLE=$tls/ca-bundle.pem"
+              echo "SSL_CERT_FILE=$tls/ca-bundle.pem"
+            } >> "$GITHUB_ENV"
+          fi
+
       - name: Run Claude to add the conference entry
         id: claude
         uses: anthropics/claude-code-action@v1

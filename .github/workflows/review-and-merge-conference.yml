@@ -210,6 +210,7 @@ jobs:
             /AGENTS.md
             /CLAUDE.md
             /.github/prompts/
+            /scripts/complete_tls_chain.sh
           sparse-checkout-cone-mode: false
 
       - name: Load the output schema
@@ -236,6 +237,24 @@ jobs:
               sys.exit("::error::meeting URL host is missing or not a plain DNS name")
           print(f"host={host}")
           PY
+
+      # Some meeting sites omit their intermediate certificate: browsers cope,
+      # but WebFetch rejects them and the verdict comes back empty. Complete
+      # such a chain (verified against the system roots); see the script.
+      - name: Complete the meeting site's TLS chain if needed
+        env:
+          HOST: ${{ steps.host.outputs.host }}
+        run: |
+          set -uo pipefail
+          tls="$RUNNER_TEMP/tls"
+          bash scripts/complete_tls_chain.sh "$HOST" "$tls" || true
+          if [[ -s "$tls/extra-ca.pem" ]]; then
+            {
+              echo "NODE_EXTRA_CA_CERTS=$tls/extra-ca.pem"
+              echo "CURL_CA_BUNDLE=$tls/ca-bundle.pem"
+              echo "SSL_CERT_FILE=$tls/ca-bundle.pem"
+            } >> "$GITHUB_ENV"
+          fi
 
       # Permission scoping (docs: code.claude.com/docs/en/permissions):
       #   Read      only AGENTS.md and .github/prompts/** are pre-approved.
@@ -336,17 +355,54 @@ jobs:
           fi
           git show "$HEAD_SHA:data/conferences.yml" > "$RUNNER_TEMP/head.yml"
 
+      # The evidence re-fetch below uses Python, which (like WebFetch) rejects
+      # a site that omits its intermediate certificate.
+      - name: Complete the meeting site's TLS chain if needed
+        run: |
+          set -uo pipefail
+          tls="$RUNNER_TEMP/tls"
+          hosts="$(python3 - "$RUNNER_TEMP/artifacts/gate-json/gate.json" "$RUNNER_TEMP/head.yml" <<'PY' || true
+          import json, sys
+          from urllib.parse import urlsplit
+          sys.path.insert(0, "scripts")
+          from calendar_core import load_conferences
+          gate = json.load(open(sys.argv[1], encoding="utf-8"))
+          urls = [gate.get("meeting_url", "")]
+          urls += [c.url for c in load_conferences(sys.argv[2]) if c.id == gate.get("entry_id")]
+          print("\n".join(sorted({urlsplit(u).hostname or "" for u in urls} - {""})))
+          PY
+          )"
+          while read -r h; do
+            if [[ -n "$h" ]]; then bash scripts/complete_tls_chain.sh "$h" "$tls" || true; fi
+          done <<<"$hosts"
+          if [[ -s "$tls/extra-ca.pem" ]]; then
+            {
+              echo "NODE_EXTRA_CA_CERTS=$tls/extra-ca.pem"
+              echo "CURL_CA_BUNDLE=$tls/ca-bundle.pem"
+              echo "SSL_CERT_FILE=$tls/ca-bundle.pem"
+            } >> "$GITHUB_ENV"
+          fi
+
+      # Exit 1 from the script means "no match" (the table says why) and is a
+      # normal outcome: the step stays green, `passed` stays unset, and the
+      # report job comments and labels the PR. Only a missing table, i.e. the
+      # comparison itself not running, fails the step.
       - name: Compare the reviewer's verdict with the PR entry
         id: compare
         run: |
+          # The step's default shell is `bash -e`; without `set +e` a no-match
+          # exit would abort the step at the pipeline below.
+          set +e
           set -uo pipefail
+          rm -f "$RUNNER_TEMP/table.md"
           python3 scripts/auto_merge_check.py compare \
             --gate-json "$RUNNER_TEMP/artifacts/gate-json/gate.json" \
             --head-data "$RUNNER_TEMP/head.yml" \
             --verdict "$RUNNER_TEMP/artifacts/verdict-json/verdict.json" \
             --table-output "$RUNNER_TEMP/table.md" | tee -a "$GITHUB_STEP_SUMMARY"
           rc="${PIPESTATUS[0]}"
-          if [[ "$rc" == "0" ]]; then echo "passed=true" >> "$GITHUB_OUTPUT"; fi
+          if [[ "$rc" == "0" ]]; then echo "passed=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [[ "$rc" == "1" && -s "$RUNNER_TEMP/table.md" ]]; then exit 0; fi
           exit "$rc"
 
       - name: Upload the comparison table
@@ -508,6 +564,7 @@ jobs:
       PR_NUMBER: ${{ github.event.pull_request.number }}
       REVIEW_RESULT: ${{ needs.review.result }}
       COMPARE_RESULT: ${{ needs.compare.result }}
+      COMPARE_PASSED: ${{ needs.compare.outputs.passed }}
       MERGE_RESULT: ${{ needs.merge.result }}
       MERGED: ${{ needs.merge.outputs.merged }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -535,7 +592,9 @@ jobs:
           if [[ "$REVIEW_RESULT" != "success" ]]; then
             why="the blind review stage ended as '$REVIEW_RESULT' (no usable verdict)."
           elif [[ "$COMPARE_RESULT" != "success" ]]; then
-            why="the comparison stage ended as '$COMPARE_RESULT': the reviewer's extraction does not match the PR entry, its evidence could not be verified, or the stage did not finish."
+            why="the comparison stage ended as '$COMPARE_RESULT' before producing a result."
+          elif [[ "$COMPARE_PASSED" != "true" ]]; then
+            why="the reviewer's extraction does not match the PR entry, or its evidence could not be verified (see the table)."
           elif [[ "$MERGE_RESULT" != "success" ]]; then
             why="the merge stage ended as '$MERGE_RESULT': re-verification against current main failed, or merging was refused or cancelled."
           else
